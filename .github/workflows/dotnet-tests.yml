@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest  # Use Windows runner to support .NET Framework
+    runs-on: windows-latest 
 
     steps:
     - name: Checkout code
