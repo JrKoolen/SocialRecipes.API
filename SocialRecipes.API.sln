@@ -3,13 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialRecipes.API", "SocialRecipes.API\SocialRecipes.API.csproj", "{109C5F99-2A14-477A-9ED5-3FCBC979612B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialRecipes.API", "SocialRecipes.API\SocialRecipes.API.csproj", "{109C5F99-2A14-477A-9ED5-3FCBC979612B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialRecipes.DAL", "SocialRecipes.DAL\SocialRecipes.DAL.csproj", "{37608A16-9C89-4028-8D88-A8E838AA415D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialRecipes.DAL", "SocialRecipes.DAL\SocialRecipes.DAL.csproj", "{37608A16-9C89-4028-8D88-A8E838AA415D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialRecipes.Domain", "SocialRecipes.Domain\SocialRecipes.Domain.csproj", "{B498669D-420F-4F3E-993E-AA7C05E882A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialRecipes.Domain", "SocialRecipes.Domain\SocialRecipes.Domain.csproj", "{B498669D-420F-4F3E-993E-AA7C05E882A6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialRecipes.UnitTests", "SocialRecipes.UnitTests\SocialRecipes.UnitTests.csproj", "{0AA91020-DA5E-4D3E-84F5-5C5E0C0D3E43}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1A011E7D-8369-4C85-907A-9980665EA15A}"
+	ProjectSection(SolutionItems) = preProject
+		dotnet-tests.yml = dotnet-tests.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
