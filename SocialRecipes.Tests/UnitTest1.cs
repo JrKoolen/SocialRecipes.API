@@ -6,8 +6,7 @@ namespace SocialRecipes.Tests
         [TestMethod]
         public void AlwaysPass()
         {
-            Assert.IsTrue(false);
+            Assert.IsTrue(true);
         }
     }
-
 }

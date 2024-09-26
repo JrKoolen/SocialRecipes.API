@@ -6,12 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="MySql.Data" Version="9.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\SocialRecipes.Domain\SocialRecipes.Domain.csproj" />
-  </ItemGroup>
-
 </Project>
