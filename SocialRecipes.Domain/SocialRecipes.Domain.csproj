@@ -10,4 +10,8 @@
     <Folder Include="Logica\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SocialRecipes.DTO\SocialRecipes.DTO.csproj" />
+  </ItemGroup>
+
 </Project>

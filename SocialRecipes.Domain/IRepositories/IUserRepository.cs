@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SocialRecipes.Domain.Models;
+using SocialRecipes.DTO.IN;
 
 namespace SocialRecipes.Domain.IRepositories
 {
     public interface IUserRepository
     {
+        void CreateUser(CreateUserDto user);
     }
 }

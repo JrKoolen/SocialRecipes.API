@@ -1,4 +1,4 @@
-﻿namespace SocialRecipes.DAL.Dto.IN
+﻿namespace SocialRecipes.DTO.IN
 {
     public class CreateUserDto
     {

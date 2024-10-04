@@ -1,7 +1,10 @@
-﻿namespace SocialRecipes.Domain.IServices
+﻿using SocialRecipes.Domain.Models;
+using SocialRecipes.DTO.IN;
+
+namespace SocialRecipes.Domain.IServices
 {
     public interface IUserService
     {
-        void CreateUser(CreatePersonDto userInput);
+        void CreateUser(CreateUserDto userInput);
     }
 }

@@ -1,5 +1,5 @@
 ﻿using SocialRecipes.Domain.IRepositories;
-using SocialRecipes.DAL.Dto.IN;
+using SocialRecipes.DTO.IN;
 using MySql.Data.MySqlClient;
 
 namespace SocialRecipes.DAL.Repositories
@@ -19,7 +19,7 @@ namespace SocialRecipes.DAL.Repositories
             {
                 connection.Open();
 
-                string query = @"INERT INTO User (Name, Email, Password, Age) VALUES (@Name, @Email, @Password, @Age)";
+                string query = @"INSERT INTO User (Name, Email, Password, Age) VALUES (@Name, @Email, @Password, @Age)";
 
                 using (var command = new MySqlCommand(query, connection))
                 {
