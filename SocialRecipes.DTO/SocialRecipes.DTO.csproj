@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="General\" />
     <Folder Include="OUT\" />
   </ItemGroup>
 </Project>

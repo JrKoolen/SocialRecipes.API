@@ -1,6 +1,6 @@
 ﻿namespace SocialRecipes.DTO.IN
 {
-    public class CreateUserDto
+    public class AddUserDto
     {
         public string Name { get; set; }
         public string Email { get; set; }

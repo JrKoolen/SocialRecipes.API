@@ -5,6 +5,7 @@ namespace SocialRecipes.Domain.IServices
 {
     public interface IUserService
     {
-        void CreateUser(CreateUserDto userInput);
+        void CreateUser(AddUserDto userInput);
+        void DeleteUserByID(int id);
     }
 }

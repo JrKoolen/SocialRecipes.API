@@ -13,7 +13,7 @@ namespace SocialRecipes.DAL.Repositories
             _connectionString = connectionString;
         }
 
-        public void CreateUser(CreateUserDto user)
+        public void AddUser(AddUserDto user)
         {
             using (var connection = new MySqlConnection(_connectionString))
             {

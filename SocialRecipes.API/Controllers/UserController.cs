@@ -16,7 +16,7 @@ namespace SocialRecipes.API.Controllers
         }
 
         [HttpPost("CreateUser")]
-        public IActionResult CreateUser([FromBody] SocialRecipes.DTO.IN.CreateUserDto user)
+        public IActionResult CreateUser([FromBody] SocialRecipes.DTO.IN.AddUserDto user)
         {
             if (user == null)
             {

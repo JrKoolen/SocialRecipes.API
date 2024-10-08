@@ -12,9 +12,9 @@ namespace SocialRecipes.Services.Services
             _userRepository = userRepository;
         }
 
-        public void CreateUser(CreateUserDto userInput)
+        public void CreateUser(AddUserDto userInput)
         {
-            _userRepository.CreateUser(userInput);
+            _userRepository.AddUser(userInput);
         }
     }
 }
