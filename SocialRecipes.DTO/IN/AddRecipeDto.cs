@@ -1,9 +1,12 @@
-﻿namespace SocialRecipes.DTO.IN
+﻿using SocialRecipes.DTO.General;
+
+namespace SocialRecipes.DTO.IN
 {
     public class AddRecipeDto
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public string Title { get; set; }
+        public string Body { get; set; }
+        public List<IngredientDto> Recipes { get; set; } = new List<IngredientDto>();
         public int UserId { get; set; }
         public string Status { get; set; }
     }

@@ -12,9 +12,10 @@ namespace SocialRecipes.API.Controllers
         private readonly ILogger<IngredientController> _logger;
         private readonly IIngredientService _ingredientService;
 
-        public IngredientController(ILogger<IngredientController> logger)
+        public IngredientController(ILogger<IngredientController> logger, IIngredientService ingredientService)
         {
             _logger = logger;
+            _ingredientService = ingredientService;
         }
         [HttpPost("AddIngredient")]
         public IActionResult AddIngredient([FromBody] AddIngredientDto ingredient)
@@ -28,23 +29,6 @@ namespace SocialRecipes.API.Controllers
             _ingredientService.AddIngredient(ingredient);
             _logger.LogInformation($"Creating a new ingredient: {ingredient.Name}");
             return Ok(new { message = "Ingredient added successfully", ingredient });
-        }
-
-        [HttpDelete("RemoveIngredient/{id}")]
-        public IActionResult RemoveIngredient(int id)
-        {
-            _logger.LogInformation($"Attempting to remove ingredient with ID {id}");
-
-            IngredientDto ingredient = _ingredientService.GetIngredientsFromRecipeId(id);  
-            if (ingredient == null)
-            {
-                _logger.LogWarning($"Ingredient with ID {id} not found.");
-                return NotFound(new { message = "Ingredient not found", id });
-            }
-
-            _ingredientService.RemoveIngredient(id);
-            _logger.LogInformation($"Ingredient with ID {id} removed from database.");
-            return Ok(new { message = "Ingredient removed", id });
         }
 
         [HttpPut("UpdateIngredient")]
@@ -67,6 +51,23 @@ namespace SocialRecipes.API.Controllers
             _ingredientService.UpdateIngredient(ingredient);
             _logger.LogInformation($"Ingredient with ID {ingredient.Id} successfully updated.");
             return Ok(new { message = "Ingredient updated", ingredient.Id });
+        }
+
+        [HttpDelete("RemoveIngredient/{id}")]
+        public IActionResult RemoveIngredient(int id)
+        {
+            _logger.LogInformation($"Attempting to remove ingredient with ID {id}");
+
+            IngredientDto[] ingredient = _ingredientService.GetIngredientsFromRecipeId(id);
+            if (ingredient == null)
+            {
+                _logger.LogWarning($"Ingredient with ID {id} not found.");
+                return NotFound(new { message = "Ingredient not found", id });
+            }
+
+            _ingredientService.RemoveIngredient(id);
+            _logger.LogInformation($"Ingredient with ID {id} removed from database.");
+            return Ok(new { message = "Ingredient removed", id });
         }
     }
 }

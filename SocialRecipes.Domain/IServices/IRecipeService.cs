@@ -8,8 +8,8 @@ namespace SocialRecipes.Domain.IServices
         public RecipeDto GetRecipeById(int id);
         public RecipeDto[] GetAllRecipesFromUser(int userId);
         public RecipeDto[] GetAllRecipes();
-        public RecipeDto[] GetAllRecipesFromStatus(int status);
-        public RecipeDto[] GetAllRecipesFromStatusAndUser(int status, int userId);
+        public RecipeDto[] GetAllRecipesFromStatus(string status);
+        public RecipeDto[] GetAllRecipesFromStatusAndUser(string status, int userId);
         public void DeleteRecipeFromId(int id);
         public void UpdateRecipe(RecipeDto recipe);
     }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SocialRecipes.Domain.IServices;
 using SocialRecipes.DTO.General;
+using SocialRecipes.DTO.IN;
 
 namespace SocialRecipes.API.Controllers
 {
@@ -11,12 +12,13 @@ namespace SocialRecipes.API.Controllers
         private readonly ILogger<RecipeController> _logger;
         private readonly IRecipeService _recipeService;
 
-        public RecipeController(ILogger<RecipeController> logger)
+        public RecipeController(ILogger<RecipeController> logger, IRecipeService recipeService)
         {
             _logger = logger;
+            _recipeService = recipeService;
         }
-        [HttpPost("CreateUser")]
-        public IActionResult AddRecipe([FromBody] SocialRecipes.DTO.IN.AddRecipeDto recipe)
+        [HttpPost("CreateRecipe")]
+        public IActionResult AddRecipe(AddRecipeDto recipe)
         {
             if (recipe == null)
             {
@@ -24,7 +26,7 @@ namespace SocialRecipes.API.Controllers
                 return BadRequest("recipe is null.");
             }
             _recipeService.AddRecipe(recipe);
-            _logger.LogInformation($"Creating a new recipe: {recipe.Name}");
+            _logger.LogInformation($"Creating a new recipe: {recipe.Title}");
             return Ok(new { message = "200", recipe });
         }
         [HttpPost("UpdateRecipe")]
@@ -64,7 +66,7 @@ namespace SocialRecipes.API.Controllers
         }
 
         [HttpGet("GetAllRecipesFromStatus/{status}")]
-        public IActionResult GetAllRecipesFromStatus(int status)
+        public IActionResult GetAllRecipesFromStatus(string status)
         {
             _logger.LogInformation($"Get all recipes by status {status}");
             var recipes = _recipeService.GetAllRecipesFromStatus(status);
@@ -72,7 +74,7 @@ namespace SocialRecipes.API.Controllers
         }
 
         [HttpGet("GetAllRecipesFromStatusAndUser/{status}/{userId}")]
-        public IActionResult GetAllRecipesFromStatusAndUser(int status, int userId)
+        public IActionResult GetAllRecipesFromStatusAndUser(string status, int userId)
         {
             _logger.LogInformation($"Get all recipes by status {status} and user {userId}");
             var recipes = _recipeService.GetAllRecipesFromStatusAndUser(status, userId);

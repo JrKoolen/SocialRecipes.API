@@ -7,24 +7,47 @@ namespace SocialRecipes.Services.Services
 {
     public class FollowerService : IFollowerService
     {
-        public bool Follow(int userid)
+        private readonly IFollowerRepository _followerRepository;
+
+        public FollowerService(IFollowerRepository followerRepository)
         {
-            throw new NotImplementedException();
+            _followerRepository = followerRepository;
         }
 
-        public FollowerDto GetFollowers(int userid)
+        public bool Follow(int userId, int followerId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _followerRepository.Follow(userId, followerId);
+                return true; 
+            }
+            catch
+            {
+                return false; 
+            }
         }
 
-        public FollowerDto GetFollowing(int userid)
+        public FollowerDto GetFollowers(int userId)
         {
-            throw new NotImplementedException();
+            return _followerRepository.GetFollowers(userId);
         }
 
-        public bool RemoveFollow(int userid)
+        public FollowerDto GetFollowing(int userId)
         {
-            throw new NotImplementedException();
+            return _followerRepository.GetFollowing(userId);
+        }
+
+        public bool RemoveFollow(int userId, int followerId)
+        {
+            try
+            {
+                _followerRepository.RemoveFollow(userId, followerId);
+                return true; 
+            }
+            catch
+            {
+                return false; 
+            }
         }
     }
 }

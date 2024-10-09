@@ -2,7 +2,7 @@
 using SocialRecipes.Domain.IServices;
 using SocialRecipes.DTO.General;
 using SocialRecipes.DTO.IN;
-using Microsoft.Extensions.Logging; // Don't forget the proper using directive
+using Microsoft.Extensions.Logging;
 
 namespace SocialRecipes.API.Controllers
 {
@@ -13,7 +13,6 @@ namespace SocialRecipes.API.Controllers
         private readonly ILogger<UserController> _logger;
         private readonly IUserService _userService;
 
-        // Injecting IUserService properly in the constructor
         public UserController(ILogger<UserController> logger, IUserService userService)
         {
             _logger = logger;
@@ -35,7 +34,6 @@ namespace SocialRecipes.API.Controllers
                 return BadRequest("User name is required.");
             }
 
-            // Since _userService is now injected, no need to check for null
             _userService.CreateUser(user);
             _logger.LogInformation($"Creating a new user: {user.Name}");
 

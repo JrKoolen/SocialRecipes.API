@@ -6,7 +6,7 @@ namespace SocialRecipes.Domain.IServices
     {
         public FollowerDto GetFollowers(int userid);
         public FollowerDto GetFollowing(int userid);
-        public bool Follow(int userid);
-        public bool RemoveFollow(int userid);
+        public bool Follow(int userId, int followerId);
+        public bool RemoveFollow(int userId, int followerId);
     }
 }

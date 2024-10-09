@@ -6,7 +6,7 @@ namespace SocialRecipes.Domain.IRepositories
     {
         public FollowerDto GetFollowers(int userid);
         public FollowerDto GetFollowing(int userid);
-        public void Follow(int userid);
-        public void RemoveFollow(int userid);
+        public void Follow(int userId, int followerId);
+        public void RemoveFollow(int userId, int followerId);
     }
 }

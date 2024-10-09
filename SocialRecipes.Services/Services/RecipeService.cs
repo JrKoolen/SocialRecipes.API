@@ -7,44 +7,51 @@ namespace SocialRecipes.Services.Services
 {
     public class RecipeService : IRecipeService
     {
+        private readonly IRecipeRepository _recipeRepository;
+
+        public RecipeService(IRecipeRepository recipeRepository)
+        {
+            _recipeRepository = recipeRepository;
+        }
+
         public void AddRecipe(AddRecipeDto recipe)
         {
-            throw new NotImplementedException();
+            _recipeRepository.AddRecipe(recipe);
         }
 
         public RecipeDto[] GetAllRecipes()
         {
-            throw new NotImplementedException();
+            return _recipeRepository.GetAllRecipes();
         }
 
-        public RecipeDto[] GetAllRecipesFromStatus(int status)
+        public RecipeDto[] GetAllRecipesFromStatus(string status)
         {
-            throw new NotImplementedException();
+            return _recipeRepository.GetAllRecipesFromStatus(status);
         }
 
-        public RecipeDto[] GetAllRecipesFromStatusAndUser(int status, int userId)
+        public RecipeDto[] GetAllRecipesFromStatusAndUser(string status, int userId)
         {
-            throw new NotImplementedException();
+            return _recipeRepository.GetAllRecipesFromStatusAndUser(status, userId);
         }
 
         public RecipeDto[] GetAllRecipesFromUser(int userId)
         {
-            throw new NotImplementedException();
+            return _recipeRepository.GetAllRecipesFromUser(userId);
         }
 
         public RecipeDto GetRecipeById(int id)
         {
-            throw new NotImplementedException();
+            return _recipeRepository.GetRecipeById(id);
         }
 
         public void DeleteRecipeFromId(int id)
         {
-            throw new NotImplementedException();
+            _recipeRepository.DeleteRecipeFromId(id);
         }
 
         public void UpdateRecipe(RecipeDto recipe)
         {
-            throw new NotImplementedException();
+            _recipeRepository.UpdateRecipe(recipe);
         }
     }
 }

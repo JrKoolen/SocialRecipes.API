@@ -6,7 +6,7 @@ namespace SocialRecipes.Domain.IServices
     {
         public void AddIngredient(AddIngredientDto ingredient);
         public void UpdateIngredient(IngredientDto ingredient);
-        public IngredientDto GetIngredientsFromRecipeId(int recipeId);
+        public IngredientDto[] GetIngredientsFromRecipeId(int recipeId);
         public void RemoveIngredient(int ingredientId);
     }
 }

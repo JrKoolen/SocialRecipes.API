@@ -17,6 +17,23 @@ namespace SocialRecipes.API.Controllers
             _followerService = followService;
         }
 
+        [HttpPost("Follow/{userId}")]
+        public IActionResult Follow(int userId, int followerId)
+        {
+            _logger.LogInformation($"User attempting to follow user with ID {userId}");
+
+            var result = _followerService.Follow(userId, followerId);
+
+            if (!result)
+            {
+                _logger.LogWarning($"Failed to follow user with ID {userId}");
+                return BadRequest(new { message = "Failed to follow", userId });
+            }
+
+            _logger.LogInformation($"Successfully followed user with ID {userId}");
+            return Ok(new { message = "Successfully followed", userId });
+        }
+
         [HttpGet("GetFollowers/{userId}")]
         public IActionResult GetFollowers(int userId)
         {
@@ -46,29 +63,13 @@ namespace SocialRecipes.API.Controllers
 
             return Ok(new { message = "Following users retrieved", following });
         }
-        [HttpPost("Follow/{userId}")]
-        public IActionResult Follow(int userId)
-        {
-            _logger.LogInformation($"User attempting to follow user with ID {userId}");
-
-            var result = _followerService.Follow(userId); 
-
-            if (!result)
-            {
-                _logger.LogWarning($"Failed to follow user with ID {userId}");
-                return BadRequest(new { message = "Failed to follow", userId });
-            }
-
-            _logger.LogInformation($"Successfully followed user with ID {userId}");
-            return Ok(new { message = "Successfully followed", userId });
-        }
 
         [HttpDelete("Unfollow/{userId}")]
-        public IActionResult RemoveFollow(int userId)
+        public IActionResult RemoveFollow(int userId, int followerId)
         {
             _logger.LogInformation($"User attempting to unfollow user with ID {userId}");
 
-            var result = _followerService.RemoveFollow(userId);
+            var result = _followerService.RemoveFollow(userId, followerId);
 
             if (!result)
             {

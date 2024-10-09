@@ -7,7 +7,8 @@ namespace SocialRecipes.Services.Services
 {
     public class UserService : IUserService
     {
-        public readonly IUserRepository _userRepository;
+        private readonly IUserRepository _userRepository;
+
         public UserService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
@@ -20,17 +21,17 @@ namespace SocialRecipes.Services.Services
 
         public void DeleteUserByID(int id)
         {
-            throw new NotImplementedException();
+            _userRepository.DeleteUserById(id);
         }
 
         public void DeleteUserById(int id)
         {
-            throw new NotImplementedException();
+            _userRepository.DeleteUserById(id);
         }
 
         public UserDto GetUserById(int id)
         {
-            throw new NotImplementedException();
+            return _userRepository.GetUserById(id);
         }
     }
 }

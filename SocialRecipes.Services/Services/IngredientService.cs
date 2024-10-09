@@ -7,24 +7,31 @@ namespace SocialRecipes.Services.Services
 {
     public class IngredientService : IIngredientService
     {
-        public void AddIngredient(AddIngredientDto ingredient)
+        private readonly IIngredientRepository _ingredientRepository;
+
+        public IngredientService(IIngredientRepository ingredientRepository)
         {
-            throw new NotImplementedException();
+            _ingredientRepository = ingredientRepository;
         }
 
-        public IngredientDto GetIngredientsFromRecipeId(int recipeId)
+        public void AddIngredient(AddIngredientDto ingredient)
         {
-            throw new NotImplementedException();
+            _ingredientRepository.AddIngredient(ingredient);
+        }
+
+        public IngredientDto[] GetIngredientsFromRecipeId(int recipeId)
+        {
+            return _ingredientRepository.GetIngredientsFromRecipeId(recipeId);
         }
 
         public void RemoveIngredient(int ingredientId)
         {
-            throw new NotImplementedException();
+            _ingredientRepository.RemoveIngredient(ingredientId);
         }
 
         public void UpdateIngredient(IngredientDto ingredient)
         {
-            throw new NotImplementedException();
+            _ingredientRepository.UpdateIngredient(ingredient);
         }
     }
 }

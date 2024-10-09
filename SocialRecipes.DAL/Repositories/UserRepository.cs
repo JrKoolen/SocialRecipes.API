@@ -18,7 +18,6 @@ namespace SocialRecipes.DAL.Repositories
             using (var connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();
-
                 string query = @"INSERT INTO Users (Username, Email, Password) VALUES (@Username, @Email, @Password)";
 
                 using (var command = new MySqlCommand(query, connection))
@@ -28,18 +27,50 @@ namespace SocialRecipes.DAL.Repositories
                     command.Parameters.AddWithValue("@Password", user.Password);
                     command.ExecuteNonQuery();
                 }
-                
             }
         }
 
         public void DeleteUserById(int userId)
         {
-            throw new NotImplementedException();
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                connection.Open();
+                string query = @"DELETE FROM Users WHERE Id = @UserId";
+
+                using (var command = new MySqlCommand(query, connection))
+                {
+                    // Add the user ID as a parameter
+                    command.Parameters.AddWithValue("@UserId", userId);
+                    command.ExecuteNonQuery();
+                }
+            }
         }
 
         public UserDto GetUserById(int id)
         {
-            throw new NotImplementedException();
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                connection.Open();
+                string query = @"SELECT Username, Email, Password FROM Users WHERE Id = @Id";
+
+                using (var command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Id", id);
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return new UserDto
+                            {
+                                Username = reader.GetString("Username"),
+                                Email = reader.GetString("Email"),
+                            };
+                        }
+                    }
+                }
+            }
+            return null;
         }
     }
 }
