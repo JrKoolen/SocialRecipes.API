@@ -1,10 +1,11 @@
-﻿using SocialRecipes.DTO;
+﻿using SocialRecipes.DTO.General;
+
 namespace SocialRecipes.Domain.IRepositories
 {
     public interface IFollowerRepository
     {
-        public void GetFollowers(int userid);
-        public void GetFollowing(int userid);
+        public FollowerDto GetFollowers(int userid);
+        public FollowerDto GetFollowing(int userid);
         public void Follow(int userid);
         public void RemoveFollow(int userid);
     }

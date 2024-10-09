@@ -1,7 +1,7 @@
 ﻿using SocialRecipes.Domain.IRepositories;
 using SocialRecipes.DTO.IN;
 using MySql.Data.MySqlClient;
-
+using SocialRecipes.DTO.General;
 namespace SocialRecipes.DAL.Repositories
 {
     public class UserRepository : IUserRepository
@@ -26,9 +26,18 @@ namespace SocialRecipes.DAL.Repositories
                     command.Parameters.AddWithValue("@User", user.Name);
                     command.Parameters.AddWithValue("@Email", user.Email);
                     command.Parameters.AddWithValue("@Password", user.Password);
-                    command.Parameters.AddWithValue("@Age", user.Age);
                 }
             }
+        }
+
+        public void DeleteUserById(int userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public UserDto GetUserById(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }
