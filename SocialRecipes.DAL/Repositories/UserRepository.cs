@@ -19,14 +19,16 @@ namespace SocialRecipes.DAL.Repositories
             {
                 connection.Open();
 
-                string query = @"INSERT INTO User (Name, Email, Password, Age) VALUES (@Name, @Email, @Password, @Age)";
+                string query = @"INSERT INTO Users (Username, Email, Password) VALUES (@Username, @Email, @Password)";
 
                 using (var command = new MySqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@User", user.Name);
+                    command.Parameters.AddWithValue("@Username", user.Name);
                     command.Parameters.AddWithValue("@Email", user.Email);
                     command.Parameters.AddWithValue("@Password", user.Password);
+                    command.ExecuteNonQuery();
                 }
+                
             }
         }
 
