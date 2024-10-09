@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -12,8 +12,18 @@
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="MSTest.TestAdapter" Version="3.1.1" />
     <PackageReference Include="MSTest.TestFramework" Version="3.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SocialRecipes.API\SocialRecipes.API.csproj" />
+    <ProjectReference Include="..\SocialRecipes.DAL\SocialRecipes.DAL.csproj" />
+    <ProjectReference Include="..\SocialRecipes.Domain\SocialRecipes.Domain.csproj" />
+    <ProjectReference Include="..\SocialRecipes.DTO\SocialRecipes.DTO.csproj" />
+    <ProjectReference Include="..\SocialRecipes.Infrastructure\SocialRecipes.Infrastructure.csproj" />
+    <ProjectReference Include="..\SocialRecipes.Services\SocialRecipes.Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>
