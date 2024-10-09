@@ -14,6 +14,30 @@ builder.Services.AddScoped<IUserRepository, UserRepository>(provider =>
     return new UserRepository(connectionString);
 });
 
+builder.Services.AddScoped<IRecipeService, RecipeService>();
+builder.Services.AddScoped<IRecipeRepository, RecipeRepository>(provider =>
+{
+    var configuration = provider.GetRequiredService<IConfiguration>();
+    var connectionString = configuration.GetConnectionString("DefaultConnection");
+    return new RecipeRepository(connectionString);
+});
+
+builder.Services.AddScoped<IIngredientService, IngredientService>();
+builder.Services.AddScoped<IIngredientRepository, IngredientRepository>(provider =>
+{
+    var configuration = provider.GetRequiredService<IConfiguration>();
+    var connectionString = configuration.GetConnectionString("DefaultConnection");
+    return new IngredientRepository(connectionString);
+});
+
+builder.Services.AddScoped<IFollowerService, FollowerService>();
+builder.Services.AddScoped<IFollowerRepository, FollowerRepository>(provider =>
+{
+    var configuration = provider.GetRequiredService<IConfiguration>();
+    var connectionString = configuration.GetConnectionString("DefaultConnection");
+    return new FollowerRepository(connectionString);
+});
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

@@ -3,7 +3,7 @@ using SocialRecipes.DTO.General;
 using System.ComponentModel;
 namespace SocialRecipes.Domain.IRepositories
 {
-    public interface IRecipeRepositoy
+    public interface IRecipeRepository
     {
         public void AddRecipe(AddRecipeDto recipe);
         public RecipeDto GetRecipeById(int id);

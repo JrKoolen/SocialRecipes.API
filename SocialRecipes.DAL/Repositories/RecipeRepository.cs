@@ -5,7 +5,7 @@ using SocialRecipes.DTO.General;
 
 namespace SocialRecipes.DAL.Repositories
 {
-    public class RecipeRepository : IRecipeRepositoy
+    public class RecipeRepository : IRecipeRepository
     {
         private readonly string _connectionString;
 
