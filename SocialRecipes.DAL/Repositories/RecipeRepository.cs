@@ -20,18 +20,69 @@ namespace SocialRecipes.DAL.Repositories
             {
                 connection.Open();
 
-                string query = @"INSERT INTO recipe (Title, Body, Status) VALUES (@Title, @Body, @Status)";
-
-                using (var command = new MySqlCommand(query, connection))
+                using (var transaction = connection.BeginTransaction())
                 {
-                    // DONT FORGET TO WRITE THE INGRIEDENTS AND ASSIGN THEM IN THE SERVICE TO THE OTHER REPOSITORY
-                    command.Parameters.AddWithValue("@Title", recipe.Title);
-                    command.Parameters.AddWithValue("@Body", recipe.Body);
-                    command.Parameters.AddWithValue("@Status", recipe.Status);
-                    command.ExecuteNonQuery();
+                    try
+                    {
+                        string userCheckQuery = "SELECT COUNT(*) FROM users WHERE id = @UserId";
+                        using (var userCheckCommand = new MySqlCommand(userCheckQuery, connection, transaction))
+                        {
+                            userCheckCommand.Parameters.AddWithValue("@UserId", recipe.UserId);
+                            var userExists = Convert.ToInt32(userCheckCommand.ExecuteScalar()) > 0;
+
+                            if (!userExists)
+                            {
+                                return;
+                            }
+                        }
+
+                        string recipeQuery = @"
+                    INSERT INTO recipe (title, body, status, user_id, created_at) 
+                    VALUES (@Title, @Body, @Status, @User_Id, NOW())";
+
+                        int recipeId;
+                        using (var recipeCommand = new MySqlCommand(recipeQuery, connection, transaction))
+                        {
+                            recipeCommand.Parameters.AddWithValue("@Title", recipe.Title);
+                            recipeCommand.Parameters.AddWithValue("@Body", recipe.Body);
+                            recipeCommand.Parameters.AddWithValue("@Status", recipe.Status);
+                            recipeCommand.Parameters.AddWithValue("@User_Id", recipe.UserId);
+                            recipeCommand.ExecuteNonQuery();
+                            recipeId = (int)recipeCommand.LastInsertedId; 
+                        }
+
+                        if (recipe.Recipes != null && recipe.Recipes.Count > 0)
+                        {
+                            string ingredientQuery = @"
+                        INSERT INTO ingredients (name, amount, metric, Recipe_id) 
+                        VALUES (@Name, @Amount, @Metric, @RecipeId)";
+
+                            foreach (var ingredient in recipe.Recipes)
+                            {
+                                using (var ingredientCommand = new MySqlCommand(ingredientQuery, connection, transaction))
+                                {
+                                    ingredientCommand.Parameters.AddWithValue("@Name", ingredient.Name);
+                                    ingredientCommand.Parameters.AddWithValue("@Amount", ingredient.Amount);
+                                    ingredientCommand.Parameters.AddWithValue("@Metric", ingredient.Metric);
+                                    ingredientCommand.Parameters.AddWithValue("@RecipeId", recipeId);
+
+                                    ingredientCommand.ExecuteNonQuery();
+                                }
+                            }
+                        }
+
+                        transaction.Commit();
+                    }
+                    catch
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
                 }
             }
         }
+
+
 
         public RecipeDto[] GetAllRecipes()
         {
@@ -143,11 +194,11 @@ namespace SocialRecipes.DAL.Repositories
             using (var connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();
-                string query = @"SELECT Id, Title, Body, User_Id, Status, Created_at FROM Recipe WHERE UserId = @UserId";
+                string query = @"SELECT Id, Title, Body, User_Id, Status, Created_at FROM Recipe WHERE User_Id = @User_Id";
 
                 using (var command = new MySqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@UserId", userId);
+                    command.Parameters.AddWithValue("@User_Id", userId);
                     using (var reader = command.ExecuteReader())
                     {
                         while (reader.Read())
@@ -222,14 +273,14 @@ namespace SocialRecipes.DAL.Repositories
             using (var connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();
-                string query = @"UPDATE Recipe SET Title = @Title, Body = @Body, Use_rId = @UserId, Status = @Status, Created_at = @Created_at WHERE Id = @Id";
+                string query = @"UPDATE Recipe SET Title = @Title, Body = @Body, User_Id = @User_Id, Status = @Status, Created_at = @Created_at WHERE Id = @Id";
 
                 using (var command = new MySqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Id", recipe.Id);
                     command.Parameters.AddWithValue("@Title", recipe.Title);
                     command.Parameters.AddWithValue("@Body", recipe.Body);
-                    command.Parameters.AddWithValue("@UserId", recipe.UserId);
+                    command.Parameters.AddWithValue("@User_Id", recipe.UserId);
                     command.Parameters.AddWithValue("@Status", recipe.Status);
                     command.Parameters.AddWithValue("@Created_at", recipe.DateTime);
                     command.ExecuteNonQuery();

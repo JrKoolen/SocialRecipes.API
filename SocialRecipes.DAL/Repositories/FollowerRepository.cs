@@ -14,76 +14,94 @@ namespace SocialRecipes.DAL.Repositories
             _connectionString = connectionString;
         }
 
-        public void Follow(int userId, int followerId)
+        public UserDto[] GetFollowers(int userId)
         {
-            using (var connection = new MySqlConnection(_connectionString))
-            {
-                connection.Open();
-                string query = @"INSERT INTO Followers (FollowerId, FollowingId, FollowingDate) VALUES (@FollowerId, @FollowingId, @FollowingDate)";
-                using (var command = new MySqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@FollowerId", followerId);
-                    command.Parameters.AddWithValue("@FollowingId", userId);
-                    command.Parameters.AddWithValue("@FollowingDate", DateTime.Now);
-                    command.ExecuteNonQuery();
-                }
-            }
-        }
-
-        public FollowerDto GetFollowers(int userId)
-        {
-            var followerDto = new FollowerDto();
-            var followerIds = new List<int>();
+            var followers = new List<UserDto>();
 
             using (var connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();
                 string query = @"
-        SELECT u.Id, u.Username, u.Email
-        FROM Follows f
-        JOIN Users u ON f.Followed_User_Id = u.Id
-        WHERE f.FollowingId = @FollowingId";
+                    SELECT u.Id, u.Username, u.Email
+                    FROM Follows f
+                    JOIN Users u ON f.Following_User_Id = u.Id
+                    WHERE f.Followed_User_Id = @FollowedUserId";
+
                 using (var command = new MySqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@FollowingId", userId);
+                    command.Parameters.AddWithValue("@FollowedUserId", userId);
 
                     using (var reader = command.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            followerIds.Add(reader.GetInt32("FollowerId"));
+                            var userDto = new UserDto
+                            {
+                                Id = reader.GetInt32("Id"),
+                                Username = reader.GetString("Username"),
+                                Email = reader.GetString("Email")
+                            };
+                            followers.Add(userDto);
                         }
                     }
                 }
             }
-            followerDto.followed_user_id= followerIds.ToArray();
-            return followerDto;
+
+            return followers.ToArray();
         }
 
-        public FollowerDto GetFollowing(int userId)
+        public UserDto[] GetFollowing(int userId)
         {
-            var followerDto = new FollowerDto();
-            var followingIds = new List<int>();
+            var following = new List<UserDto>();
+
             using (var connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();
+                string query = @"
+                    SELECT u.Id, u.Username, u.Email
+                    FROM Follows f
+                    JOIN Users u ON f.Followed_User_Id = u.Id
+                    WHERE f.Following_User_Id = @FollowingUserId";
 
-                string query = @"SELECT FollowingId FROM Follows WHERE FollowerId = @FollowerId";
                 using (var command = new MySqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@FollowerId", userId);
+                    command.Parameters.AddWithValue("@FollowingUserId", userId);
+
                     using (var reader = command.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            followingIds.Add(reader.GetInt32("FollowingId"));
+                            var userDto = new UserDto
+                            {
+                                Id = reader.GetInt32("Id"),
+                                Username = reader.GetString("Username"),
+                                Email = reader.GetString("Email")
+                            };
+                            following.Add(userDto);
                         }
                     }
                 }
             }
 
-            followerDto.following_user_id = followingIds.ToArray();
-            return followerDto;
+            return following.ToArray();
+        }
+
+        public void Follow(int userId, int followerId)
+        {
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                connection.Open();
+                string query = @"
+                    INSERT INTO Follows (Following_User_Id, Followed_User_Id, Created_At)
+                    VALUES (@FollowerId, @UserId, NOW())";
+
+                using (var command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@FollowerId", followerId);
+                    command.Parameters.AddWithValue("@UserId", userId);
+                    command.ExecuteNonQuery();
+                }
+            }
         }
 
         public void RemoveFollow(int userId, int followerId)
@@ -91,12 +109,14 @@ namespace SocialRecipes.DAL.Repositories
             using (var connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();
-                string query = @"DELETE FROM Follows WHERE FollowerId = @FollowerId AND FollowingId = @FollowingId";
+                string query = @"
+                    DELETE FROM Follows
+                    WHERE Following_User_Id = @FollowerId AND Followed_User_Id = @UserId";
 
                 using (var command = new MySqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@FollowerId", followerId);
-                    command.Parameters.AddWithValue("@FollowingId", userId);
+                    command.Parameters.AddWithValue("@UserId", userId);
                     command.ExecuteNonQuery();
                 }
             }

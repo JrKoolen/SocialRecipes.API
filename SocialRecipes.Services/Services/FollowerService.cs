@@ -27,12 +27,12 @@ namespace SocialRecipes.Services.Services
             }
         }
 
-        public FollowerDto GetFollowers(int userId)
+        public UserDto[] GetFollowers(int userId)
         {
             return _followerRepository.GetFollowers(userId);
         }
 
-        public FollowerDto GetFollowing(int userId)
+        public UserDto[] GetFollowing(int userId)
         {
             return _followerRepository.GetFollowing(userId);
         }

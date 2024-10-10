@@ -13,25 +13,28 @@ namespace SocialRecipes.DAL.Repositories
         {
             _connectionString = connectionString;
         }
-        public void AddIngredient(AddIngredientDto ingredient)
-        {
-            using (var connection = new MySqlConnection(_connectionString))
-            {
-                connection.Open();
+        //public void AddIngredient(AddIngredientDto ingredient)
+        //{
+        //    using (var connection = new MySqlConnection(_connectionString))
+        //    {
+        //        connection.Open();
 
-                string query = @"INSERT INTO Ingredients (Name, RecipeId, Amount, Metric) VALUES (@Name, @RecipeId, @Amount, @Metric)";
+        //        string query = @"
+        //    INSERT INTO ingredients (Name, Recipe_id, Amount, Metric) 
+        //    VALUES (@Name, @RecipeId, @Amount, @Metric)";
 
-                using (var command = new MySqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@Name", ingredient.Name);
-                    command.Parameters.AddWithValue("@RecipeId", ingredient.RecipeId);
-                    command.Parameters.AddWithValue("@Amount", ingredient.Amount);
-                    command.Parameters.AddWithValue("@Metric", ingredient.Metric);
+        //        using (var command = new MySqlCommand(query, connection))
+        //        {
+        //            command.Parameters.AddWithValue("@Name", ingredient.Name);
+        //            command.Parameters.AddWithValue("@RecipeId", ingredient.RecipeId); 
+        //            command.Parameters.AddWithValue("@Amount", ingredient.Amount);
+        //            command.Parameters.AddWithValue("@Metric", ingredient.Metric);
 
-                    command.ExecuteNonQuery();
-                }
-            }
-        }
+        //            command.ExecuteNonQuery();
+        //        }
+        //    }
+        //}
+
 
         public IngredientDto[] GetIngredientsFromRecipeId(int recipeId)
         {
@@ -39,21 +42,27 @@ namespace SocialRecipes.DAL.Repositories
             using (var connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();
-                string query = @"SELECT Id, Name, RecipeId, Amount, Metric FROM Ingredients WHERE RecipeId = @RecipeId";
+
+                string query = @"
+            SELECT id, name, Recipe_id, amount, metric 
+            FROM ingredients 
+            WHERE Recipe_id = @RecipeId";
+
                 using (var command = new MySqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@RecipeId", recipeId);
+
                     using (var reader = command.ExecuteReader())
                     {
                         while (reader.Read())
                         {
                             var ingredient = new IngredientDto
                             {
-                                Id = reader.GetInt32("Id"),
-                                Name = reader.GetString("Name"),
-                                RecipeId = reader.GetString("RecipeId"),
-                                Amount = reader.GetInt32("Amount"),
-                                Metric = reader.GetInt32("Metric")
+                                Id = reader.GetInt32("id"),
+                                Name = reader.GetString("name"),
+                                RecipeId = reader.GetInt32("Recipe_id"),
+                                Amount = reader.GetInt32("amount"),
+                                Metric = reader.GetInt32("metric")
                             };
                             ingredients.Add(ingredient);
                         }
@@ -63,12 +72,13 @@ namespace SocialRecipes.DAL.Repositories
             return ingredients.ToArray();
         }
 
+
         public void RemoveIngredient(int ingredientId)
         {
             using (var connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();
-                string query = @"DELETE FROM Ingredients WHERE Id = @Id";
+                string query = @"DELETE FROM ingredients WHERE id = @Id";
                 using (var command = new MySqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Id", ingredientId);
@@ -77,18 +87,22 @@ namespace SocialRecipes.DAL.Repositories
             }
         }
 
+
         public void UpdateIngredient(IngredientDto ingredient)
         {
             using (var connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();
-                string query = @"UPDATE Ingredients SET Name = @Name, RecipeId = @RecipeId, Amount = @Amount, Metric = @Metric WHERE Id = @Id";
+                string query = @"
+            UPDATE ingredients 
+            SET Name = @Name, Recipe_id = @RecipeId, Amount = @Amount, Metric = @Metric 
+            WHERE id = @Id";
 
                 using (var command = new MySqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Id", ingredient.Id);
                     command.Parameters.AddWithValue("@Name", ingredient.Name);
-                    command.Parameters.AddWithValue("@RecipeId", ingredient.RecipeId);
+                    command.Parameters.AddWithValue("@RecipeId", ingredient.RecipeId);  
                     command.Parameters.AddWithValue("@Amount", ingredient.Amount);
                     command.Parameters.AddWithValue("@Metric", ingredient.Metric);
 
@@ -96,5 +110,6 @@ namespace SocialRecipes.DAL.Repositories
                 }
             }
         }
+
     }
 }

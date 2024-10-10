@@ -17,19 +17,19 @@ namespace SocialRecipes.API.Controllers
             _logger = logger;
             _ingredientService = ingredientService;
         }
-        [HttpPost("AddIngredient")]
-        public IActionResult AddIngredient([FromBody] AddIngredientDto ingredient)
-        {
-            if (ingredient == null)
-            {
-                _logger.LogError("Ingredient object sent from client is null.");
-                return BadRequest("Ingredient is null.");
-            }
+        //[HttpPost("AddIngredient")]
+        //public IActionResult AddIngredient([FromBody] AddIngredientDto ingredient)
+        //{
+        //    if (ingredient == null)
+        //    {
+        //        _logger.LogError("Ingredient object sent from client is null.");
+        //        return BadRequest("Ingredient is null.");
+        //    }
 
-            _ingredientService.AddIngredient(ingredient);
-            _logger.LogInformation($"Creating a new ingredient: {ingredient.Name}");
-            return Ok(new { message = "Ingredient added successfully", ingredient });
-        }
+        //    _ingredientService.AddIngredient(ingredient);
+        //    _logger.LogInformation($"Creating a new ingredient: {ingredient.Name}");
+        //    return Ok(new { message = "Ingredient added successfully", ingredient });
+        //}
 
         [HttpPut("UpdateIngredient")]
         public IActionResult UpdateIngredient([FromBody] IngredientDto ingredient)

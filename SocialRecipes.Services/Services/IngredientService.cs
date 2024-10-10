@@ -14,10 +14,6 @@ namespace SocialRecipes.Services.Services
             _ingredientRepository = ingredientRepository;
         }
 
-        public void AddIngredient(AddIngredientDto ingredient)
-        {
-            _ingredientRepository.AddIngredient(ingredient);
-        }
 
         public IngredientDto[] GetIngredientsFromRecipeId(int recipeId)
         {
