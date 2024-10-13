@@ -91,7 +91,7 @@ namespace SocialRecipes.DAL.Repositories
             using (var connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();
-                string query = @"SELECT Id, Title, Body, User_Id, Status, Created_at FROM Recipe";
+                string query = @"SELECT Id, Title, Body, User_Id, Status, Image, Created_at FROM Recipe";
 
                 using (var command = new MySqlCommand(query, connection))
                 {
@@ -106,7 +106,9 @@ namespace SocialRecipes.DAL.Repositories
                                 Body = reader.IsDBNull(reader.GetOrdinal("Body")) ? null : reader.GetString("Body"),
                                 UserId = reader.IsDBNull(reader.GetOrdinal("User_id")) ? 0 : reader.GetInt32("User_id"), 
                                 Status = reader.IsDBNull(reader.GetOrdinal("Status")) ? null : reader.GetString("Status"),
-                                DateTime = reader.IsDBNull(reader.GetOrdinal("Created_at")) ? DateTime.MinValue : reader.GetDateTime("Created_at")
+                                DateTime = reader.IsDBNull(reader.GetOrdinal("Created_at")) ? DateTime.MinValue : reader.GetDateTime("Created_at"),
+                                Image = reader.IsDBNull(reader.GetOrdinal("Image")) ? null : (byte[])reader["Image"]
+
                             };
                             recipes.Add(recipe);
                         }

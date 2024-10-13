@@ -8,5 +8,6 @@
         public int UserId { get; set; }
         public string Status { get; set; }
         public DateTime DateTime { get; set; }
+        public byte[] Image { get; set; }
     }
 }
