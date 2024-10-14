@@ -60,9 +60,23 @@ namespace SocialRecipes.API.Controllers
         [HttpGet("GetAllRecipes")]
         public IActionResult GetAllRecipes()
         {
-            _logger.LogInformation($"Get all recipes");
+            _logger.LogInformation("Get all recipes");
             var recipes = _recipeService.GetAllRecipes();
-            return Ok(new { message = "200", recipes });
+
+            var response = recipes.Select(recipe => new
+            {
+                recipe.Id,
+                recipe.Title,
+                recipe.Likes,
+                recipe.Description,
+                recipe.Body,
+                recipe.UserId,
+                recipe.Status,
+                recipe.DateTime,
+                ImageBase64 = recipe.Image != null ? Convert.ToBase64String(recipe.Image) : null
+            });
+
+            return Ok(new { message = "200", recipes = response });
         }
 
         [HttpGet("GetAllRecipesFromStatus/{status}")]
