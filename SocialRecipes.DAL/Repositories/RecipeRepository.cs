@@ -230,7 +230,7 @@ namespace SocialRecipes.DAL.Repositories
             using (var connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();
-                string query = @"SELECT Id, Title, Body, Status, User_id, Created_at FROM Recipe WHERE Id = @Id";
+                string query = @"SELECT Id, Title, Description, Body, User_Id, Status, Image, Likes, Created_at FROM Recipe WHERE Id = @Id";
 
                 using (var command = new MySqlCommand(query, connection))
                 {
@@ -243,10 +243,13 @@ namespace SocialRecipes.DAL.Repositories
                             {
                                 Id = reader.GetInt32("Id"),
                                 Title = reader.IsDBNull(reader.GetOrdinal("Title")) ? null : reader.GetString("Title"),
+                                Description = reader.IsDBNull(reader.GetOrdinal("Description")) ? null : reader.GetString("Description"),
+                                Likes = reader.IsDBNull(reader.GetOrdinal("Likes")) ? 0 : reader.GetInt32("Likes"),
                                 Body = reader.IsDBNull(reader.GetOrdinal("Body")) ? null : reader.GetString("Body"),
-                                UserId = reader.IsDBNull(reader.GetOrdinal("User_id")) ? 0 : reader.GetInt32("User_id"), 
+                                UserId = reader.IsDBNull(reader.GetOrdinal("User_id")) ? 0 : reader.GetInt32("User_id"),
                                 Status = reader.IsDBNull(reader.GetOrdinal("Status")) ? null : reader.GetString("Status"),
-                                DateTime = reader.IsDBNull(reader.GetOrdinal("Created_at")) ? DateTime.MinValue : reader.GetDateTime("Created_at")
+                                DateTime = reader.IsDBNull(reader.GetOrdinal("Created_at")) ? DateTime.MinValue : reader.GetDateTime("Created_at"),
+                                Image = reader.IsDBNull(reader.GetOrdinal("Image")) ? null : (byte[])reader["Image"]
                             };
                         }
                     }

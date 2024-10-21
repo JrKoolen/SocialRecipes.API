@@ -46,7 +46,19 @@ namespace SocialRecipes.API.Controllers
         {
             _logger.LogInformation($"Get recipe by id {id}");
             var recipe = _recipeService.GetRecipeById(id);
-            return Ok(new { message = "200", recipe });
+            var response = new
+            {
+                recipe.Id,
+                recipe.Title,
+                recipe.Likes,
+                recipe.Description,
+                recipe.Body,
+                recipe.UserId,
+                recipe.Status,
+                recipe.DateTime,
+                ImageBase64 = recipe.Image != null ? Convert.ToBase64String(recipe.Image) : null
+            };
+            return Ok(new { message = "200", recipe = response });
         }
 
         [HttpGet("GetAllRecipesFromUser/{userId}")]
