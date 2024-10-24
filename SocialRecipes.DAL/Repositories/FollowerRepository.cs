@@ -38,7 +38,7 @@ namespace SocialRecipes.DAL.Repositories
                             var userDto = new UserDto
                             {
                                 Id = reader.GetInt32("Id"),
-                                Username = reader.GetString("Username"),
+                                Name = reader.GetString("Username"),
                                 Email = reader.GetString("Email")
                             };
                             followers.Add(userDto);
@@ -74,7 +74,7 @@ namespace SocialRecipes.DAL.Repositories
                             var userDto = new UserDto
                             {
                                 Id = reader.GetInt32("Id"),
-                                Username = reader.GetString("Username"),
+                                Name = reader.GetString("Username"),
                                 Email = reader.GetString("Email")
                             };
                             following.Add(userDto);

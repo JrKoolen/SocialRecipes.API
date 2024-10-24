@@ -63,7 +63,7 @@ namespace SocialRecipes.DAL.Repositories
                         {
                             return new UserDto
                             {
-                                Username = reader.GetString("Username"),
+                                Name = reader.GetString("Username"),
                                 Email = reader.GetString("Email"),
                             };
                         }
