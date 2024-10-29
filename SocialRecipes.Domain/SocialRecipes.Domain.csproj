@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SocialRecipes.DTO\SocialRecipes.DTO.csproj" />
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
   </ItemGroup>
 
 </Project>
