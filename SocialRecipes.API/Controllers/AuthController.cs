@@ -10,7 +10,7 @@ using Microsoft.Extensions.Options;
 using SocialRecipes.Infrastructure.Settings; 
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("[controller]")]
 public class AuthController : ControllerBase
 {
     private readonly ILogger<AuthController> _logger;
