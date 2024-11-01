@@ -1,6 +1,6 @@
 ﻿using SocialRecipes.DTO.IN;
 
-namespace SocialRecipes.Domain.IServices
+namespace SocialRecipes.API.IServices
 {
     public interface IAuthService
     {

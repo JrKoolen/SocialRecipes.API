@@ -1,4 +1,4 @@
-﻿using SocialRecipes.Domain.IRepositories;
+﻿using SocialRecipes.Services.IRepositories;
 using SocialRecipes.DTO.IN;
 using MySql.Data.MySqlClient;
 using SocialRecipes.DTO.General;

@@ -20,8 +20,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialRecipes.Infrastructur
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialRecipes.Services", "SocialRecipes.Services\SocialRecipes.Services.csproj", "{92A3D03A-89D0-44CE-979C-6777FF1D8B58}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialRecipes.DTO", "SocialRecipes.DTO\SocialRecipes.DTO.csproj", "{3DB8A2EE-1A36-42C6-B366-F484294CAE01}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,10 +50,6 @@ Global
 		{92A3D03A-89D0-44CE-979C-6777FF1D8B58}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{92A3D03A-89D0-44CE-979C-6777FF1D8B58}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{92A3D03A-89D0-44CE-979C-6777FF1D8B58}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3DB8A2EE-1A36-42C6-B366-F484294CAE01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3DB8A2EE-1A36-42C6-B366-F484294CAE01}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3DB8A2EE-1A36-42C6-B366-F484294CAE01}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3DB8A2EE-1A36-42C6-B366-F484294CAE01}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

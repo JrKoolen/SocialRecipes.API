@@ -20,7 +20,6 @@
   <ItemGroup>
     <ProjectReference Include="..\SocialRecipes.DAL\SocialRecipes.DAL.csproj" />
     <ProjectReference Include="..\SocialRecipes.Domain\SocialRecipes.Domain.csproj" />
-    <ProjectReference Include="..\SocialRecipes.DTO\SocialRecipes.DTO.csproj" />
     <ProjectReference Include="..\SocialRecipes.Infrastructure\SocialRecipes.Infrastructure.csproj" />
     <ProjectReference Include="..\SocialRecipes.Services\SocialRecipes.Services.csproj" />
   </ItemGroup>

@@ -1,6 +1,6 @@
 ﻿using SocialRecipes.DTO.General;
 
-namespace SocialRecipes.Domain.IRepositories
+namespace SocialRecipes.Services.IRepositories
 {
     public interface IFollowerRepository
     {

@@ -1,6 +1,7 @@
 ﻿using SocialRecipes.DTO.IN;
 using SocialRecipes.DTO.General;
-namespace SocialRecipes.Domain.IServices
+
+namespace SocialRecipes.API.IServices
 {
     public interface IRecipeService
     {

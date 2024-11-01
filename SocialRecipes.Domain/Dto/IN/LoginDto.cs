@@ -1,4 +1,4 @@
-﻿namespace SocialRecipes.DTO.IN
+﻿namespace SocialRecipes.Domain.Dto.IN
 {
     public class LoginDto
     {

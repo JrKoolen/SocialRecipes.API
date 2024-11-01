@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SocialRecipes.Domain\SocialRecipes.Domain.csproj" />
+    <ProjectReference Include="..\SocialRecipes.Services\SocialRecipes.Services.csproj" />
   </ItemGroup>
 
 </Project>

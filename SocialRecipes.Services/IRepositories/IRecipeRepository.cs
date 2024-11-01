@@ -1,7 +1,7 @@
 ﻿using SocialRecipes.DTO.IN;
 using SocialRecipes.DTO.General;
-using System.ComponentModel;
-namespace SocialRecipes.Domain.IRepositories
+
+namespace SocialRecipes.Services.IRepositories
 {
     public interface IRecipeRepository
     {

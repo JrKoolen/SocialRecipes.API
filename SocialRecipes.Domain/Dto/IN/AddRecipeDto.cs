@@ -1,6 +1,6 @@
-﻿using SocialRecipes.DTO.General;
+﻿using SocialRecipes.Domain.Dto.General;
 
-namespace SocialRecipes.DTO.IN
+namespace SocialRecipes.Domain.Dto.IN
 {
     public class AddRecipeDto
     {

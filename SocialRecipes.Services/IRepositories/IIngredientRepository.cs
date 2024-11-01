@@ -1,8 +1,8 @@
 ﻿using SocialRecipes.DTO.General;
-using SocialRecipes.DTO.IN;
-namespace SocialRecipes.Domain.IServices
+
+namespace SocialRecipes.Services.IRepositories
 {
-    public interface IIngredientService
+    public interface IIngredientRepository
     {
         public void UpdateIngredient(IngredientDto ingredient);
         public IngredientDto[] GetIngredientsFromRecipeId(int recipeId);

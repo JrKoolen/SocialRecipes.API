@@ -1,4 +1,4 @@
-﻿namespace SocialRecipes.DTO.General
+﻿namespace SocialRecipes.Domain.Dto.General
 {
     public class IngredientDto
     {
