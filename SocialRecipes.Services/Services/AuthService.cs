@@ -1,6 +1,6 @@
-﻿using SocialRecipes.Domain.IServices;
-using SocialRecipes.Domain.IRepositories;
-using SocialRecipes.DTO.IN;
+﻿using SocialRecipes.Services.IRepositories;
+using SocialRecipes.Domain.Dto.IN;
+using SocialRecipes.Domain.IServices;
 using System.Security.Claims;
 using System.Text;
 

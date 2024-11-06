@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using SocialRecipes.Domain.IServices;
+﻿using SocialRecipes.Domain.IServices;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace SocialRecipes.API.Controllers

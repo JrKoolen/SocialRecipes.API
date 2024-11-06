@@ -1,7 +1,7 @@
-﻿using SocialRecipes.Domain;
-using SocialRecipes.DTO.IN;
+﻿using SocialRecipes.Domain.Dto.IN;
+using SocialRecipes.Domain.Dto.General;
 
-namespace SocialRecipes.API.IServices
+namespace SocialRecipes.Domain.IServices
 {
     public interface IUserService
     {

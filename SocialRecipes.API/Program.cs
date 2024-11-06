@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using SocialRecipes.DAL.Repositories;
-using SocialRecipes.Domain.IRepositories;
+using SocialRecipes.Services.IRepositories;
 using SocialRecipes.Domain.IServices;
 using SocialRecipes.Infrastructure.Settings;
 using SocialRecipes.Services.Services;
@@ -29,14 +29,6 @@ builder.Services.AddScoped<IRecipeRepository, RecipeRepository>(provider =>
     var configuration = provider.GetRequiredService<IConfiguration>();
     var connectionString = configuration.GetConnectionString("DefaultConnection");
     return new RecipeRepository(connectionString);
-});
-
-builder.Services.AddScoped<IIngredientService, IngredientService>();
-builder.Services.AddScoped<IIngredientRepository, IngredientRepository>(provider =>
-{
-    var configuration = provider.GetRequiredService<IConfiguration>();
-    var connectionString = configuration.GetConnectionString("DefaultConnection");
-    return new IngredientRepository(connectionString);
 });
 
 builder.Services.AddScoped<IFollowerService, FollowerService>();

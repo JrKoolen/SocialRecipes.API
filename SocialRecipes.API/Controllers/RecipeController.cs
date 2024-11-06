@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SocialRecipes.Domain.IServices;
-using SocialRecipes.DTO.General;
-using SocialRecipes.DTO.IN;
+using SocialRecipes.Domain.Dto.General;
+using SocialRecipes.Domain.Dto.IN;
 
 namespace SocialRecipes.API.Controllers
 {

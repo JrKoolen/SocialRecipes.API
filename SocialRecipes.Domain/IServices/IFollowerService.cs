@@ -1,6 +1,6 @@
-﻿using SocialRecipes.DTO;
-using SocialRecipes.DTO.General;
-namespace SocialRecipes.API.IServices
+﻿using SocialRecipes.Domain.Dto.IN;
+using SocialRecipes.Domain.Dto.General;
+namespace SocialRecipes.Domain.IServices
 {
     public interface IFollowerService 
     {

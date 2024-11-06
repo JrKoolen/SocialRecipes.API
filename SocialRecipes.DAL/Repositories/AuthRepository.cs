@@ -1,7 +1,8 @@
 ﻿using SocialRecipes.Services.IRepositories;
-using SocialRecipes.DTO.IN;
+using SocialRecipes.Domain.Dto.IN;
+using SocialRecipes.Services.IRepositories;
 using MySql.Data.MySqlClient;
-using SocialRecipes.DTO.General;
+using SocialRecipes.Domain.Dto.General;
 using System.Security.Cryptography;
 using System.Text;
 using BCrypt.Net;

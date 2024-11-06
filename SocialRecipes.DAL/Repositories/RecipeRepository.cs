@@ -1,7 +1,7 @@
 ﻿using SocialRecipes.Services.IRepositories;
-using SocialRecipes.DTO.IN;
+using SocialRecipes.Domain.Dto.IN;
 using MySql.Data.MySqlClient;
-using SocialRecipes.DTO.General;
+using SocialRecipes.Domain.Dto.General;
 
 namespace SocialRecipes.DAL.Repositories
 {
@@ -50,28 +50,7 @@ namespace SocialRecipes.DAL.Repositories
                             recipeCommand.ExecuteNonQuery();
                             recipeId = (int)recipeCommand.LastInsertedId; 
                         }
-
-                        if (recipe.Recipes != null && recipe.Recipes.Count > 0)
-                        {
-                            string ingredientQuery = @"
-                        INSERT INTO ingredients (name, amount, metric, Recipe_id) 
-                        VALUES (@Name, @Amount, @Metric, @RecipeId)";
-
-                            foreach (var ingredient in recipe.Recipes)
-                            {
-                                using (var ingredientCommand = new MySqlCommand(ingredientQuery, connection, transaction))
-                                {
-                                    ingredientCommand.Parameters.AddWithValue("@Name", ingredient.Name);
-                                    ingredientCommand.Parameters.AddWithValue("@Amount", ingredient.Amount);
-                                    ingredientCommand.Parameters.AddWithValue("@Metric", ingredient.Metric);
-                                    ingredientCommand.Parameters.AddWithValue("@RecipeId", recipeId);
-
-                                    ingredientCommand.ExecuteNonQuery();
-                                }
-                            }
-                        }
-
-                        transaction.Commit();
+                       
                     }
                     catch
                     {

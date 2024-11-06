@@ -1,7 +1,7 @@
 ﻿using SocialRecipes.Services.IRepositories;
-using SocialRecipes.DTO.IN;
+using SocialRecipes.Domain.Dto.IN;
 using MySql.Data.MySqlClient;
-using SocialRecipes.DTO.General;
+using SocialRecipes.Domain.Dto.General;
 
 namespace SocialRecipes.DAL.Repositories
 {

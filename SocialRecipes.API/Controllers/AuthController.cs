@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using SocialRecipes.Infrastructure.Settings;
+using SocialRecipes.Domain.Dto.IN;
+using SocialRecipes.Domain.IServices;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using SocialRecipes.DTO.IN;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using SocialRecipes.Infrastructure.Settings; 
 
 [ApiController]
 [Route("[controller]")]

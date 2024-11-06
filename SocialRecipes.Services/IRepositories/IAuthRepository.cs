@@ -1,4 +1,4 @@
-﻿using SocialRecipes.DTO.IN;
+﻿using SocialRecipes.Domain.Dto.IN;
 
 namespace SocialRecipes.Services.IRepositories
 {

@@ -1,4 +1,4 @@
-﻿using SocialRecipes.DTO.General;
+﻿using SocialRecipes.Domain.Dto.General;
 
 namespace SocialRecipes.Services.IRepositories
 {
