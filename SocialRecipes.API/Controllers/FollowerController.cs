@@ -1,6 +1,5 @@
 ﻿using SocialRecipes.Domain.IServices;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace SocialRecipes.API.Controllers
 {
@@ -18,11 +17,11 @@ namespace SocialRecipes.API.Controllers
         }
 
         [HttpPost("Follow/{userId}")]
-        public IActionResult Follow(int userId, int followerId)
+        public async Task<IActionResult> FollowAsync(int userId, int followerId)
         {
             _logger.LogInformation($"User attempting to follow user with ID {userId}");
 
-            var result = _followerService.Follow(userId, followerId);
+            var result = await _followerService.FollowAsync(userId, followerId);
 
             if (!result)
             {
@@ -35,12 +34,12 @@ namespace SocialRecipes.API.Controllers
         }
 
         [HttpGet("GetFollowers/{userId}")]
-        public IActionResult GetFollowers(int userId)
+        public async Task<IActionResult> GetFollowersAsync(int userId)
         {
             _logger.LogInformation($"Retrieving followers for user with ID {userId}");
 
-            var followers = _followerService.GetFollowers(userId);
-            if (followers == null)
+            var followers = await _followerService.GetFollowersAsync(userId);
+            if (followers == null || followers.Length == 0)
             {
                 _logger.LogWarning($"No followers found for user with ID {userId}");
                 return NotFound(new { message = "No followers found", userId });
@@ -50,12 +49,12 @@ namespace SocialRecipes.API.Controllers
         }
 
         [HttpGet("GetFollowing/{userId}")]
-        public IActionResult GetFollowing(int userId)
+        public async Task<IActionResult> GetFollowingAsync(int userId)
         {
             _logger.LogInformation($"Retrieving following users for user with ID {userId}");
 
-            var following = _followerService.GetFollowing(userId);
-            if (following == null)
+            var following = await _followerService.GetFollowingAsync(userId);
+            if (following == null || following.Length == 0)
             {
                 _logger.LogWarning($"User with ID {userId} is not following anyone.");
                 return NotFound(new { message = "No following users found", userId });
@@ -65,11 +64,11 @@ namespace SocialRecipes.API.Controllers
         }
 
         [HttpDelete("Unfollow/{userId}")]
-        public IActionResult RemoveFollow(int userId, int followerId)
+        public async Task<IActionResult> RemoveFollowAsync(int userId, int followerId)
         {
             _logger.LogInformation($"User attempting to unfollow user with ID {userId}");
 
-            var result = _followerService.RemoveFollow(userId, followerId);
+            var result = await _followerService.RemoveFollowAsync(userId, followerId);
 
             if (!result)
             {

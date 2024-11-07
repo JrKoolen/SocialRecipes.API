@@ -14,24 +14,19 @@ namespace SocialRecipes.Services.Services
             _userRepository = userRepository;
         }
 
-        public void CreateUser(AddUserDto userInput)
+        public async Task CreateUserAsync(AddUserDto userInput)
         {
-            _userRepository.AddUser(userInput);
+            await _userRepository.AddUserAsync(userInput);
         }
 
-        public void DeleteUserByID(int id)
+        public async Task DeleteUserByIdAsync(int id)
         {
-            _userRepository.DeleteUserById(id);
+            await _userRepository.DeleteUserByIdAsync(id);
         }
 
-        public void DeleteUserById(int id)
+        public async Task<UserDto> GetUserByIdAsync(int id)
         {
-            _userRepository.DeleteUserById(id);
-        }
-
-        public UserDto GetUserById(int id)
-        {
-            return _userRepository.GetUserById(id);
+            return await _userRepository.GetUserByIdAsync(id);
         }
     }
 }

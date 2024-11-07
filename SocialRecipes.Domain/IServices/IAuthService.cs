@@ -4,7 +4,7 @@ namespace SocialRecipes.Domain.IServices
 {
     public interface IAuthService
     {
-        bool Login(LoginDto loginDto);
-        bool Register(AddUserDto addUserDto);
+        Task<bool> LoginAsync(LoginDto loginDto);
+        Task<bool> RegisterAsync(AddUserDto addUserDto);
     }
 }

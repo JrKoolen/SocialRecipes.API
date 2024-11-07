@@ -1,7 +1,6 @@
 ﻿using SocialRecipes.Services.IRepositories;
 using SocialRecipes.Domain.IServices;
 using SocialRecipes.Domain.Dto.General;
-using SocialRecipes.Domain.Dto.IN;
 
 namespace SocialRecipes.Services.Services
 {
@@ -14,39 +13,39 @@ namespace SocialRecipes.Services.Services
             _followerRepository = followerRepository;
         }
 
-        public bool Follow(int userId, int followerId)
+        public async Task<bool> FollowAsync(int userId, int followerId)
         {
             try
             {
-                _followerRepository.Follow(userId, followerId);
-                return true; 
+                await _followerRepository.FollowAsync(userId, followerId);
+                return true;
             }
             catch
             {
-                return false; 
+                return false;
             }
         }
 
-        public UserDto[] GetFollowers(int userId)
+        public async Task<UserDto[]> GetFollowersAsync(int userId)
         {
-            return _followerRepository.GetFollowers(userId);
+            return await _followerRepository.GetFollowersAsync(userId);
         }
 
-        public UserDto[] GetFollowing(int userId)
+        public async Task<UserDto[]> GetFollowingAsync(int userId)
         {
-            return _followerRepository.GetFollowing(userId);
+            return await _followerRepository.GetFollowingAsync(userId);
         }
 
-        public bool RemoveFollow(int userId, int followerId)
+        public async Task<bool> RemoveFollowAsync(int userId, int followerId)
         {
             try
             {
-                _followerRepository.RemoveFollow(userId, followerId);
-                return true; 
+                await _followerRepository.RemoveFollowAsync(userId, followerId);
+                return true;
             }
             catch
             {
-                return false; 
+                return false;
             }
         }
     }

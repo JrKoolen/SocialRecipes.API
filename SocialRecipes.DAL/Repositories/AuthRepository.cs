@@ -1,59 +1,57 @@
 ﻿using SocialRecipes.Services.IRepositories;
 using SocialRecipes.Domain.Dto.IN;
-using SocialRecipes.Services.IRepositories;
-using MySql.Data.MySqlClient;
-using SocialRecipes.Domain.Dto.General;
-using System.Security.Cryptography;
-using System.Text;
-using BCrypt.Net;
+using Microsoft.EntityFrameworkCore;
+using SocialRecipes.Domain.Models;
 
 namespace SocialRecipes.DAL.Repositories
 {
     public class AuthRepository : IAuthRepository
     {
-        private readonly string _connectionString;
+        private readonly AppDbContext _context;
 
-        public AuthRepository(string connectionString)
+        public AuthRepository(AppDbContext context)
         {
-            _connectionString = connectionString;
+            _context = context;
         }
 
-        public bool Login(LoginDto loginDto)
+        public async Task<bool> LoginAsync(LoginDto loginDto)
         {
-            using var connection = new MySqlConnection(_connectionString);
-            connection.Open();
+            var user = await _context.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Name == loginDto.Username);
 
-            var command = new MySqlCommand("SELECT Password FROM Users WHERE Username = @username", connection);
-            command.Parameters.AddWithValue("@username", loginDto.Username);
-
-            var dbPasswordHash = command.ExecuteScalar()?.ToString();
-            if (dbPasswordHash == null)
+            if (user == null)
             {
                 return false;
             }
 
-            return BCrypt.Net.BCrypt.Verify(loginDto.Password, dbPasswordHash);
+            return BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password);
         }
 
-        public bool Register(AddUserDto addUserDto)
+        public async Task<bool> RegisterAsync(AddUserDto addUserDto)
         {
-            using var connection = new MySqlConnection(_connectionString);
-            connection.Open();
+            var userExists = await _context.Users
+                .AnyAsync(u => u.Name == addUserDto.Name);
 
-            var checkUserCommand = new MySqlCommand("SELECT COUNT(*) FROM Users WHERE Username = @username", connection);
-            checkUserCommand.Parameters.AddWithValue("@username", addUserDto.Name);
-
-            var userExists = Convert.ToInt32(checkUserCommand.ExecuteScalar()) > 0;
             if (userExists)
+            {
                 return false; 
+            }
 
             var hashedPassword = BCrypt.Net.BCrypt.HashPassword(addUserDto.Password);
 
-            var insertCommand = new MySqlCommand("INSERT INTO Users (Username, Password) VALUES (@username, @password)", connection);
-            insertCommand.Parameters.AddWithValue("@username", addUserDto.Name);
-            insertCommand.Parameters.AddWithValue("@password", hashedPassword);
+            var newUser = new User
+            {
+                Name = addUserDto.Name,
+                Email = addUserDto.Email,
+                Password = hashedPassword,
+                CreatedAt = DateTime.Now
+            };
 
-            return insertCommand.ExecuteNonQuery() > 0;
+            await _context.Users.AddAsync(newUser);
+            var result = await _context.SaveChangesAsync();
+
+            return result > 0; 
         }
     }
 }

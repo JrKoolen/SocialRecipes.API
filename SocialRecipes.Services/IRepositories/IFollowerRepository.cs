@@ -4,9 +4,9 @@ namespace SocialRecipes.Services.IRepositories
 {
     public interface IFollowerRepository
     {
-        public UserDto[] GetFollowers(int userid);
-        public UserDto[] GetFollowing(int userid);
-        public void Follow(int userId, int followerId);
-        public void RemoveFollow(int userId, int followerId);
+        Task<UserDto[]> GetFollowersAsync(int userId);
+        Task<UserDto[]> GetFollowingAsync(int userId);
+        Task FollowAsync(int userId, int followerId);
+        Task RemoveFollowAsync(int userId, int followerId);
     }
 }

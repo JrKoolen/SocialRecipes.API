@@ -1,76 +1,59 @@
 ﻿using SocialRecipes.Services.IRepositories;
 using SocialRecipes.Domain.Dto.IN;
-using MySql.Data.MySqlClient;
 using SocialRecipes.Domain.Dto.General;
+using SocialRecipes.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace SocialRecipes.DAL.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private readonly string _connectionString;
+        private readonly AppDbContext _context;
 
-        public UserRepository(string connectionString)
+        public UserRepository(AppDbContext context)
         {
-            _connectionString = connectionString;
+            _context = context;
         }
 
-        public void AddUser(AddUserDto user)
+        public async Task AddUserAsync(AddUserDto user)
         {
-            using (var connection = new MySqlConnection(_connectionString))
+            var newUser = new User
             {
-                connection.Open();
-                string query = @"INSERT INTO Users (Username, Email, Password) VALUES (@Username, @Email, @Password)";
+                Name = user.Name,
+                Email = user.Email,
+                Password = user.Password 
+            };
 
-                using (var command = new MySqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@Username", user.Name);
-                    command.Parameters.AddWithValue("@Email", user.Email);
-                    command.Parameters.AddWithValue("@Password", user.Password);
-                    command.ExecuteNonQuery();
-                }
+            _context.Users.Add(newUser);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteUserByIdAsync(int userId)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user != null)
+            {
+                _context.Users.Remove(user);
+                await _context.SaveChangesAsync();
             }
         }
 
-        public void DeleteUserById(int userId)
+        public async Task<UserDto> GetUserByIdAsync(int id)
         {
-            using (var connection = new MySqlConnection(_connectionString))
+            var user = await _context.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Id == id);
+
+            if (user != null)
             {
-                connection.Open();
-                string query = @"DELETE FROM Users WHERE Id = @UserId";
-
-                using (var command = new MySqlCommand(query, connection))
+                return new UserDto
                 {
-                    // Add the user ID as a parameter
-                    command.Parameters.AddWithValue("@UserId", userId);
-                    command.ExecuteNonQuery();
-                }
+                    Id = user.Id,
+                    Name = user.Name,
+                    Email = user.Email
+                };
             }
-        }
 
-        public UserDto GetUserById(int id)
-        {
-            using (var connection = new MySqlConnection(_connectionString))
-            {
-                connection.Open();
-                string query = @"SELECT Username, Email, Password FROM Users WHERE Id = @Id";
-
-                using (var command = new MySqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@Id", id);
-
-                    using (var reader = command.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            return new UserDto
-                            {
-                                Name = reader.GetString("Username"),
-                                Email = reader.GetString("Email"),
-                            };
-                        }
-                    }
-                }
-            }
             return null;
         }
     }

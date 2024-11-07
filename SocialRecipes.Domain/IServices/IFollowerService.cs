@@ -1,12 +1,12 @@
-﻿using SocialRecipes.Domain.Dto.IN;
-using SocialRecipes.Domain.Dto.General;
+﻿using SocialRecipes.Domain.Dto.General;
+
 namespace SocialRecipes.Domain.IServices
 {
-    public interface IFollowerService 
+    public interface IFollowerService
     {
-        public UserDto[] GetFollowers(int userid);
-        public UserDto[] GetFollowing(int userid);
-        public bool Follow(int userId, int followerId);
-        public bool RemoveFollow(int userId, int followerId);
+        Task<UserDto[]> GetFollowersAsync(int userId);
+        Task<UserDto[]> GetFollowingAsync(int userId);
+        Task<bool> FollowAsync(int userId, int followerId);
+        Task<bool> RemoveFollowAsync(int userId, int followerId);
     }
 }

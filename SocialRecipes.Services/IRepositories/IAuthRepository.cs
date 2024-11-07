@@ -4,7 +4,7 @@ namespace SocialRecipes.Services.IRepositories
 {
     public interface IAuthRepository
     {
-        bool Login(LoginDto loginDto);
-        bool Register(AddUserDto addUserDto);
+        Task<bool> LoginAsync(LoginDto loginDto);
+        Task<bool> RegisterAsync(AddUserDto addUserDto);
     }
 }

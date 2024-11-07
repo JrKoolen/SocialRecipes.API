@@ -2,8 +2,8 @@
 {
     public class FollowerDto
     {
-        public int[]? followed_user_id {  get; set; }
-        public int[]? following_user_id {  get; set; }
+        public int FollowedUserId {  get; set; }
+        public int FollowingUserId {  get; set; }
         public DateTime FollowingDate { get; set; } 
     }
 }

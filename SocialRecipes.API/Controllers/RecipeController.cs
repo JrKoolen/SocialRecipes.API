@@ -17,35 +17,43 @@ namespace SocialRecipes.API.Controllers
             _logger = logger;
             _recipeService = recipeService;
         }
+
         [HttpPost("CreateRecipe")]
-        public IActionResult AddRecipe(AddRecipeDto recipe)
+        public async Task<IActionResult> AddRecipeAsync(AddRecipeDto recipe)
         {
             if (recipe == null)
             {
-                _logger.LogError("recipe object sent from client is null.");
-                return BadRequest("recipe is null.");
+                _logger.LogError("Recipe is null");
+                return BadRequest("Recipe is null.");
             }
-            _recipeService.AddRecipe(recipe);
+            await _recipeService.AddRecipeAsync(recipe);
             _logger.LogInformation($"Creating a new recipe: {recipe.Title}");
             return Ok(new { message = "200", recipe });
         }
+
         [HttpPost("UpdateRecipe")]
-        public IActionResult UpdateRecipe(RecipeDto recipe)
+        public async Task<IActionResult> UpdateRecipeAsync(RecipeDto recipe)
         {
             if (recipe == null)
             {
-                _logger.LogError("recipe object sent from client is null.");
-                return BadRequest("recipe is null.");
+                _logger.LogError("Recipe is null");
+                return BadRequest("Recipe is null.");
             }
             _logger.LogInformation($"{recipe.Id} updated");
-            _recipeService.UpdateRecipe(recipe);
+            await _recipeService.UpdateRecipeAsync(recipe);
             return Ok(new { message = "200", recipe.Id });
         }
+
         [HttpGet("GetRecipeById/{id}")]
-        public IActionResult GetRecipeById(int id)
+        public async Task<IActionResult> GetRecipeByIdAsync(int id)
         {
             _logger.LogInformation($"Get recipe by id {id}");
-            var recipe = _recipeService.GetRecipeById(id);
+            var recipe = await _recipeService.GetRecipeByIdAsync(id);
+            if (recipe == null)
+            {
+                return NotFound(new { message = "Recipe not found", id });
+            }
+
             var response = new
             {
                 recipe.Id,
@@ -62,18 +70,18 @@ namespace SocialRecipes.API.Controllers
         }
 
         [HttpGet("GetAllRecipesFromUser/{userId}")]
-        public IActionResult GetAllRecipesFromUser(int userId)
+        public async Task<IActionResult> GetAllRecipesFromUserAsync(int userId)
         {
-            _logger.LogInformation($"Get all recipes for user {userId}");
-            var recipes = _recipeService.GetAllRecipesFromUser(userId);
+            _logger.LogInformation($"Get all recipes from user {userId}");
+            var recipes = await _recipeService.GetAllRecipesFromUserAsync(userId);
             return Ok(new { message = "200", recipes });
         }
 
         [HttpGet("GetAllRecipes")]
-        public IActionResult GetAllRecipes()
+        public async Task<IActionResult> GetAllRecipesAsync()
         {
             _logger.LogInformation("Get all recipes");
-            var recipes = _recipeService.GetAllRecipes();
+            var recipes = await _recipeService.GetAllRecipesAsync();
 
             var response = recipes.Select(recipe => new
             {
@@ -92,26 +100,27 @@ namespace SocialRecipes.API.Controllers
         }
 
         [HttpGet("GetAllRecipesFromStatus/{status}")]
-        public IActionResult GetAllRecipesFromStatus(string status)
+        public async Task<IActionResult> GetAllRecipesFromStatusAsync(string status)
         {
             _logger.LogInformation($"Get all recipes by status {status}");
-            var recipes = _recipeService.GetAllRecipesFromStatus(status);
+            var recipes = await _recipeService.GetAllRecipesFromStatusAsync(status);
             return Ok(new { message = "200", recipes });
         }
 
         [HttpGet("GetAllRecipesFromStatusAndUser/{status}/{userId}")]
-        public IActionResult GetAllRecipesFromStatusAndUser(string status, int userId)
+        public async Task<IActionResult> GetAllRecipesFromStatusAndUserAsync(string status, int userId)
         {
             _logger.LogInformation($"Get all recipes by status {status} and user {userId}");
-            var recipes = _recipeService.GetAllRecipesFromStatusAndUser(status, userId);
+            var recipes = await _recipeService.GetAllRecipesFromStatusAndUserAsync(status, userId);
             return Ok(new { message = "200", recipes });
         }
+
         [HttpDelete("DeleteRecipeFromId")]
-        public IActionResult RemoveRecipeFromId(int id)
+        public async Task<IActionResult> RemoveRecipeFromIdAsync(int id)
         {
             _logger.LogInformation($"{id} deleted");
-            _recipeService.DeleteRecipeFromId(id);
-            return Ok(new { message = "200", id});
+            await _recipeService.DeleteRecipeByIdAsync(id);
+            return Ok(new { message = "200", id });
         }
     }
 }

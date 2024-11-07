@@ -2,7 +2,6 @@
 using SocialRecipes.Domain.IServices;
 using SocialRecipes.Domain.Dto.General;
 using SocialRecipes.Domain.Dto.IN;
-using Microsoft.Extensions.Logging;
 
 namespace SocialRecipes.API.Controllers
 {
@@ -18,42 +17,42 @@ namespace SocialRecipes.API.Controllers
             _logger = logger;
             _userService = userService;
         }
+        // Moved the  logica of creating a user to authcontroller.
+       //HttpPost("CreateUser")]
+      //public async Task<IActionResult> CreateUser(AddUserDto user)
+      //{
+     //     if (user == null)
+    //      {
+   //           _logger.LogError("User object sent from client is null.");
+   //           return BadRequest("User is null.");
+   //       }
+   //
+   //       if (string.IsNullOrEmpty(user.Name))
+   //       {
+   //           _logger.LogError("User name is null or empty.");
+   //           return BadRequest("User name is required.");
+   //       }
 
-        [HttpPost("CreateUser")]
-        public IActionResult CreateUser(AddUserDto user)
-        {
-            if (user == null)
-            {
-                _logger.LogError("User object sent from client is null.");
-                return BadRequest("User is null.");
-            }
+   //       await _userService.CreateUserAsync(user);
+   //       _logger.LogInformation($"Creating a new user: {user.Name}");
 
-            if (string.IsNullOrEmpty(user.Name))
-            {
-                _logger.LogError("User name is null or empty.");
-                return BadRequest("User name is required.");
-            }
-
-            _userService.CreateUser(user);
-            _logger.LogInformation($"Creating a new user: {user.Name}");
-
-            return Ok(new { message = "200", user });
-        }
+   //       return Ok(new { message = "200", user });
+   //   }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteUser(int id)
+        public async Task<IActionResult> DeleteUser(int id)
         {
-            _logger.LogInformation($"User with ID {id} removed from database");
+            _logger.LogInformation($"Delete user {id} ");
 
-            UserDto user = _userService.GetUserById(id);
+            UserDto user = await _userService.GetUserByIdAsync(id);
             if (user == null)
             {
-                _logger.LogWarning($"User with ID {id} not found.");
+                _logger.LogWarning($"User not found: {id}");
                 return NotFound(new { message = "User not found", id });
             }
 
-            _userService.DeleteUserById(id);
-            _logger.LogInformation($"User with ID {id} successfully deleted.");
+            await _userService.DeleteUserByIdAsync(id);
+            _logger.LogInformation($"User deleted {id} ");
 
             return Ok(new { message = "User deleted", id });
         }

@@ -1,278 +1,155 @@
 ﻿using SocialRecipes.Services.IRepositories;
-using SocialRecipes.Domain.Dto.IN;
-using MySql.Data.MySqlClient;
 using SocialRecipes.Domain.Dto.General;
+using SocialRecipes.Domain.Dto.IN;
+using SocialRecipes.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace SocialRecipes.DAL.Repositories
 {
     public class RecipeRepository : IRecipeRepository
     {
-        private readonly string _connectionString;
+        private readonly AppDbContext _context;
 
-        public RecipeRepository(string connectionString)
+        public RecipeRepository(AppDbContext context)
         {
-            _connectionString = connectionString;
+            _context = context;
         }
 
-        public void AddRecipe(AddRecipeDto recipe)
+        public async Task AddRecipeAsync(AddRecipeDto recipe)
         {
-            using (var connection = new MySqlConnection(_connectionString))
+            var userExists = await _context.Users.AnyAsync(u => u.Id == recipe.UserId);
+            if (!userExists)
             {
-                connection.Open();
+                return;
+            }
 
-                using (var transaction = connection.BeginTransaction())
+            var newRecipe = new Recipe
+            {
+                Title = recipe.Title,
+                Body = recipe.Body,
+                Description = recipe.Description,
+                Status = recipe.Status,
+                UserId = recipe.UserId,
+                DateTime = DateTime.Now
+            };
+
+            await _context.Recipes.AddAsync(newRecipe);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<RecipeDto[]> GetAllRecipesAsync()
+        {
+            return await _context.Recipes
+                .Select(r => new RecipeDto
                 {
-                    try
-                    {
-                        string userCheckQuery = "SELECT COUNT(*) FROM users WHERE id = @UserId";
-                        using (var userCheckCommand = new MySqlCommand(userCheckQuery, connection, transaction))
-                        {
-                            userCheckCommand.Parameters.AddWithValue("@UserId", recipe.UserId);
-                            var userExists = Convert.ToInt32(userCheckCommand.ExecuteScalar()) > 0;
+                    Id = r.Id,
+                    Title = r.Title,
+                    Description = r.Description,
+                    Body = r.Body,
+                    UserId = r.UserId,
+                    Status = r.Status,
+                    DateTime = r.DateTime,
+                    Image = r.Image ?? null,
+                    Likes = r.Likes
+                }).ToArrayAsync();
+        }
 
-                            if (!userExists)
-                            {
-                                return;
-                            }
-                        }
+        public async Task<RecipeDto[]> GetAllRecipesFromStatusAsync(string status)
+        {
+            return await _context.Recipes
+                .Where(r => r.Status == status)
+                .Select(r => new RecipeDto
+                {
+                    Id = r.Id,
+                    Title = r.Title,
+                    Body = r.Body,
+                    UserId = r.UserId,
+                    Status = r.Status,
+                    DateTime = r.DateTime,
+                    Image = r.Image ?? null,
+                    Likes = r.Likes
+                }).ToArrayAsync();
+        }
 
-                        string recipeQuery = @"
-                    INSERT INTO recipe (title, body, status, user_id, created_at) 
-                    VALUES (@Title, @Body, @Status, @User_Id, NOW())";
+        public async Task<RecipeDto[]> GetAllRecipesFromStatusAndUserAsync(string status, int userId)
+        {
+            return await _context.Recipes
+                .Where(r => r.Status == status && r.UserId == userId)
+                .Select(r => new RecipeDto
+                {
+                    Id = r.Id,
+                    Title = r.Title,
+                    Body = r.Body,
+                    UserId = r.UserId,
+                    Status = r.Status,
+                    DateTime = r.DateTime,
+                    Image = r.Image ?? null,
+                    Likes = r.Likes
+                }).ToArrayAsync();
+        }
 
-                        int recipeId;
-                        using (var recipeCommand = new MySqlCommand(recipeQuery, connection, transaction))
-                        {
-                            recipeCommand.Parameters.AddWithValue("@Title", recipe.Title);
-                            recipeCommand.Parameters.AddWithValue("@Body", recipe.Body);
-                            recipeCommand.Parameters.AddWithValue("@Status", recipe.Status);
-                            recipeCommand.Parameters.AddWithValue("@User_Id", recipe.UserId);
-                            recipeCommand.ExecuteNonQuery();
-                            recipeId = (int)recipeCommand.LastInsertedId; 
-                        }
-                       
-                    }
-                    catch
-                    {
-                        transaction.Rollback();
-                        throw;
-                    }
-                }
+        public async Task<RecipeDto[]> GetAllRecipesFromUserAsync(int userId)
+        {
+            return await _context.Recipes
+                .Where(r => r.UserId == userId)
+                .Select(r => new RecipeDto
+                {
+                    Id = r.Id,
+                    Title = r.Title,
+                    Body = r.Body,
+                    UserId = r.UserId,
+                    Status = r.Status,
+                    DateTime = r.DateTime,
+                    Image = r.Image ?? null,
+                    Likes = r.Likes
+
+                }).ToArrayAsync();
+        }
+
+        public async Task<RecipeDto> GetRecipeByIdAsync(int id)
+        {
+            return await _context.Recipes
+                .Where(r => r.Id == id)
+                .Select(r => new RecipeDto
+                {
+                    Id = r.Id,
+                    Title = r.Title,
+                    Description = r.Description,
+                    Body = r.Body,
+                    UserId = r.UserId,
+                    Status = r.Status,
+                    DateTime = r.DateTime,
+                    Image = r.Image ?? null,
+                    Likes = r.Likes
+                }).FirstOrDefaultAsync();
+        }
+
+        public async Task DeleteRecipeByIdAsync(int id)
+        {
+            var recipe = await _context.Recipes.FindAsync(id);
+            if (recipe != null)
+            {
+                _context.Recipes.Remove(recipe);
+                await _context.SaveChangesAsync();
             }
         }
 
 
 
-        public RecipeDto[] GetAllRecipes()
+        public async Task UpdateRecipeAsync(RecipeDto recipe)
         {
-            var recipes = new List<RecipeDto>();
-
-            using (var connection = new MySqlConnection(_connectionString))
+            var existingRecipe = await _context.Recipes.FindAsync(recipe.Id);
+            if (existingRecipe != null)
             {
-                connection.Open();
-                string query = @"SELECT Id, Title, Description, Body, User_Id, Status, Image, Likes, Created_at FROM Recipe";
+                existingRecipe.Title = recipe.Title;
+                existingRecipe.Body = recipe.Body;
+                existingRecipe.UserId = recipe.UserId;
+                existingRecipe.Status = recipe.Status;
+                existingRecipe.DateTime = recipe.DateTime; 
 
-                using (var command = new MySqlCommand(query, connection))
-                {
-                    using (var reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            var recipe = new RecipeDto
-                            {
-                                Id = reader.GetInt32("Id"),
-                                Title = reader.IsDBNull(reader.GetOrdinal("Title")) ? null : reader.GetString("Title"),
-                                Description = reader.IsDBNull(reader.GetOrdinal("Description")) ? null : reader.GetString("Description"),
-                                Likes = reader.IsDBNull(reader.GetOrdinal("Likes")) ? 0 : reader.GetInt32("Likes"),
-                                Body = reader.IsDBNull(reader.GetOrdinal("Body")) ? null : reader.GetString("Body"),
-                                UserId = reader.IsDBNull(reader.GetOrdinal("User_id")) ? 0 : reader.GetInt32("User_id"), 
-                                Status = reader.IsDBNull(reader.GetOrdinal("Status")) ? null : reader.GetString("Status"),
-                                DateTime = reader.IsDBNull(reader.GetOrdinal("Created_at")) ? DateTime.MinValue : reader.GetDateTime("Created_at"),
-                                Image = reader.IsDBNull(reader.GetOrdinal("Image")) ? null : (byte[])reader["Image"]
-
-                            };
-                            recipes.Add(recipe);
-                        }
-                    }
-                }
-            }
-            return recipes.ToArray();
-        }
-
-
-        public RecipeDto[] GetAllRecipesFromStatus(string status)
-        {
-            var recipes = new List<RecipeDto>();
-            using (var connection = new MySqlConnection(_connectionString))
-            {
-                connection.Open();
-                string query = @"SELECT Id, Title, Body, User_Id, Status, Created_at FROM Recipe WHERE Status = @Status";
-
-                using (var command = new MySqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@Status", status);
-
-                    using (var reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            var recipe = new RecipeDto
-                            {
-                                Id = reader.GetInt32("Id"),
-                                Title = reader.IsDBNull(reader.GetOrdinal("Title")) ? null : reader.GetString("Title"),
-                                Body = reader.IsDBNull(reader.GetOrdinal("Body")) ? null : reader.GetString("Body"),
-                                UserId = reader.IsDBNull(reader.GetOrdinal("User_id")) ? 0 : reader.GetInt32("User_id"),
-                                Status = reader.IsDBNull(reader.GetOrdinal("Status")) ? null : reader.GetString("Status"),
-                                DateTime = reader.IsDBNull(reader.GetOrdinal("Created_at")) ? DateTime.MinValue : reader.GetDateTime("Created_at")
-                            };
-                            recipes.Add(recipe);
-                        }
-                    }
-                }
-            }
-
-            return recipes.ToArray();
-        }
-
-        public RecipeDto[] GetAllRecipesFromStatusAndUser(string status, int userId)
-        {
-            var recipes = new List<RecipeDto>();
-            using (var connection = new MySqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                string query = @"SELECT Id, Title, Body, User_Id, Status, Created_at FROM Recipe WHERE Status = @Status AND User_Id = @User_Id";
-
-                using (var command = new MySqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@Status", status);
-                    command.Parameters.AddWithValue("@User_Id", userId);
-                    using (var reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            var recipe = new RecipeDto
-                            {
-                                Id = reader.GetInt32("Id"),
-                                Title = reader.IsDBNull(reader.GetOrdinal("Title")) ? null : reader.GetString("Title"),
-                                Body = reader.IsDBNull(reader.GetOrdinal("Body")) ? null : reader.GetString("Body"),
-                                UserId = reader.IsDBNull(reader.GetOrdinal("User_id")) ? 0 : reader.GetInt32("User_id"), 
-                                Status = reader.IsDBNull(reader.GetOrdinal("Status")) ? null : reader.GetString("Status"),
-                                DateTime = reader.IsDBNull(reader.GetOrdinal("Created_at")) ? DateTime.MinValue : reader.GetDateTime("Created_at")
-                            };
-
-                            recipes.Add(recipe);
-                        }
-                    }
-                }
-            }
-            return recipes.ToArray();
-        }
-
-
-        public RecipeDto[] GetAllRecipesFromUser(int userId)
-        {
-            var recipes = new List<RecipeDto>();
-
-            using (var connection = new MySqlConnection(_connectionString))
-            {
-                connection.Open();
-                string query = @"SELECT Id, Title, Body, User_Id, Status, Created_at FROM Recipe WHERE User_Id = @User_Id";
-
-                using (var command = new MySqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@User_Id", userId);
-                    using (var reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            var recipe = new RecipeDto
-                            {
-                                Id = reader.GetInt32("Id"),
-                                Title = reader.IsDBNull(reader.GetOrdinal("Title")) ? null : reader.GetString("Title"),
-                                Body = reader.IsDBNull(reader.GetOrdinal("Body")) ? null : reader.GetString("Body"),
-                                UserId = reader.IsDBNull(reader.GetOrdinal("User_id")) ? 0 : reader.GetInt32("User_id"), 
-                                Status = reader.IsDBNull(reader.GetOrdinal("Status")) ? null : reader.GetString("Status"),
-                                DateTime = reader.IsDBNull(reader.GetOrdinal("Created_at")) ? DateTime.MinValue : reader.GetDateTime("Created_at")
-                            };
-                            recipes.Add(recipe);
-                        }
-                    }
-                }
-            }
-            return recipes.ToArray();
-        }
-
-
-        public RecipeDto GetRecipeById(int id)
-        {
-            using (var connection = new MySqlConnection(_connectionString))
-            {
-                connection.Open();
-                string query = @"SELECT Id, Title, Description, Body, User_Id, Status, Image, Likes, Created_at FROM Recipe WHERE Id = @Id";
-
-                using (var command = new MySqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@Id", id);
-                    using (var reader = command.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            return new RecipeDto
-                            {
-                                Id = reader.GetInt32("Id"),
-                                Title = reader.IsDBNull(reader.GetOrdinal("Title")) ? null : reader.GetString("Title"),
-                                Description = reader.IsDBNull(reader.GetOrdinal("Description")) ? null : reader.GetString("Description"),
-                                Likes = reader.IsDBNull(reader.GetOrdinal("Likes")) ? 0 : reader.GetInt32("Likes"),
-                                Body = reader.IsDBNull(reader.GetOrdinal("Body")) ? null : reader.GetString("Body"),
-                                UserId = reader.IsDBNull(reader.GetOrdinal("User_id")) ? 0 : reader.GetInt32("User_id"),
-                                Status = reader.IsDBNull(reader.GetOrdinal("Status")) ? null : reader.GetString("Status"),
-                                DateTime = reader.IsDBNull(reader.GetOrdinal("Created_at")) ? DateTime.MinValue : reader.GetDateTime("Created_at"),
-                                Image = reader.IsDBNull(reader.GetOrdinal("Image")) ? null : (byte[])reader["Image"]
-                            };
-                        }
-                    }
-                }
-            }
-            return null;
-        }
-
-
-        public void DeleteRecipeFromId(int id)
-        {
-            using (var connection = new MySqlConnection(_connectionString))
-            {
-                connection.Open();
-                string query = @"DELETE FROM Recipe WHERE Id = @Id";
-
-                using (var command = new MySqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@Id", id);
-                    command.ExecuteNonQuery();
-                }
+                _context.Recipes.Update(existingRecipe);
+                await _context.SaveChangesAsync();
             }
         }
-
-
-        public void UpdateRecipe(RecipeDto recipe)
-        {
-            using (var connection = new MySqlConnection(_connectionString))
-            {
-                connection.Open();
-                string query = @"UPDATE Recipe SET Title = @Title, Body = @Body, User_Id = @User_Id, Status = @Status, Created_at = @Created_at WHERE Id = @Id";
-
-                using (var command = new MySqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@Id", recipe.Id);
-                    command.Parameters.AddWithValue("@Title", recipe.Title);
-                    command.Parameters.AddWithValue("@Body", recipe.Body);
-                    command.Parameters.AddWithValue("@User_Id", recipe.UserId);
-                    command.Parameters.AddWithValue("@Status", recipe.Status);
-                    command.Parameters.AddWithValue("@Created_at", recipe.DateTime);
-                    command.ExecuteNonQuery();
-                }
-            }
-        }
-
     }
 }

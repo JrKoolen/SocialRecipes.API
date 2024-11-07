@@ -6,7 +6,6 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 [ApiController]
@@ -21,13 +20,13 @@ public class AuthController : ControllerBase
     {
         _logger = logger;
         _authService = authService;
-        _jwtSettings = jwtSettings.Value; 
+        _jwtSettings = jwtSettings.Value;
     }
 
     [HttpPost("login")]
-    public IActionResult Login([FromBody] LoginDto login)
+    public async Task<IActionResult> LoginAsync([FromBody] LoginDto login)
     {
-        var isValidUser = _authService.Login(login);
+        var isValidUser = await _authService.LoginAsync(login);
         if (isValidUser)
         {
             var token = GenerateJwtToken(login.Username);
@@ -38,9 +37,9 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
-    public IActionResult Register([FromBody] AddUserDto addUser)
+    public async Task<IActionResult> RegisterAsync([FromBody] AddUserDto addUser)
     {
-        var isRegistered = _authService.Register(addUser);
+        var isRegistered = await _authService.RegisterAsync(addUser);
         if (isRegistered)
         {
             return Ok("User registered successfully.");
@@ -60,8 +59,8 @@ public class AuthController : ControllerBase
                 new Claim(ClaimTypes.Name, username)
             }),
             Expires = DateTime.UtcNow.AddHours(1),
-            Issuer = _jwtSettings.Issuer,           
-            Audience = _jwtSettings.Audience,       
+            Issuer = _jwtSettings.Issuer,
+            Audience = _jwtSettings.Audience,
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
 

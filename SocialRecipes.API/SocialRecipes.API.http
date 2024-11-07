@@ -1,6 +1,4 @@
 @SocialRecipes.API_HostAddress = http://localhost:5135
 
-GET {{SocialRecipes.API_HostAddress}}/weatherforecast/
+GET {{SocialRecipes.API_HostAddress}}/RecipeApi
 Accept: application/json
-
-###

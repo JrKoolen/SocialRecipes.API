@@ -1,8 +1,7 @@
 ﻿using SocialRecipes.Services.IRepositories;
 using SocialRecipes.Domain.Dto.IN;
 using SocialRecipes.Domain.IServices;
-using System.Security.Claims;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace SocialRecipes.Services.Services
 {
@@ -15,14 +14,14 @@ namespace SocialRecipes.Services.Services
             _authRepository = authRepository;
         }
 
-        public bool Login(LoginDto loginDto)
+        public async Task<bool> LoginAsync(LoginDto loginDto)
         {
-            return _authRepository.Login(loginDto);
+            return await _authRepository.LoginAsync(loginDto);
         }
 
-        public bool Register(AddUserDto addUserDto)
+        public async Task<bool> RegisterAsync(AddUserDto addUserDto)
         {
-            return _authRepository.Register(addUserDto);
+            return await _authRepository.RegisterAsync(addUserDto);
         }
     }
 }

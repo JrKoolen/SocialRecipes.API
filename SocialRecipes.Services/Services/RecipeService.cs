@@ -14,44 +14,44 @@ namespace SocialRecipes.Services.Services
             _recipeRepository = recipeRepository;
         }
 
-        public void AddRecipe(AddRecipeDto recipe)
+        public async Task AddRecipeAsync(AddRecipeDto recipe)
         {
-            _recipeRepository.AddRecipe(recipe);
+            await _recipeRepository.AddRecipeAsync(recipe);
         }
 
-        public RecipeDto[] GetAllRecipes()
+        public async Task<RecipeDto[]> GetAllRecipesAsync()
         {
-            return _recipeRepository.GetAllRecipes();
+            return await _recipeRepository.GetAllRecipesAsync();
         }
 
-        public RecipeDto[] GetAllRecipesFromStatus(string status)
+        public async Task<RecipeDto[]> GetAllRecipesFromStatusAsync(string status)
         {
-            return _recipeRepository.GetAllRecipesFromStatus(status);
+            return await _recipeRepository.GetAllRecipesFromStatusAsync(status);
         }
 
-        public RecipeDto[] GetAllRecipesFromStatusAndUser(string status, int userId)
+        public async Task<RecipeDto[]> GetAllRecipesFromStatusAndUserAsync(string status, int userId)
         {
-            return _recipeRepository.GetAllRecipesFromStatusAndUser(status, userId);
+            return await _recipeRepository.GetAllRecipesFromStatusAndUserAsync(status, userId);
         }
 
-        public RecipeDto[] GetAllRecipesFromUser(int userId)
+        public async Task<RecipeDto[]> GetAllRecipesFromUserAsync(int userId)
         {
-            return _recipeRepository.GetAllRecipesFromUser(userId);
+            return await _recipeRepository.GetAllRecipesFromUserAsync(userId);
         }
 
-        public RecipeDto GetRecipeById(int id)
+        public async Task<RecipeDto> GetRecipeByIdAsync(int id)
         {
-            return _recipeRepository.GetRecipeById(id);
+            return await _recipeRepository.GetRecipeByIdAsync(id);
         }
 
-        public void DeleteRecipeFromId(int id)
+        public async Task DeleteRecipeByIdAsync(int id)
         {
-            _recipeRepository.DeleteRecipeFromId(id);
+            await _recipeRepository.DeleteRecipeByIdAsync(id);
         }
 
-        public void UpdateRecipe(RecipeDto recipe)
+        public async Task UpdateRecipeAsync(RecipeDto recipe)
         {
-            _recipeRepository.UpdateRecipe(recipe);
+            await _recipeRepository.UpdateRecipeAsync(recipe);
         }
     }
 }
