@@ -1,4 +1,4 @@
-﻿namespace SocialRecipes.Domain.Models
+﻿namespace SocialRecipes.DAL.Models
 {
     public class Comment
     {

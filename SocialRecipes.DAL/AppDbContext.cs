@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SocialRecipes.Domain.Models;
+using SocialRecipes.DAL.Models;
 
 namespace SocialRecipes.DAL
 {

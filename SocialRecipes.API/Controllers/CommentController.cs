@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SocialRecipes.Domain.IServices;
 using SocialRecipes.Domain.Dto.General;
-using System.Threading.Tasks;
+using SocialRecipes.Services.Services;
 
 namespace SocialRecipes.API.Controllers
 {
@@ -9,11 +8,11 @@ namespace SocialRecipes.API.Controllers
     [Route("[controller]")]
     public class CommentController : ControllerBase
     {
-        private readonly ICommentService _commentService;
+        private readonly CommentService _commentService;
 
-        public CommentController(ICommentService commentService)
+        public CommentController(CommentService commentService)
         {
-            _commentService = commentService;
+            _commentService = commentService; 
         }
 
         [HttpPost("Add")]

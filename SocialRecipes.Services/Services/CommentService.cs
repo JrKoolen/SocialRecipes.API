@@ -1,10 +1,9 @@
 ﻿using SocialRecipes.Domain.Dto.General;
-using SocialRecipes.Domain.IServices;
 using SocialRecipes.Services.IRepositories;
 
 namespace SocialRecipes.Services.Services
 {
-    public class CommentService : ICommentService
+    public class CommentService 
     {
         private readonly ICommentRepository _commentRepository;
 

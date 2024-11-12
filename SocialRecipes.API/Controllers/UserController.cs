@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SocialRecipes.Domain.IServices;
 using SocialRecipes.Domain.Dto.General;
 using SocialRecipes.Domain.Dto.IN;
+using SocialRecipes.Services.Services;
 
 namespace SocialRecipes.API.Controllers
 {
@@ -10,34 +10,13 @@ namespace SocialRecipes.API.Controllers
     public class UserController : ControllerBase
     {
         private readonly ILogger<UserController> _logger;
-        private readonly IUserService _userService;
+        private readonly UserService _userService;
 
-        public UserController(ILogger<UserController> logger, IUserService userService)
+        public UserController(ILogger<UserController> logger, UserService userService)
         {
             _logger = logger;
             _userService = userService;
         }
-        // Moved the  logica of creating a user to authcontroller.
-       //HttpPost("CreateUser")]
-      //public async Task<IActionResult> CreateUser(AddUserDto user)
-      //{
-     //     if (user == null)
-    //      {
-   //           _logger.LogError("User object sent from client is null.");
-   //           return BadRequest("User is null.");
-   //       }
-   //
-   //       if (string.IsNullOrEmpty(user.Name))
-   //       {
-   //           _logger.LogError("User name is null or empty.");
-   //           return BadRequest("User name is required.");
-   //       }
-
-   //       await _userService.CreateUserAsync(user);
-   //       _logger.LogInformation($"Creating a new user: {user.Name}");
-
-   //       return Ok(new { message = "200", user });
-   //   }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)

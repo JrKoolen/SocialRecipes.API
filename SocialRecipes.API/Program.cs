@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SocialRecipes.DAL.Repositories;
 using SocialRecipes.Services.IRepositories;
-using SocialRecipes.Domain.IServices;
 using SocialRecipes.Infrastructure.Settings;
 using SocialRecipes.Services.Services;
 using System.Text;
@@ -18,18 +17,23 @@ builder.Services.AddSingleton(jwtSettings);
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(configuration.GetConnectionString("DefaultConnection"),
-    new MySqlServerVersion(new Version(8, 0, 21)))); 
+    new MySqlServerVersion(new Version(8, 0, 21)),
+    mysqlOptions => mysqlOptions.EnableRetryOnFailure(
+        maxRetryCount: 5,
+        maxRetryDelay: TimeSpan.FromSeconds(10),
+        errorNumbersToAdd: null
+    ))); 
 
-builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IRecipeService, RecipeService>();
+builder.Services.AddScoped<RecipeService>();
 builder.Services.AddScoped<IRecipeRepository, RecipeRepository>();
-builder.Services.AddScoped<IFollowerService, FollowerService>();
+builder.Services.AddScoped<FollowerService>();
 builder.Services.AddScoped<IFollowerRepository, FollowerRepository>();
-builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
-builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddScoped<CommentService>();
 
 builder.Services.AddAuthentication(options =>
 {

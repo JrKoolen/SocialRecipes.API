@@ -1,7 +1,8 @@
 ﻿using SocialRecipes.Services.IRepositories;
 using SocialRecipes.Domain.Dto.IN;
 using Microsoft.EntityFrameworkCore;
-using SocialRecipes.Domain.Models;
+using SocialRecipes.DAL.Models;
+using SocialRecipes.Domain.Dto.General;
 
 namespace SocialRecipes.DAL.Repositories
 {
@@ -14,7 +15,7 @@ namespace SocialRecipes.DAL.Repositories
             _context = context;
         }
 
-        public async Task<bool> LoginAsync(LoginDto loginDto)
+        public async Task<UserDto> LoginAsync(LoginDto loginDto)
         {
             var user = await _context.Users
                 .AsNoTracking()
@@ -22,10 +23,15 @@ namespace SocialRecipes.DAL.Repositories
 
             if (user == null)
             {
-                return false;
+                return null;
             }
-
-            return BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password);
+            UserDto userDto = new UserDto
+            {
+                Id = user.Id,
+                Name = null,
+                Email = null,
+            };
+            return userDto;
         }
 
         public async Task<bool> RegisterAsync(AddUserDto addUserDto)

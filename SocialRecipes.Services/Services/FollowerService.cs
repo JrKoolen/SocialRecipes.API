@@ -1,10 +1,9 @@
 ﻿using SocialRecipes.Services.IRepositories;
-using SocialRecipes.Domain.IServices;
 using SocialRecipes.Domain.Dto.General;
 
 namespace SocialRecipes.Services.Services
 {
-    public class FollowerService : IFollowerService
+    public class FollowerService 
     {
         private readonly IFollowerRepository _followerRepository;
 

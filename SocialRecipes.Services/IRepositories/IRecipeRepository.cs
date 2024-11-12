@@ -5,7 +5,7 @@ namespace SocialRecipes.Services.IRepositories
 {
     public interface IRecipeRepository
     {
-        Task AddRecipeAsync(AddRecipeDto recipe);
+        Task<bool> AddRecipeAsync(AddRecipeDto recipe);
         Task<RecipeDto> GetRecipeByIdAsync(int id);
         Task<RecipeDto[]> GetAllRecipesFromUserAsync(int userId);
         Task<RecipeDto[]> GetAllRecipesAsync();

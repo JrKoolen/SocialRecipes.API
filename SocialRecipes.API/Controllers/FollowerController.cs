@@ -1,5 +1,6 @@
-﻿using SocialRecipes.Domain.IServices;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using SocialRecipes.Services.Services;
 
 namespace SocialRecipes.API.Controllers
 {
@@ -8,12 +9,12 @@ namespace SocialRecipes.API.Controllers
     public class FollowController : Controller
     {
         private readonly ILogger<FollowController> _logger;
-        private readonly IFollowerService _followerService;
+        private readonly FollowerService _followerService;
 
-        public FollowController(ILogger<FollowController> logger, IFollowerService followService)
+        public FollowController(ILogger<FollowController> logger, FollowerService followerService)
         {
             _logger = logger;
-            _followerService = followService;
+            _followerService = followerService;
         }
 
         [HttpPost("Follow/{userId}")]

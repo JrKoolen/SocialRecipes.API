@@ -1,7 +1,7 @@
 ﻿using SocialRecipes.Services.IRepositories;
 using SocialRecipes.Domain.Dto.IN;
 using SocialRecipes.Domain.Dto.General;
-using SocialRecipes.Domain.Models;
+using SocialRecipes.DAL.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace SocialRecipes.DAL.Repositories

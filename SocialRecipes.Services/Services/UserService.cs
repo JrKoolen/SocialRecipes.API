@@ -1,11 +1,10 @@
 ﻿using SocialRecipes.Services.IRepositories;
-using SocialRecipes.Domain.IServices;
 using SocialRecipes.Domain.Dto.General;
 using SocialRecipes.Domain.Dto.IN;
 
 namespace SocialRecipes.Services.Services
 {
-    public class UserService : IUserService
+    public class UserService 
     {
         private readonly IUserRepository _userRepository;
 

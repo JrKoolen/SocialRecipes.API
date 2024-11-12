@@ -1,11 +1,11 @@
 ﻿using SocialRecipes.Services.IRepositories;
 using SocialRecipes.Domain.Dto.IN;
-using SocialRecipes.Domain.IServices;
 using System.Threading.Tasks;
+using SocialRecipes.Domain.Dto.General;
 
 namespace SocialRecipes.Services.Services
 {
-    public class AuthService : IAuthService
+    public class AuthService 
     {
         private readonly IAuthRepository _authRepository;
 
@@ -14,7 +14,7 @@ namespace SocialRecipes.Services.Services
             _authRepository = authRepository;
         }
 
-        public async Task<bool> LoginAsync(LoginDto loginDto)
+        public async Task<UserDto> LoginAsync(LoginDto loginDto)
         {
             return await _authRepository.LoginAsync(loginDto);
         }

@@ -1,41 +1,78 @@
 ﻿using SocialRecipes.Services.IRepositories;
 using SocialRecipes.Domain.Dto.General;
 using SocialRecipes.Domain.Dto.IN;
-using SocialRecipes.Domain.Models;
+using SocialRecipes.DAL.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System.Linq.Expressions;
 
 namespace SocialRecipes.DAL.Repositories
 {
     public class RecipeRepository : IRecipeRepository
     {
         private readonly AppDbContext _context;
+        private readonly ILogger<RecipeRepository> _logger;
 
-        public RecipeRepository(AppDbContext context)
+        public RecipeRepository(AppDbContext context, ILogger<RecipeRepository> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
-        public async Task AddRecipeAsync(AddRecipeDto recipe)
+
+        public async Task<bool> AddRecipeAsync(AddRecipeDto recipe)
         {
-            var userExists = await _context.Users.AnyAsync(u => u.Id == recipe.UserId);
-            if (!userExists)
+            try
             {
-                return;
+                _logger.LogInformation("Starting AddRecipeAsync for user ID {UserId}", recipe.UserId);
+
+                var userExists = await _context.Users.AnyAsync(u => u.Id == recipe.UserId);
+                if (!userExists)
+                {
+                    _logger.LogWarning("User with ID {UserId} does not exist.", recipe.UserId);
+                    return false;
+                }
+
+                byte[] imageBytes = null;
+                if (!string.IsNullOrEmpty(recipe.Image))
+                {
+                    try
+                    {
+                        imageBytes = Convert.FromBase64String(recipe.Image);
+                        _logger.LogInformation("Image converted successfully for user ID {UserId}", recipe.UserId);
+                    }
+                    catch (FormatException ex)
+                    {
+                        _logger.LogError(ex, "Invalid image format for recipe from user ID {UserId}", recipe.UserId);
+                        return false;
+                    }
+                }
+
+                var newRecipe = new Recipe
+                {
+                    Title = recipe.Title,
+                    Body = recipe.Body,
+                    Description = recipe.Description,
+                    Status = recipe.Status,
+                    UserId = recipe.UserId,
+                    DateTime = DateTime.Now,
+                    Image = imageBytes
+                };
+
+                await _context.Recipes.AddAsync(newRecipe);
+                await _context.SaveChangesAsync();
+                _logger.LogInformation("Recipe created successfully for user ID {UserId}", recipe.UserId);
+
+                return true;
             }
-
-            var newRecipe = new Recipe
+            catch (Exception ex)
             {
-                Title = recipe.Title,
-                Body = recipe.Body,
-                Description = recipe.Description,
-                Status = recipe.Status,
-                UserId = recipe.UserId,
-                DateTime = DateTime.Now
-            };
-
-            await _context.Recipes.AddAsync(newRecipe);
-            await _context.SaveChangesAsync();
+                _logger.LogError(ex, "Error adding recipe for user ID {UserId}", recipe.UserId);
+                return false;
+            }
         }
+
+
 
         public async Task<RecipeDto[]> GetAllRecipesAsync()
         {

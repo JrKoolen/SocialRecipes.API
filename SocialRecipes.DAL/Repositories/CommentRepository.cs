@@ -1,7 +1,7 @@
 ﻿using SocialRecipes.Services.IRepositories;
 using SocialRecipes.Domain.Dto.General;
 using Microsoft.EntityFrameworkCore;
-using SocialRecipes.Domain.Models;
+using SocialRecipes.DAL.Models;
 
 namespace SocialRecipes.DAL.Repositories
 {
@@ -39,8 +39,7 @@ namespace SocialRecipes.DAL.Repositories
                     UserId = c.UserId,
                     Content = c.Content,
                     CreatedAt = c.CreatedAt
-                })
-                .ToArrayAsync();
+                }).ToArrayAsync();
         }
 
         public async Task<CommentDto[]> GetCommentsByUserIdAsync(int userId)
@@ -54,8 +53,7 @@ namespace SocialRecipes.DAL.Repositories
                     UserId = c.UserId,
                     Content = c.Content,
                     CreatedAt = c.CreatedAt
-                })
-                .ToArrayAsync();
+                }).ToArrayAsync();
         }
 
         public async Task DeleteCommentByIdAsync(int commentId)

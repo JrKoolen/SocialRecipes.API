@@ -1,11 +1,10 @@
 ﻿using SocialRecipes.Services.IRepositories;
-using SocialRecipes.Domain.IServices;
 using SocialRecipes.Domain.Dto.General;
 using SocialRecipes.Domain.Dto.IN;
 
 namespace SocialRecipes.Services.Services
 {
-    public class RecipeService : IRecipeService
+    public class RecipeService 
     {
         private readonly IRecipeRepository _recipeRepository;
 
@@ -14,9 +13,9 @@ namespace SocialRecipes.Services.Services
             _recipeRepository = recipeRepository;
         }
 
-        public async Task AddRecipeAsync(AddRecipeDto recipe)
+        public async Task<bool> AddRecipeAsync(AddRecipeDto recipe)
         {
-            await _recipeRepository.AddRecipeAsync(recipe);
+            return await _recipeRepository.AddRecipeAsync(recipe);
         }
 
         public async Task<RecipeDto[]> GetAllRecipesAsync()

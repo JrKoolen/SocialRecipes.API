@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SocialRecipes.Domain.IServices;
+using SocialRecipes.Services.Services;
 using SocialRecipes.Domain.Dto.General;
 using SocialRecipes.Domain.Dto.IN;
 
@@ -10,25 +10,35 @@ namespace SocialRecipes.API.Controllers
     public class RecipeController : Controller
     {
         private readonly ILogger<RecipeController> _logger;
-        private readonly IRecipeService _recipeService;
+        private readonly RecipeService _recipeService;
 
-        public RecipeController(ILogger<RecipeController> logger, IRecipeService recipeService)
+        public RecipeController(ILogger<RecipeController> logger, RecipeService recipeService)
         {
             _logger = logger;
             _recipeService = recipeService;
         }
 
         [HttpPost("CreateRecipe")]
-        public async Task<IActionResult> AddRecipeAsync(AddRecipeDto recipe)
+        public async Task<IActionResult> AddRecipeAsync([FromBody] AddRecipeDto recipeDto)
         {
-            if (recipe == null)
+            try
             {
-                _logger.LogError("Recipe is null");
-                return BadRequest("Recipe is null.");
+                _logger.LogInformation("Starting AddRecipeAsync in Controller.");
+                var result = await _recipeService.AddRecipeAsync(recipeDto);
+                if (!result)
+                {
+                    _logger.LogWarning("Recipe creation failed due to invalid data or service error.");
+                    return BadRequest("Failed to create recipe. Check input data.");
+                }
+
+                _logger.LogInformation("Recipe created successfully.");
+                return Ok(new { message = "Recipe created successfully." });
             }
-            await _recipeService.AddRecipeAsync(recipe);
-            _logger.LogInformation($"Creating a new recipe: {recipe.Title}");
-            return Ok(new { message = "200", recipe });
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred in AddRecipeAsync in Controller.");
+                return StatusCode(500, "Internal server error. Please try again later.");
+            }
         }
 
         [HttpPost("UpdateRecipe")]
