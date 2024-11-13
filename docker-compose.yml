@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: ./SocialRecipes.API  
+    container_name: socialrecipes-api-container
+    ports:
+      - "8080:8080"
+    networks:
+      - socialrecipes-network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=mysql-db;Database=socialrecipesdb;User Id=root;Password=rootpassword;
+    depends_on:
+      - mysql-db
+
+  frontend:
+    build:
+      context: ./frontend  
+    container_name: socialrecipesfrontend-container
+    ports:
+      - "3000:3000"
+    networks:
+      - socialrecipes-network
+    depends_on:
+      - api
+
+  mysql-db:
+    image: mysql:8.0
+    container_name: socialrecipes-mysql-db
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: socialrecipesdb
+      MYSQL_USER: root
+      MYSQL_PASSWORD: rootpassword
+    networks:
+      - socialrecipes-network
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql  
+
+networks:
+  socialrecipes-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
