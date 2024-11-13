@@ -1,9 +1,7 @@
-version: '3.8'
-
 services:
   api:
     build:
-      context: ./SocialRecipes.API  
+      dockerfile: Dockerfile       
     container_name: socialrecipes-api-container
     ports:
       - "8080:8080"
@@ -34,13 +32,11 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: socialrecipesdb
-      MYSQL_USER: root
-      MYSQL_PASSWORD: rootpassword
     networks:
       - socialrecipes-network
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql  
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
 
 networks:
   socialrecipes-network:

@@ -57,6 +57,12 @@ namespace SocialRecipes.DAL
                 .WithOne(m => m.Receiver)
                 .HasForeignKey(m => m.ReceiverId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+                modelBuilder.Entity<User>().ToTable("users");
+                modelBuilder.Entity<Comment>().ToTable("comments");
+                modelBuilder.Entity<Follower>().ToTable("followers");
+                modelBuilder.Entity<Recipe>().ToTable("recipes");
         }
+        
     }
 }
