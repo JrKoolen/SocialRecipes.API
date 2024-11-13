@@ -6,7 +6,7 @@ on:
       - master 
   pull_request:
     branches:
-      - master
+      - master 
 
 jobs:
   test:
@@ -23,23 +23,23 @@ jobs:
 
     - name: Install dependencies
       run: npm install
-      working-directory: SocialRecipes.API/frontend  # Absolute path from repository root
+      working-directory: ${{ github.workspace }}/frontend  # Correct path to frontend
 
     - name: Start server
       run: npm start &
       env:
         NODE_ENV: test  
-      working-directory: SocialRecipes.API/frontend  # Absolute path from repository root
+      working-directory: ${{ github.workspace }}/frontend  # Correct path to frontend
 
     - name: Wait for server to be ready
       run: npx wait-on http://localhost:3000 
-      working-directory: SocialRecipes.API/frontend  # Absolute path from repository root
+      working-directory: ${{ github.workspace }}/frontend  # Correct path to frontend
 
     - name: Run Cypress tests
       uses: cypress-io/github-action@v2
       with:
         browser: chrome
-        config-file: SocialRecipes.API/frontend/cypress.config.js  # Path to Cypress config in frontend
+        config-file: ${{ github.workspace }}/frontend/cypress.config.js  # Path to Cypress config in frontend
       env:
         CYPRESS_baseUrl: http://localhost:3000  
 
@@ -48,11 +48,11 @@ jobs:
       uses: actions/upload-artifact@v3  
       with:
         name: cypress-screenshots
-        path: SocialRecipes.API/frontend/cypress/screenshots  # Path to screenshots in frontend directory
+        path: ${{ github.workspace }}/frontend/cypress/screenshots  # Path to screenshots in frontend directory
 
     - name: Upload Cypress videos
       if: failure()
       uses: actions/upload-artifact@v3 
       with:
         name: cypress-videos
-        path: SocialRecipes.API/frontend/cypress/videos  # Path to videos in frontend directory
+        path: ${{ github.workspace }}/frontend/cypress/videos  # Path to videos in frontend directory
