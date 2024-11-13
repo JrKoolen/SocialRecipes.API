@@ -1,0 +1,28 @@
+<div class="sidebar">
+  <div class="logo">
+    <a href="/">
+      <img src="/assets/logo.png" alt="Logo" class="logo-img">
+    </a>
+  </div>
+  <a href="/" class="<%= activePage === 'home' ? 'active' : '' %>">
+    <span class="menu-text">Home</span>
+  </a>
+  <% if (!isLoggedIn) { %>
+    <a href="/login" class="<%= activePage === 'login' ? 'active' : '' %>">
+      <span class="menu-text">Login</span>
+    </a>
+    <a href="/register" class="<%= activePage === 'register' ? 'active' : '' %>">
+      <span class="menu-text">Register</span>
+    </a>
+  <% } else { %>
+    <a href="/create-recipe" class="<%= activePage === 'create-recipe' ? 'active' : '' %>">
+      <span class="menu-text">Create recipe</span>
+    </a>
+    <a href="/user-page" class="<%= activePage === 'user-page' ? 'active' : '' %>">
+      <span class="menu-text">My profile</span>
+    </a>
+    <a href="/logout" class="<%= activePage === 'logout' ? 'active' : '' %>">
+      <span class="menu-text">Logout</span>
+    </a>
+  <% } %>
+</div>

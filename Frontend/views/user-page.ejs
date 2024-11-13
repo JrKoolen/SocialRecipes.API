@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Page</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <%- include('partials/navbar') %>
+    <div class="container">
+        <h1>Welcome <%= username %></h1>
+        <% if (username) { %>
+            <div class="user-info-box">
+                <a href="/create-recipe">Create new recipe</a>
+            </div>
+        <% } else { %>
+            <p>User information not found. Please log in.</p>
+        <% } %>
+    </div>
+
+    <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search for recipes...">
+    </div>
+    <div class="recipe-grid" id="recipeGrid">
+      <% recipes.forEach(function(recipe) { %>
+        <div class="recipe-card" data-id="<%= recipe.id %>">
+          <img src="data:image/jpeg;base64,<%= recipe.imageBase64 %>" alt="<%= recipe.title %>">
+          <div class="card-content">
+            <h3 class="recipe-title"><%= recipe.title %></h3>
+            <p class="recipe-description">
+              <%= recipe.description ? recipe.description : 'No description available' %>
+            </p>
+            <div class="like-section">
+              <button class="like-button">Like</button>
+              <span class="like-count"><%= recipe.likes %> Likes</span>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+
+    <script>
+      const searchInput = document.getElementById('searchInput');
+      const recipeCards = document.querySelectorAll('.recipe-card');
+
+      searchInput.addEventListener('keyup', function() {
+        const searchValue = searchInput.value.toLowerCase();
+        
+        recipeCards.forEach(card => {
+          const title = card.querySelector('.recipe-title').textContent.toLowerCase();
+          const description = card.querySelector('.recipe-description').textContent.toLowerCase();
+
+          if (title.includes(searchValue) || description.includes(searchValue)) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+
+      document.querySelectorAll('.like-button').forEach(button => {
+        button.addEventListener('click', function(event) {
+          event.stopPropagation(); 
+          const likeCountSpan = this.nextElementSibling;
+          let likeCount = parseInt(likeCountSpan.textContent);
+          likeCount++;
+          likeCountSpan.textContent = `${likeCount} Likes`;
+        });
+      });
+
+      recipeCards.forEach(card => {
+        card.addEventListener('click', function() {
+          const recipeId = this.getAttribute('data-id');
+          window.location.href = `/recipe/${recipeId}`;
+        });
+      });
+    </script>
+</body>
+</html>

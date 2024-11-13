@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= recipe.title %></title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <%- include('partials/navbar', { activePage: activePage }) %>
+
+  <div class="main-content">
+    <% if (recipe.imageBase64) { %>
+      <div class="centered-image-container">
+      <img src="data:image/jpeg;base64,<%= recipe.imageBase64 %>" alt="<%= recipe.title %>" class="centered-image">
+    </div>
+    <% } %>
+
+    <h1><%= recipe.title %></h1>
+
+    <% if (recipe.description) { %>
+      <div class="description-box">
+        <p><%= recipe.description %></p>
+      </div>
+    <% } %>
+
+    <% if (recipe.body) { %>
+      <div class="body-box">
+        <%- recipe.body %>  
+      </div>
+    <% } %>
+    
+    <button>Like</button>
+  </div>
+</body>
+</html>

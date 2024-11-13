@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recipe Cards</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <%- include('partials/navbar') %>
+  <div class="main-content">
+    <h1>Featured recipes</h1>
+    <div class="recipe-grid" id="recipeGrid">
+      <% if (recipes && recipes.length > 0) { %>
+        <% recipes.forEach(function(recipe) { %>
+          <div class="recipe-card">
+            <img src="data:image/jpeg;base64,<%= recipe.imageBase64 %>" alt="<%= recipe.title %>" style="max-width: 100%; height: auto;">
+            <div class="card-content">
+              <h3 class="recipe-title"><%= recipe.title %></h3>
+              <%= recipe.description ? recipe.description : 'No description available' %>
+            </div>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <p>No recipes available.</p>
+      <% } %>
+    </div>
+  </div>
+</body>
+</html>
