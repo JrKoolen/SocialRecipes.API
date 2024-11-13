@@ -3,10 +3,10 @@ name: Run Cypress Tests
 on: 
   push:
     branches:
-      - master  
+      - master 
   pull_request:
     branches:
-      - master 
+      - master
 
 jobs:
   test:
@@ -23,23 +23,23 @@ jobs:
 
     - name: Install dependencies
       run: npm install
-      working-directory: ../frontend  
+      working-directory: SocialRecipes.API/frontend  # Absolute path from repository root
 
     - name: Start server
       run: npm start &
       env:
         NODE_ENV: test  
-      working-directory: ../frontend  
+      working-directory: SocialRecipes.API/frontend  # Absolute path from repository root
 
     - name: Wait for server to be ready
       run: npx wait-on http://localhost:3000 
-      working-directory: ../frontend  
+      working-directory: SocialRecipes.API/frontend  # Absolute path from repository root
 
     - name: Run Cypress tests
       uses: cypress-io/github-action@v2
       with:
         browser: chrome
-        config-file: ../frontend/cypress.config.js 
+        config-file: SocialRecipes.API/frontend/cypress.config.js  # Path to Cypress config in frontend
       env:
         CYPRESS_baseUrl: http://localhost:3000  
 
@@ -48,11 +48,11 @@ jobs:
       uses: actions/upload-artifact@v3  
       with:
         name: cypress-screenshots
-        path: frontend/cypress/screenshots 
+        path: SocialRecipes.API/frontend/cypress/screenshots  # Path to screenshots in frontend directory
 
     - name: Upload Cypress videos
       if: failure()
       uses: actions/upload-artifact@v3 
       with:
         name: cypress-videos
-        path: frontend/cypress/videos 
+        path: SocialRecipes.API/frontend/cypress/videos  # Path to videos in frontend directory
