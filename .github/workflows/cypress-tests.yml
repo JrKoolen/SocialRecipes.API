@@ -39,7 +39,7 @@ jobs:
       uses: cypress-io/github-action@v2
       with:
         browser: chrome
-        config-file: Frontend/cypress.config.js 
+        config-file: cypress.config.js 
         working-directory: Frontend  
       env:
         CYPRESS_baseUrl: http://localhost:3000  
