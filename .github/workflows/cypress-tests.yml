@@ -23,23 +23,24 @@ jobs:
 
     - name: Install dependencies
       run: npm install
-      working-directory: Frontend  # Use the correct directory based on your structure
+      working-directory: Frontend  # Correct path to frontend
 
     - name: Start server
       run: npm start &
       env:
         NODE_ENV: test  
-      working-directory: Frontend  # Use the correct directory
+      working-directory: Frontend  # Correct path to frontend
 
     - name: Wait for server to be ready
       run: npx wait-on http://localhost:3000 
-      working-directory: Frontend  # Use the correct directory
+      working-directory: Frontend  # Correct path to frontend
 
     - name: Run Cypress tests
       uses: cypress-io/github-action@v2
       with:
         browser: chrome
-        config-file: Frontend/cypress.config.js  # Correct path to Cypress config in Frontend
+        config-file: Frontend/cypress.config.js  # Correct path to Cypress config in frontend
+        working-directory: Frontend  # Set working directory to Frontend for Cypress
       env:
         CYPRESS_baseUrl: http://localhost:3000  
 
