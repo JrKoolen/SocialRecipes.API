@@ -42,6 +42,7 @@ builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 builder.Services.AddScoped<CommentService>();
 
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -70,16 +71,15 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 var logger = app.Services.GetRequiredService<ILogger<Program>>();
 logger.LogInformation("Application configuration started.");
-app.UseAuthentication();
-app.UseAuthorization();
+
 
 app.UseSwagger();
 app.UseSwaggerUI();
 logger.LogInformation("Swagger UI enabled.");
 
+app.UseAuthentication();
+app.UseAuthorization();
 
-logger.LogInformation("Application started and ready to accept requests.");
-app.UseHttpsRedirection();
 app.MapControllers();
 
 app.Run();
