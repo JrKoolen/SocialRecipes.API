@@ -26,13 +26,13 @@ jobs:
       run: docker-compose up -d --build  
 
     - name: Wait for frontend to be ready
-      run: npx wait-on http://localhost:3000 
+      run: npx wait-on http://localhost:3000  
 
     - name: Run Cypress tests
       uses: cypress-io/github-action@v2
       with:
         browser: chrome
-        config-file: Frontend/cypress.config.js
+        config-file: Frontend/cypress.config.js  
       env:
         CYPRESS_baseUrl: http://localhost:3000  
 
@@ -48,7 +48,7 @@ jobs:
       uses: actions/upload-artifact@v3 
       with:
         name: cypress-videos
-        path: Frontend/cypress/videos 
+        path: Frontend/cypress/videos  
 
     - name: Stop and Remove Containers
       run: docker-compose down  
