@@ -3,10 +3,10 @@ name: Run Cypress Tests
 on: 
   push:
     branches:
-      - master 
+      - main  
   pull_request:
     branches:
-      - master 
+      - main  
 
 jobs:
   test:
@@ -23,23 +23,23 @@ jobs:
 
     - name: Install dependencies
       run: npm install
-      working-directory: ${{ github.workspace }}/frontend  # Correct path to frontend
+      working-directory: Frontend  # Use the correct directory based on your structure
 
     - name: Start server
       run: npm start &
       env:
         NODE_ENV: test  
-      working-directory: ${{ github.workspace }}/frontend  # Correct path to frontend
+      working-directory: Frontend  # Use the correct directory
 
     - name: Wait for server to be ready
       run: npx wait-on http://localhost:3000 
-      working-directory: ${{ github.workspace }}/frontend  # Correct path to frontend
+      working-directory: Frontend  # Use the correct directory
 
     - name: Run Cypress tests
       uses: cypress-io/github-action@v2
       with:
         browser: chrome
-        config-file: ${{ github.workspace }}/frontend/cypress.config.js  # Path to Cypress config in frontend
+        config-file: Frontend/cypress.config.js  # Correct path to Cypress config in Frontend
       env:
         CYPRESS_baseUrl: http://localhost:3000  
 
@@ -48,11 +48,11 @@ jobs:
       uses: actions/upload-artifact@v3  
       with:
         name: cypress-screenshots
-        path: ${{ github.workspace }}/frontend/cypress/screenshots  # Path to screenshots in frontend directory
+        path: Frontend/cypress/screenshots  # Path to screenshots in Frontend directory
 
     - name: Upload Cypress videos
       if: failure()
       uses: actions/upload-artifact@v3 
       with:
         name: cypress-videos
-        path: ${{ github.workspace }}/frontend/cypress/videos  # Path to videos in frontend directory
+        path: Frontend/cypress/videos  # Path to videos in Frontend directory
