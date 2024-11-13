@@ -7,13 +7,20 @@ using SocialRecipes.Infrastructure.Settings;
 using SocialRecipes.Services.Services;
 using System.Text;
 using SocialRecipes.DAL;
+using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
+builder.Configuration.AddEnvironmentVariables();
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
+
 builder.Services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 var jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>();
 builder.Services.AddSingleton(jwtSettings);
+
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(configuration.GetConnectionString("DefaultConnection"),
@@ -22,7 +29,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         maxRetryCount: 5,
         maxRetryDelay: TimeSpan.FromSeconds(10),
         errorNumbersToAdd: null
-    ))); 
+    )));
 
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -59,26 +66,19 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.WebHost.ConfigureKestrel(options =>
-{
-    options.ListenAnyIP(8080); 
-});
 
 var app = builder.Build();
-if (!app.Environment.IsProduction())
-{
-    app.UseHttpsRedirection(); 
-}
+var logger = app.Services.GetRequiredService<ILogger<Program>>();
+logger.LogInformation("Application configuration started.");
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseSwagger();
-app.UseSwaggerUI(c =>
-{
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "SocialRecipes API v1");
-    c.RoutePrefix = string.Empty;
-});
+app.UseSwaggerUI();
+logger.LogInformation("Swagger UI enabled.");
 
+
+logger.LogInformation("Application started and ready to accept requests.");
 app.UseHttpsRedirection();
 app.MapControllers();
 
