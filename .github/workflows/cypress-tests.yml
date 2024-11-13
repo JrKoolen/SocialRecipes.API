@@ -3,10 +3,10 @@ name: Run Cypress Tests
 on: 
   push:
     branches:
-      - master  
+      - master 
   pull_request:
     branches:
-      - master 
+      - master  
 
 jobs:
   test:
@@ -23,24 +23,23 @@ jobs:
 
     - name: Install dependencies
       run: npm install
-      working-directory: Frontend  # Correct path to frontend
+      working-directory: Frontend  # Use the correct directory based on your structure
 
     - name: Start server
       run: npm start &
       env:
         NODE_ENV: test  
-      working-directory: Frontend  # Correct path to frontend
+      working-directory: Frontend  # Use the correct directory
 
     - name: Wait for server to be ready
       run: npx wait-on http://localhost:3000 
-      working-directory: Frontend  # Correct path to frontend
+      working-directory: Frontend  # Use the correct directory
 
     - name: Run Cypress tests
       uses: cypress-io/github-action@v2
       with:
         browser: chrome
-        config-file: Frontend/cypress.config.js  # Correct path to Cypress config in frontend
-        working-directory: Frontend  # Set working directory to Frontend for Cypress
+        config-file: Frontend/cypress.config.js  # Correct path to Cypress config in Frontend
       env:
         CYPRESS_baseUrl: http://localhost:3000  
 
