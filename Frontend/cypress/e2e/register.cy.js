@@ -1,57 +1,76 @@
 describe('Create Account Page', () => {
+    const baseUrl = 'http://localhost:3000/register';
+
+    const formFields = {
+        username: 'input#username',
+        email: 'input#email',
+        password: 'input#password',
+        submitButton: 'button[type="submit"]',
+    };
+
+    const testData = {
+        emptyFields: {
+            description: 'should show required field errors on empty form submission',
+            data: { username: '', email: '', password: '' },
+            expectValid: false,
+        },
+        invalidEmail: {
+            description: 'should show an error for invalid email format',
+            data: { username: 'testuser', email: 'invalid-email', password: 'Password123' },
+            expectValid: false,
+        },
+        validSubmission: {
+            description: 'should successfully submit the form with valid inputs',
+            data: {
+                username: `testuser_${Date.now()}`,
+                email: `testuser_${Date.now()}@example.com`,
+                password: 'Password123',
+            },
+            expectValid: true,
+        },
+    };
+
+    function fillForm({ username, email, password }) {
+        if (username) cy.get(formFields.username).type(username);
+        if (email) cy.get(formFields.email).type(email);
+        if (password) cy.get(formFields.password).type(password);
+    }
 
     it('should load the registration form', () => {
-      cy.visit('http://localhost:3000/register');
-      cy.get('form#createAccountForm').should('be.visible');
-      cy.get('input#username').should('be.visible');
-      cy.get('input#email').should('be.visible');
-      cy.get('input#password').should('be.visible');
-      cy.get('button[type="submit"]').should('be.visible');
+        cy.visit(baseUrl);
+        cy.get('form#createAccountForm').should('be.visible');
+        cy.get(formFields.username).should('be.visible');
+        cy.get(formFields.email).should('be.visible');
+        cy.get(formFields.password).should('be.visible');
+        cy.get(formFields.submitButton).should('be.visible');
     });
-  
-    it('should show required field errors on empty form submission', () => {
-      cy.visit('http://localhost:3000/register');
-      cy.get('button[type="submit"]').click();
-  
-      cy.get('input#username').then(($input) => {
-        expect($input[0].checkValidity()).to.be.false;
-      });
-      cy.get('input#email').then(($input) => {
-        expect($input[0].checkValidity()).to.be.false;
-      });
-      cy.get('input#password').then(($input) => {
-        expect($input[0].checkValidity()).to.be.false;
-      });
+
+    Cypress._.each(testData, (test) => {
+        it(test.description, () => {
+            cy.visit(baseUrl);
+            fillForm(test.data);
+            cy.get(formFields.submitButton).click();
+
+            if (test.expectValid) {
+                cy.url().should('include', '/login');
+                cy.contains('Login').should('be.visible');
+            } else {
+                if (!test.data.username) {
+                    cy.get(formFields.username).then(($input) => {
+                        expect($input[0].checkValidity()).to.be.false;
+                    });
+                }
+                if (!test.data.email || test.data.email.includes('invalid')) {
+                    cy.get(formFields.email).then(($input) => {
+                        expect($input[0].checkValidity()).to.be.false;
+                    });
+                }
+                if (!test.data.password) {
+                    cy.get(formFields.password).then(($input) => {
+                        expect($input[0].checkValidity()).to.be.false;
+                    });
+                }
+            }
+        });
     });
-  
-    it('should show an error for invalid email format', () => {
-      cy.visit('http://localhost:3000/register');
-      cy.get('input#username').type('testuser');
-      cy.get('input#email').type('invalid-email'); 
-      cy.get('input#password').type('Password123');
-      cy.get('button[type="submit"]').click();
-  
-      cy.get('input#email').then(($input) => {
-        expect($input[0].checkValidity()).to.be.false;
-      });
-    });
-  
-    it('should successfully submit the form with valid inputs', () => {
-        cy.visit('http://localhost:3000/register');
-      
-        const uniqueUsername = `testuser_${Date.now()}`;
-        const uniqueEmail = `testuser_${Date.now()}@example.com`;
-      
-        cy.get('input#username').type(uniqueUsername);
-        cy.get('input#email').type(uniqueEmail);
-        cy.get('input#password').type('Password123');
-      
-        cy.get('button[type="submit"]').click();
-      
-        cy.url().should('include', '/login');
-        cy.contains('Login').should('be.visible');
-      });
-      
-  
-  });
-  
+});
