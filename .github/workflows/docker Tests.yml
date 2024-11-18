@@ -43,6 +43,10 @@ jobs:
         sudo chmod +x /usr/local/bin/docker-compose
         docker-compose version
 
+    - name: List Current Directory Contents
+      run: |
+      ls -la
+
     - name: Set up Docker Compose
       run: |
         cd ..  # Move to the correct directory
