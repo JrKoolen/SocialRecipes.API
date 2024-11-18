@@ -21,7 +21,7 @@ jobs:
       run: ls -l  # List files to verify paths
 
     - name: pwd check
-      run: pwd
+      run: pwd #test
 
     - name: Set up Docker Compose
       run: |
