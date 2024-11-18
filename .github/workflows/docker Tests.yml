@@ -49,6 +49,5 @@ jobs:
 
     - name: Set up Docker Compose
       run: |
-        cd ..  # Move to the correct directory
         docker-compose down || true
         docker-compose up -d --build
