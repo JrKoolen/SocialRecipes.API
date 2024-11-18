@@ -22,7 +22,7 @@ jobs:
         pwd
         ls -la /home/runner/work
         ls -la /home/runner/work/SocialRecipes.API
-        ls -la /home/runner/work/Frontend || echo "Frontend directory not found in /home/runner/work"
+        ls -la /home/runner/work/SocialRecipes.API/Frontend || echo "Frontend directory not found in /home/runner/work"
 
 
     - name: Remove Conflicting Docker Packages
