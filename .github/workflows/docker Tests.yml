@@ -45,7 +45,7 @@ jobs:
 
     - name: List Current Directory Contents
       run: |
-      ls -la
+        ls -la
 
     - name: Set up Docker Compose
       run: |
