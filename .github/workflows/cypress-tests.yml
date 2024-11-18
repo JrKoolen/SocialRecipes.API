@@ -1,4 +1,4 @@
-name: CI/CD 
+name: CI/CD Pipeline
 
 on:
   push:
@@ -10,61 +10,53 @@ on:
 
 jobs:
   build-and-test:
-    name: Build and Test Locally
+    name: Build and Test 
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout Code
       uses: actions/checkout@v3
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
-
-    - name: Build API Image
+    - name: Set up Docker Compose
+      working-directory: ./SocialRecipes.API
       run: |
-        docker build -t myapp/api:test -f api/Dockerfile .
+        docker-compose down || true
+        docker-compose up -d --build
 
-    - name: Build Frontend Image
+    - name: Wait for Services to be Ready
+      working-directory: ./SocialRecipes.API
       run: |
-        docker build -t myapp/frontend:test -f frontend/Dockerfile .
+        sleep 15
+        docker ps
 
-    - name: Create Docker Network
-      run: docker network create test-network
-
-    - name: Start Database Service
+    - name: Run API Tests
+      working-directory: ./SocialRecipes.API
       run: |
-        docker run -d --name db --network test-network -e POSTGRES_PASSWORD=password postgres:latest
-
-    - name: Start API Service
-      run: |
-        docker run -d --name api --network test-network -e DATABASE_URL=postgres://user:password@db:5432/dbname myapp/api:test
-
-    - name: Start Frontend Service
-      run: |
-        docker run -d --name frontend --network test-network -p 3000:80 myapp/frontend:test
-
-    - name: Run Tests
-      run: |
-        docker run --rm --network test-network myapp/api:test npm run test
+        docker exec socialrecipes-api-container dotnet test --no-build --logger "trx;LogFileName=test_results.trx"
 
     - name: Upload Test Results
       uses: actions/upload-artifact@v3
       with:
         name: test-results
-        path: test-results.xml
+        path: ./SocialRecipes.API/TestResults/*.trx
+
+    - name: Tear Down Docker Compose
+      working-directory: ./SocialRecipes.API
+      if: always()
+      run: docker-compose down
 
   deploy:
     name: Deploy Locally
     runs-on: ubuntu-latest
     needs: build-and-test
-
     if: success()
 
     steps:
     - name: Tag Production Images
+      working-directory: ./SocialRecipes.API
       run: |
-        docker tag myapp/api:test myapp/api:prod
-        docker tag myapp/frontend:test myapp/frontend:prod
+        docker tag socialrecipes-api-container myapp/api:prod
+        docker tag socialrecipesfrontend-container myapp/frontend:prod
 
     - name: Notify Deployment Success
       run: echo "Local production images have been tagged successfully!"
