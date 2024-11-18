@@ -20,9 +20,11 @@ jobs:
     - name: Debug File Paths
       run: ls -l  # List files to verify paths
 
+    - name: pwd check
+      run: pwd
+
     - name: Set up Docker Compose
       run: |
-      pwd
         docker-compose down || true
         docker-compose up -d --build
         
