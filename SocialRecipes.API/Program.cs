@@ -19,6 +19,19 @@ builder.Logging.AddDebug();
 
 builder.Services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 var jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>();
+
+if (jwtSettings == null)
+{
+    jwtSettings = new JwtSettings
+    {
+        Secret = "T8x!g5#Lk92z@Q7P$G1%XcMZ5L!7DfNlR",
+        Issuer = "http://localhost",
+        Audience = "http://localhost"
+    };
+
+    Console.WriteLine("JwtSettings were missing in the configuration. Using fallback values.");
+}
+
 builder.Services.AddSingleton(jwtSettings);
 
 
