@@ -1,5 +1,5 @@
 name: CI/CD Pipeline
-# test can i please push this file
+# test can i please push this file2
 on:
   push:
     branches:
@@ -80,7 +80,6 @@ jobs:
       with:
         working-directory: ./Frontend
         config: baseUrl=http://localhost:3000
-        start: npm start
         wait-on: http://localhost:3000
         browser: chrome
 
