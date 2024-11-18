@@ -36,7 +36,7 @@ builder.Services.AddSingleton(jwtSettings);
 
 connstring = configuration.GetConnectionString("DefaultConnection");
 if (connstring == null){
-    connstring = "Server=mysql-db;Database=socialrecipesdb;User Id=root;Password=rootpassword;"
+    string connstring = "Server=mysql-db;Database=socialrecipesdb;User Id=root;Password=rootpassword;"
 }
 
 builder.Services.AddDbContext<AppDbContext>(options =>
