@@ -75,7 +75,7 @@ jobs:
     - name: Install Xvfb
       run: sudo apt-get install -y xvfb
 
-     - name: Run Cypress Tests
+    - name: Run Cypress Tests
       uses: cypress-io/github-action@v5
       with:
         config: baseUrl=http://localhost:3000
