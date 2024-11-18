@@ -34,9 +34,13 @@ if (jwtSettings == null)
 
 builder.Services.AddSingleton(jwtSettings);
 
+connstring = configuration.GetConnectionString("DefaultConnection"
+if connstring = null{
+    connstring = "Server=mysql-db;Database=socialrecipesdb;User Id=root;Password=rootpassword;"
+}
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseMySql(configuration.GetConnectionString("DefaultConnection"),
+    options.UseMySql(connstring),
     new MySqlServerVersion(new Version(8, 0, 21)),
     mysqlOptions => mysqlOptions.EnableRetryOnFailure(
         maxRetryCount: 5,
