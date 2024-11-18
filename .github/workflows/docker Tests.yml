@@ -10,21 +10,20 @@ on:
 
 jobs:
   build-and-test:
-    name: Build and Test 
-    runs-on: windows-latest
+    name: Build and Test
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout Code
       uses: actions/checkout@v3
 
-    - name: Install Docker Compose
-      run: |
-        curl -L "https://github.com/docker/compose/releases/download/v2.20.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-        chmod +x /usr/local/bin/docker-compose
-        docker-compose version
+    - name: Display Current Working Directory (Initial)
+      run: pwd
+
+    - name: Check Docker Compose Installation
+      run: docker-compose version
 
     - name: Set up Docker Compose
       run: |
         docker-compose down || true
         docker-compose up -d --build
-
