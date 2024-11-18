@@ -17,20 +17,20 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v3
 
+    - name: Debug File Paths
+      run: ls -l  # List files to verify paths
+
     - name: Set up Docker Compose
-      working-directory: ./SocialRecipes.API
       run: |
         docker-compose down || true
         docker-compose up -d --build
 
     - name: Wait for Services to be Ready
-      working-directory: ./SocialRecipes.API
       run: |
         sleep 15
         docker ps
 
     - name: Run API Tests
-      working-directory: ./SocialRecipes.API
       run: |
         docker exec socialrecipes-api-container dotnet test --no-build --logger "trx;LogFileName=test_results.trx"
 
@@ -41,7 +41,6 @@ jobs:
         path: ./SocialRecipes.API/TestResults/*.trx
 
     - name: Tear Down Docker Compose
-      working-directory: ./SocialRecipes.API
       if: always()
       run: docker-compose down
 
@@ -53,7 +52,6 @@ jobs:
 
     steps:
     - name: Tag Production Images
-      working-directory: ./SocialRecipes.API
       run: |
         docker tag socialrecipes-api-container myapp/api:prod
         docker tag socialrecipesfrontend-container myapp/frontend:prod
