@@ -25,5 +25,8 @@ jobs:
 
     - name: Set up Docker Compose
       run: |
-        docker-compose down || true
-        docker-compose up -d --build
+        pwd  
+        cd ..  # Move up one directory
+        pwd  
+        docker compose down || true
+        docker compose up -d --build
