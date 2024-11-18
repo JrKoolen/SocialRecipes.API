@@ -1,5 +1,5 @@
-const BASE_URL = process.env.API_BASE_URL ||'http://socialrecipes-api-container:8080';
-
+//const BASE_URL = process.env.API_BASE_URL ||'http://socialrecipes-api-container:8080';
+ const BASE_URL = process.env.API_BASE_URL ||'http://localhost:8080';
 module.exports = {
   AUTH: {
     LOGIN: `${BASE_URL}/Auth/login`,
