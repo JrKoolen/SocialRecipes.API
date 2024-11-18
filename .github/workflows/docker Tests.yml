@@ -71,7 +71,10 @@ jobs:
     - name: Wait for Services to Be Ready
       run: 
         sleep 10
-
+    
+    - name: Install Xvfb
+      run: sudo apt-get install -y xvfb
+      
     - name: Run Cypress Tests
       run: |
         docker-compose exec -T frontend npx cypress run --config baseUrl=http://localhost:3000
