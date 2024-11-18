@@ -78,6 +78,7 @@ jobs:
     - name: Run Cypress Tests
       uses: cypress-io/github-action@v5
       with:
+        working-directory: ./Frontend
         config: baseUrl=http://localhost:3000
         start: npm start
         wait-on: http://localhost:3000
