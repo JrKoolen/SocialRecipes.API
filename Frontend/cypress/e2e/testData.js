@@ -26,8 +26,8 @@ export const formFields = {
     validSubmission: {
       description: 'should successfully submit the form with valid inputs',
       data: {
-        username: `testuser_${Date.now()}`,
-        email: `testuser_${Date.now()}@example.com`,
+        username: `testuser_}`,
+        email: `testuser_@example.com`,
         password: 'Password123',
       },
       expectValid: true,
