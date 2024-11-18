@@ -77,8 +77,8 @@ jobs:
         for i in {1..30}; do
           API_READY=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/api/status)
 
-          if [ "$API_READY" -eq 200 ]; then
-            echo "API is ready!"
+          if [ "$API_RESPONSE" -eq 200 ]; then
+            echo "API is ready! Response: $(curl -s http://localhost:8080/api/status)"
             break
           fi
           
@@ -90,6 +90,9 @@ jobs:
           echo "API did not start in time. Exiting..."
           exit 1
         fi
+
+    - name: Check API Logs
+      run: docker-compose logs api
 
     - name: Install Xvfb
       run: sudo apt-get install -y xvfb
