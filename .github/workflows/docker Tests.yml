@@ -17,6 +17,14 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v3
 
+    - name: Debug Directory Structure
+      run: |
+        pwd
+        ls -la /home/runner/work
+        ls -la /home/runner/work/SocialRecipes.API
+        ls -la /home/runner/work/Frontend || echo "Frontend directory not found in /home/runner/work"
+
+
     - name: Remove Conflicting Docker Packages
       run: |
         sudo apt-get remove -y containerd docker docker.io docker-ce docker-ce-cli containerd.io
