@@ -34,19 +34,20 @@ if (jwtSettings == null)
 
 builder.Services.AddSingleton(jwtSettings);
 
-connstring = configuration.GetConnectionString("DefaultConnection");
-if (connstring == null){
-    string connstring = "Server=mysql-db;Database=socialrecipesdb;User Id=root;Password=rootpassword;"
+var connstring = configuration.GetConnectionString("DefaultConnection");
+if (connstring == null)
+{
+    connstring = "Server=mysql-db;Database=socialrecipesdb;User Id=root;Password=rootpassword;";
 }
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseMySql(connstring),
-    new MySqlServerVersion(new Version(8, 0, 21)),
-    mysqlOptions => mysqlOptions.EnableRetryOnFailure(
-        maxRetryCount: 5,
-        maxRetryDelay: TimeSpan.FromSeconds(10),
-        errorNumbersToAdd: null
-    )));
+    options.UseMySql(connstring,
+        new MySqlServerVersion(new Version(8, 0, 21)),
+        mysqlOptions => mysqlOptions.EnableRetryOnFailure(
+            maxRetryCount: 5,
+            maxRetryDelay: TimeSpan.FromSeconds(10),
+            errorNumbersToAdd: null
+        )));
 
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
