@@ -21,7 +21,11 @@ jobs:
       run: pwd
 
     - name: Check Docker Compose Installation
-      run: docker-compose version
+      run: |
+        pwd  
+        cd ..  # Move up one directory
+        pwd  
+       docker-compose version
 
     - name: Set up Docker Compose
       run: |
