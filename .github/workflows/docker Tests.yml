@@ -28,7 +28,7 @@ jobs:
 
     - name: Move to Root Directory
       run: |
-        cd /home/runner/work/SocialRecipes.API  # Navigate to the root where Frontend exists
+        cd /home/runner/work/SocialRecipes.API  
         pwd
         ls -la  # Confirm Frontend is here
 
@@ -69,16 +69,8 @@ jobs:
         docker-compose up -d --build
 
     - name: Wait for Services to Be Ready
-      run: |
-        # Wait for the backend and frontend to be ready
-        for i in {1..30}; do
-          if curl -s http://localhost:3000 && curl -s http://localhost:5000; then
-            echo "Services are up and running!";
-            break;
-          fi
-          echo "Waiting for services to start..."
-          sleep 5;
-        done
+      run: 
+        sleep 10
 
     - name: Run Cypress Tests
       run: |
