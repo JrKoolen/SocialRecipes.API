@@ -20,17 +20,11 @@ jobs:
     - name: Display Current Working Directory (Initial)
       run: pwd
 
-    - name: Check Docker Compose Installation
-      run: |
-        pwd  
-        cd ..  # Move up one directory
-        pwd  
-       docker-compose version
-
     - name: Set up Docker Compose
       run: |
         pwd  
         cd ..  # Move up one directory
         pwd  
+        docker-compose version
         docker compose down || true
         docker compose up -d --build
