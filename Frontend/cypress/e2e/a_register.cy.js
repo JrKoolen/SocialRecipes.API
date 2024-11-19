@@ -22,9 +22,9 @@ describe('Create Account Page', () => {
         validSubmission: {
             description: 'should successfully submit the form with valid inputs',
             data: {
-                username: `testuser`,
+                username: `jan`,
                 email: `testuser@example.com`,
-                password: 'Password123',
+                password: 'jan',
             },
             expectValid: true,
         },
