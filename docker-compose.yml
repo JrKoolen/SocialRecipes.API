@@ -15,7 +15,7 @@ services:
 
   frontend:
     build:
-      context: ../frontend  
+      context: ./Frontend  
     container_name: socialrecipesfrontend-container
     ports:
       - "3000:3000"
