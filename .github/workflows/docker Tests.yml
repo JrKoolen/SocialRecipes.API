@@ -1,0 +1,91 @@
+name: CI/CD Pipeline
+# test can i please push this file2
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build-and-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Debug Directory Structure
+      run: |
+        pwd
+        ls -la /home/runner/work
+        ls -la /home/runner/work/SocialRecipes.API
+        ls -la /home/runner/work/SocialRecipes.API/Frontend || echo "Frontend directory not found"
+
+    - name: Move to Root Directory
+      run: |
+        cd /home/runner/work/SocialRecipes.API  
+        pwd
+        ls -la  # Confirm Frontend is here
+
+
+    - name: Remove Conflicting Docker Packages
+      run: |
+        sudo apt-get remove -y containerd docker docker.io docker-ce docker-ce-cli containerd.io
+        sudo apt-get autoremove -y
+        sudo rm -rf /var/lib/docker /var/lib/containerd
+
+    - name: Install Docker
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          apt-transport-https \
+          ca-certificates \
+          curl \
+          software-properties-common
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+        sudo apt-get update
+        sudo apt-get install -y docker-ce docker-ce-cli containerd.io
+        sudo docker version
+
+    - name: Install Docker Compose
+      run: |
+        sudo curl -L "https://github.com/docker/compose/releases/download/v2.20.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+        sudo chmod +x /usr/local/bin/docker-compose
+        docker-compose version
+
+    - name: List Current Directory Contents
+      run: |
+        ls -la
+
+    - name: Set up Docker Compose
+      run: |
+        docker-compose down || true
+        docker-compose up -d --build
+
+    - name: Wait for Services to Be Ready
+      run: 
+        sleep 10
+        
+    - name: Check API Logs
+      run: docker-compose logs api
+
+    - name: Install Xvfb
+      run: sudo apt-get install -y xvfb
+
+    - name: Run Cypress Tests
+      uses: cypress-io/github-action@v5
+      with:
+        working-directory: ./Frontend
+        config: baseUrl=http://localhost:3000
+        wait-on: http://localhost:3000
+        browser: chrome
+
+    - name: Stop Docker Compose Services
+      run: |
+        docker-compose down
