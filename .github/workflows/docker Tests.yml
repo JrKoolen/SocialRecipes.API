@@ -89,3 +89,12 @@ jobs:
     - name: Stop Docker Compose Services
       run: |
         docker-compose down
+
+    - name: Merge to Release Branch
+      if: success()  
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git checkout release
+        git merge master -m "CI/CD: Merge master into release [skip ci]"
+        git push origin release
