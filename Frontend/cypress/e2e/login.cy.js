@@ -21,8 +21,8 @@ describe('Login Page Tests', () => {
 
   it('should login successfully with valid credentials', () => {
     cy.visit('http://localhost:3000/login');
-    cy.get('input[name="username"]').type('Jan'); 
-    cy.get('input[name="password"]').type('Jan');
+    cy.get('input[name="username"]').type('jan'); 
+    cy.get('input[name="password"]').type('jan');
     cy.get('button[type="submit"]').click();
 
     cy.url().should('include', '/user-page'); 
