@@ -19,17 +19,35 @@ builder.Logging.AddDebug();
 
 builder.Services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 var jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>();
+
+if (jwtSettings == null)
+{
+    jwtSettings = new JwtSettings
+    {
+        Secret = "T8x!g5#Lk92z@Q7P$G1%XcMZ5L!7DfNlR",
+        Issuer = "http://localhost",
+        Audience = "http://localhost"
+    };
+
+    Console.WriteLine("JwtSettings were missing in the configuration. Using fallback values.");
+}
+
 builder.Services.AddSingleton(jwtSettings);
 
+var connstring = configuration.GetConnectionString("DefaultConnection");
+if (connstring == null)
+{
+    connstring = "Server=mysql-db;Database=socialrecipesdb;User Id=root;Password=rootpassword;";
+}
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseMySql(configuration.GetConnectionString("DefaultConnection"),
-    new MySqlServerVersion(new Version(8, 0, 21)),
-    mysqlOptions => mysqlOptions.EnableRetryOnFailure(
-        maxRetryCount: 5,
-        maxRetryDelay: TimeSpan.FromSeconds(10),
-        errorNumbersToAdd: null
-    )));
+    options.UseMySql(connstring,
+        new MySqlServerVersion(new Version(8, 0, 21)),
+        mysqlOptions => mysqlOptions.EnableRetryOnFailure(
+            maxRetryCount: 5,
+            maxRetryDelay: TimeSpan.FromSeconds(10),
+            errorNumbersToAdd: null
+        )));
 
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
