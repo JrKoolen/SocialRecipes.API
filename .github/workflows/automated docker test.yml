@@ -1,0 +1,34 @@
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  update-docker:
+    name: Update Docker
+    runs-on: windows-latest
+    needs: build-and-test-docker-frontend
+    if: github.event_name != 'workflow_dispatch' || github.event.inputs.run_build_and_test == 'true'
+    steps:
+      - name: Debug Directory Structure
+        run: |
+          pwd
+          ls 
+          ls -la /d/a/SocialRecipes.API
+
+      - name: Run update-docker.sh
+        run: |
+          cd /d/a/SocialRecipes.API
+          pwd
+          ./update-docker.sh
+
+      - name: Run update-docker.sh
+        run: |
+          cd /d/a
+          pwd
+          ./update-docker.sh
+
