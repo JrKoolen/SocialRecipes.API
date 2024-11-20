@@ -33,8 +33,8 @@ jobs:
         pwd
         ls -la  # Confirm Frontend is here
 
-    - name: Test
-      run: /home/runner/work/SocialRecipes.API/SocialRecipes.Tests --no-build --verbosity normal
+    - name: API unit Test
+      run: /SocialRecipes.Tests --no-build --verbosity normal
 
     - name: Remove Conflicting Docker Packages
       run: |
