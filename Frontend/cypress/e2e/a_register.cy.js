@@ -8,35 +8,7 @@ describe('Create Account Page', () => {
         submitButton: 'button[type="submit"]',
     };
 
-    const testData = {
-        emptyFields: {
-            description: 'should show required field errors on empty form submission',
-            data: { username: '', email: '', password: '' },
-            expectValid: false,
-        },
-        invalidEmail: {
-            description: 'should show an error for invalid email format',
-            data: { username: 'testuser', email: 'invalid-email', password: 'Password123' },
-            expectValid: false,
-        },
-        validSubmission: {
-            description: 'should successfully submit the form with valid inputs',
-            data: {
-                username: `testuser`,
-                email: `testuser@example.com`,
-                password: 'Password123',
-            },
-            expectValid: true,
-        },
-    };
-
-    function fillForm({ username, email, password }) {
-        if (username) cy.get(formFields.username).type(username);
-        if (email) cy.get(formFields.email).type(email);
-        if (password) cy.get(formFields.password).type(password);
-    }
-
-    it('should load the registration form', () => {
+    it('should load the registration form successfully', () => {
         cy.visit(baseUrl);
         cy.get('form#createAccountForm').should('be.visible');
         cy.get(formFields.username).should('be.visible');
@@ -45,32 +17,48 @@ describe('Create Account Page', () => {
         cy.get(formFields.submitButton).should('be.visible');
     });
 
-    Cypress._.each(testData, (test) => {
-        it(test.description, () => {
-            cy.visit(baseUrl);
-            fillForm(test.data);
-            cy.get(formFields.submitButton).click();
+    it('should show required field errors on empty form submission', () => {
+        cy.visit(baseUrl);
+        cy.get(formFields.submitButton).click();
 
-            if (test.expectValid) {
-                cy.url().should('include', '/login');
-                cy.contains('Login').should('be.visible');
-            } else {
-                if (!test.data.username) {
-                    cy.get(formFields.username).then(($input) => {
-                        expect($input[0].checkValidity()).to.be.false;
-                    });
-                }
-                if (!test.data.email || test.data.email.includes('invalid')) {
-                    cy.get(formFields.email).then(($input) => {
-                        expect($input[0].checkValidity()).to.be.false;
-                    });
-                }
-                if (!test.data.password) {
-                    cy.get(formFields.password).then(($input) => {
-                        expect($input[0].checkValidity()).to.be.false;
-                    });
-                }
-            }
+        cy.get(formFields.username).should('have.attr', 'required');
+        cy.get(formFields.username).then(($input) => {
+            expect($input[0].checkValidity()).to.be.false;
         });
+
+        cy.get(formFields.email).should('have.attr', 'required');
+        cy.get(formFields.email).then(($input) => {
+            expect($input[0].checkValidity()).to.be.false;
+        });
+
+        cy.get(formFields.password).should('have.attr', 'required');
+        cy.get(formFields.password).then(($input) => {
+            expect($input[0].checkValidity()).to.be.false;
+        });
+    });
+
+    it('should show an error for invalid email format', () => {
+        cy.visit(baseUrl);
+        cy.get(formFields.username).type('testuser1');
+        cy.get(formFields.email).type('invalid-email');
+        cy.get(formFields.password).type('Password123');
+        cy.get(formFields.submitButton).click();
+
+        cy.get(formFields.email).then(($input) => {
+            expect($input[0].checkValidity()).to.be.false;
+        });
+    });
+
+    it('should successfully submit the form with valid inputs', () => {
+        const uniqueEmail = `testuser-${Date.now()}@example.com`;
+
+        cy.visit(baseUrl);
+        cy.get(formFields.username).type('testuser');
+        cy.get(formFields.email).type(uniqueEmail);
+        cy.get(formFields.password).type('Password123');
+        cy.get(formFields.submitButton).click();
+
+        cy.url().should('include', '/login');
+        cy.contains('Login').should('be.visible');
     });
 });
