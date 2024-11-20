@@ -106,10 +106,7 @@ jobs:
     steps:
       - name: Debug Directory Structure
         shell: bash
-        run: |
-          pwd
-          ls -la /home/runner/work
-          ls -la /home/runner/work/SocialRecipes.API
+        run: pwd
 
       - name: Run update-docker.sh
         shell: bash
