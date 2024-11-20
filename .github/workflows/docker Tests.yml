@@ -99,8 +99,8 @@ jobs:
  #       git push origin release
 
 
-jobs:
-  update-docker:
+ update-docker:
+    name: Update Docker
     runs-on: windows-latest
     needs: build-and-test
     steps:
@@ -110,6 +110,7 @@ jobs:
           pwd
           ls -la /home/runner/work
           ls -la /home/runner/work/SocialRecipes.API
+
       - name: Run update-docker.sh
         shell: bash
         run: ./update-docker.sh
