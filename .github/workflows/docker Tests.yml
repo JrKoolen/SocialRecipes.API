@@ -33,6 +33,8 @@ jobs:
         pwd
         ls -la  # Confirm Frontend is here
 
+    - name: Test
+      run: /home/runner/work/SocialRecipes.API/SocialRecipes.Tests --no-build --verbosity normal
 
     - name: Remove Conflicting Docker Packages
       run: |
@@ -86,15 +88,6 @@ jobs:
         config: baseUrl=http://localhost:3000
         wait-on: http://localhost:3000
         browser: chrome
-
-    - name: Debug Directory Structure
-      run: |
-        pwd
-        ls -la
-        ls -la socialrecipes.api
-
-    - name: Test
-      run: /home/runner/work/SocialRecipes.API/SocialRecipes.Tests --no-build --verbosity normal
 
     - name: Stop Docker Compose Services
       run: |
