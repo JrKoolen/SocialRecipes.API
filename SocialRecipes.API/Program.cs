@@ -53,7 +53,7 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<RecipeService>();
 builder.Services.AddScoped<IRecipeRepository, RecipeRepository>();
-builder.Services.AddScoped<FollowerService>();
+builder.Services.AddScoped<FollowService>();
 builder.Services.AddScoped<IFollowerRepository, FollowerRepository>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();

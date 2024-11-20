@@ -7,6 +7,6 @@ namespace SocialRecipes.Services.IRepositories
         Task<UserDto[]> GetFollowersAsync(int userId);
         Task<UserDto[]> GetFollowingAsync(int userId);
         Task FollowAsync(int userId, int followerId);
-        Task RemoveFollowAsync(int userId, int followerId);
+        Task<bool> RemoveFollowAsync(int userId, int followerId);
     }
 }

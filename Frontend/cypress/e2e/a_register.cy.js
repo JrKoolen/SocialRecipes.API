@@ -53,7 +53,7 @@ describe('Create Account Page', () => {
         const uniqueEmail = `testuser-${Date.now()}@example.com`;
 
         cy.visit(baseUrl);
-        cy.get(formFields.username).type('testuser');
+        cy.get(formFields.username).type(`testuser-${Date.now()}`);
         cy.get(formFields.email).type(uniqueEmail);
         cy.get(formFields.password).type('Password123');
         cy.get(formFields.submitButton).click();

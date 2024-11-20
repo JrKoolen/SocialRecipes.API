@@ -3,20 +3,34 @@ using SocialRecipes.Domain.Dto.General;
 
 namespace SocialRecipes.Services.Services
 {
-    public class FollowerService 
+    public class FollowService 
     {
         private readonly IFollowerRepository _followerRepository;
 
-        public FollowerService(IFollowerRepository followerRepository)
+        public FollowService(IFollowerRepository followerRepository)
         {
             _followerRepository = followerRepository;
         }
 
-        public async Task<bool> FollowAsync(int userId, int followerId)
+        public async Task<bool> FollowAsync(int? userId, int? followerId)
         {
+            if (userId == followerId)
+            {
+                return false;
+            }
+            if (userId == null || followerId == null)
+            {
+                return false;
+            }
+
+            if (userId <= 0 || followerId <= 0)
+            {
+                return false;
+            }
+
             try
             {
-                await _followerRepository.FollowAsync(userId, followerId);
+                await _followerRepository.FollowAsync(userId.Value, followerId.Value);
                 return true;
             }
             catch
@@ -24,6 +38,7 @@ namespace SocialRecipes.Services.Services
                 return false;
             }
         }
+
 
         public async Task<UserDto[]> GetFollowersAsync(int userId)
         {
@@ -37,6 +52,11 @@ namespace SocialRecipes.Services.Services
 
         public async Task<bool> RemoveFollowAsync(int userId, int followerId)
         {
+            if (userId <= 0 || followerId <= 0)
+            {
+                return false;
+            }
+
             try
             {
                 await _followerRepository.RemoveFollowAsync(userId, followerId);
@@ -47,5 +67,6 @@ namespace SocialRecipes.Services.Services
                 return false;
             }
         }
+
     }
 }

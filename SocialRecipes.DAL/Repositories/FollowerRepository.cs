@@ -57,16 +57,32 @@ namespace SocialRecipes.DAL.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task RemoveFollowAsync(int userId, int followerId)
+        public async Task<bool> RemoveFollowAsync(int userId, int followerId)
         {
-            var followEntry = await _context.Followers
-                .FirstOrDefaultAsync(f => f.FollowingUserId == followerId && f.FollowedUserId == userId);
-
-            if (followEntry != null)
+            if (userId <= 0 || followerId <= 0)
             {
-                _context.Followers.Remove(followEntry);
-                await _context.SaveChangesAsync();
+                return false;
+            }
+
+            try
+            {
+                var followEntry = await _context.Followers
+                    .FirstOrDefaultAsync(f => f.FollowingUserId == followerId && f.FollowedUserId == userId);
+
+                if (followEntry != null)
+                {
+                    _context.Followers.Remove(followEntry);
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+
+                return false; 
+            }
+            catch
+            {
+                return false; 
             }
         }
+
     }
 }

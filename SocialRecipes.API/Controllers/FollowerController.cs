@@ -9,9 +9,9 @@ namespace SocialRecipes.API.Controllers
     public class FollowController : Controller
     {
         private readonly ILogger<FollowController> _logger;
-        private readonly FollowerService _followerService;
+        private readonly FollowService _followerService;
 
-        public FollowController(ILogger<FollowController> logger, FollowerService followerService)
+        public FollowController(ILogger<FollowController> logger, FollowService followerService)
         {
             _logger = logger;
             _followerService = followerService;
