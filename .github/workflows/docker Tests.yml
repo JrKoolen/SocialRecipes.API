@@ -38,7 +38,7 @@ jobs:
       run: |
        cd /home/runner/work/SocialRecipes.API
        ls -la /home/runner/work/SocialRecipes.API
-       dotnet test SocialRecipes.Tests --no-build --verbosity normal
+       dotnet test SocialRecipes.API.sln --no-build --verbosity normal
 
     - name: Remove Conflicting Docker Packages
       run: |
