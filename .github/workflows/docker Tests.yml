@@ -20,7 +20,7 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 8.0.x
-        
+
     - name: Restore dependencies
       run: dotnet restore
 
@@ -134,10 +134,21 @@ jobs:
     needs: build-and-test-docker-frontend
     if: github.event_name != 'workflow_dispatch' || github.event.inputs.run_build_and_test == 'true'
     steps:
-      - name: Run update-docker.sh
-        shell: bash
+      - name: Debug Directory Structure
         run: |
           pwd
           ls -la
+          ls -la /d/a/SocialRecipes.API
+
+      - name: Run update-docker.sh
+        run: |
+          cd /d/a/SocialRecipes.API
+          pwd
           ./update-docker.sh
-         
+
+      - name: Run update-docker.sh
+        run: |
+          cd /d/a
+          pwd
+          ./update-docker.sh
+
