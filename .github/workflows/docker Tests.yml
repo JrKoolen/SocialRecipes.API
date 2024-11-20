@@ -97,3 +97,19 @@ jobs:
  #       git checkout release
  #       git merge master -m "CI/CD: Merge master into release [skip ci]"
  #       git push origin release
+
+
+jobs:
+  update-docker:
+    runs-on: windows-latest
+    needs: build-and-test
+    steps:
+      - name: Debug Directory Structure
+        run: |
+          pwd
+          ls -la /home/runner/work
+          ls -la /home/runner/work/SocialRecipes.API
+
+      - name: Run update-docker.sh
+        shell: bash
+        run: ./update-docker.sh
