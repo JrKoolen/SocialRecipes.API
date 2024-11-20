@@ -25,6 +25,7 @@ jobs:
         pwd
         ls -la /home/runner/work
         ls -la /home/runner/work/SocialRecipes.API
+        ls -la SocialRecipes.Tests
         ls -la /home/runner/work/SocialRecipes.API/Frontend || echo "Frontend directory not found"
 
     - name: Move to Root Directory
