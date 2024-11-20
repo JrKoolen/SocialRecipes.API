@@ -87,10 +87,14 @@ jobs:
         wait-on: http://localhost:3000
         browser: chrome
 
-    - name: Test
+    - name: Debug Directory Structure
       run: |
-      cd .. 
-      dotnet test --no-build --verbosity normal
+        pwd
+        ls -la
+        ls -la socialrecipes.api
+
+    - name: Test
+      run: dotnet test socialrecipes.api/socialrecipes.tests --no-build --verbosity normal
 
     - name: Stop Docker Compose Services
       run: |
