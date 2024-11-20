@@ -99,7 +99,7 @@ jobs:
  #       git push origin release
 
 
- update-docker:
+  update-docker:
     name: Update Docker
     runs-on: windows-latest
     needs: build-and-test
