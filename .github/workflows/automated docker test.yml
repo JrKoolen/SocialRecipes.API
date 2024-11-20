@@ -11,24 +11,20 @@ jobs:
   update-docker:
     name: Update Docker
     runs-on: windows-latest
-    needs: build-and-test-docker-frontend
-    if: github.event_name != 'workflow_dispatch' || github.event.inputs.run_build_and_test == 'true'
+
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
       - name: Debug Directory Structure
         run: |
           pwd
-          ls 
-          ls -la /d/a/SocialRecipes.API
+          ls
+          ls -la $GITHUB_WORKSPACE
 
+      # Run update-docker.sh
       - name: Run update-docker.sh
         run: |
-          cd /d/a/SocialRecipes.API
+          cd $GITHUB_WORKSPACE
           pwd
           ./update-docker.sh
-
-      - name: Run update-docker.sh
-        run: |
-          cd /d/a
-          pwd
-          ./update-docker.sh
-
