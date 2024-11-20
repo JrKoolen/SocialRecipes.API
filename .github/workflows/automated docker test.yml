@@ -20,7 +20,6 @@ jobs:
         run: |
           pwd
           ls
-          ls -la $GITHUB_WORKSPACE
 
       # Run update-docker.sh
       - name: Run update-docker.sh
