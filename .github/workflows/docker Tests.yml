@@ -109,8 +109,9 @@ jobs:
       - name: Debug Directory Structure
         shell: bash
         run: |
-          cd..
+          cd ..
           pwd
+          ls -la
 
       - name: Run update-docker.sh
         shell: bash
