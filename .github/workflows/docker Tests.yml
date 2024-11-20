@@ -110,4 +110,5 @@ jobs:
 
       - name: Run update-docker.sh
         shell: bash
-        run: ./update-docker.sh
+        run: socialrecipes.api/update-docker.sh 
+         
