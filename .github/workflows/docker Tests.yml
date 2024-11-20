@@ -31,7 +31,7 @@ jobs:
       run: |
         cd /home/runner/work/SocialRecipes.API  
         pwd
-        ls -la  # Confirm Frontend is here
+        ls  
 
     - name: API unit Test
       run: SocialRecipes.API/SocialRecipes.Tests --no-build --verbosity normal
