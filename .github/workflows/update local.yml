@@ -1,0 +1,19 @@
+jobs:
+  update-docker:
+  runs-on: windows-latest
+
+  steps:
+
+  -name: Checkout Code
+    uses: actions/checkout@v3
+    with:
+      fetch-depth: 0
+  
+  -name: Debug Directory Structure
+    run: |
+      pwd
+      ls -la /home/runner/work
+      ls -la /home/runner/work/SocialRecipes.API
+
+  -name: run update-docker.sh
+   run: ./.github/workflows/update-docker.sh
