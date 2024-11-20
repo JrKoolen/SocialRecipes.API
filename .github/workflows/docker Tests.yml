@@ -7,6 +7,7 @@ on:
   pull_request:
     branches:
       - master
+  workflow_dispatch:
 
 jobs:
   build-and-test:
@@ -103,12 +104,15 @@ jobs:
     name: Update Docker
     runs-on: windows-latest
     needs: build-and-test
+    if: github.event_name != 'workflow_dispatch' || github.event.inputs.run_build_and_test == 'true'
     steps:
       - name: Debug Directory Structure
         shell: bash
-        run: pwd
+        run: |
+          cd..
+          pwd
 
       - name: Run update-docker.sh
         shell: bash
-        run: socialrecipes.api/update-docker.sh 
+        run: SocialRecipes.API/update-docker.sh 
          
