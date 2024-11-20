@@ -10,10 +10,27 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-test:
-    name: Build and Test
-    runs-on: ubuntu-latest
+  Build-and-test-API:
+    name: Build and Test API
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 8.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
 
+
+  build-and-test-docker-frontend:
+    name: Build and Test frontend & docker
+    runs-on: ubuntu-latest
+    needs: Build-and-test-API
     steps:
     - name: Checkout Code
       uses: actions/checkout@v3
@@ -33,8 +50,7 @@ jobs:
         pwd
         ls -la SocialRecipes.API
 
-    #- name: API unit Test
-   #   run: dotnet test SocialRecipes.API/SocialRecipes.Tests/SocialRecipes.Tests.csproj --no-build --verbosity normal
+
 
     - name: Remove Conflicting Docker Packages
       run: |
@@ -105,7 +121,7 @@ jobs:
   update-docker:
     name: Update Docker
     runs-on: windows-latest
-    needs: build-and-test
+    needs: build-and-test-docker-frontend
     if: github.event_name != 'workflow_dispatch' || github.event.inputs.run_build_and_test == 'true'
     steps:
       - name: Debug Directory Structure
