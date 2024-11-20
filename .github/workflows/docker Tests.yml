@@ -91,7 +91,7 @@ jobs:
       run: |
         pwd
         ls -la
-        ls -la socialrecipes.api
+        ls -la SocialRecipes.Tests
 
     - name: Test
       run: dotnet test socialrecipes.api/socialrecipes.tests --no-build --verbosity normal
