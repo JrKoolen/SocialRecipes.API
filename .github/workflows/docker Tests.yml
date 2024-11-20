@@ -87,6 +87,9 @@ jobs:
         wait-on: http://localhost:3000
         browser: chrome
 
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
+
     - name: Stop Docker Compose Services
       run: |
         docker-compose down
@@ -109,11 +112,15 @@ jobs:
       - name: Debug Directory Structure
         shell: bash
         run: |
-          cd ..
           pwd
           ls -la
+          ls -la SocialRecipes.API
 
       - name: Run update-docker.sh
         shell: bash
-        run: SocialRecipes.API/update-docker.sh 
+        run: |
+          cd SocialRecipes.API
+          pwd
+          ls -la
+          ./update-docker.sh
          
