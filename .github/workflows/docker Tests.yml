@@ -124,17 +124,9 @@ jobs:
     needs: build-and-test-docker-frontend
     if: github.event_name != 'workflow_dispatch' || github.event.inputs.run_build_and_test == 'true'
     steps:
-      - name: Debug Directory Structure
-        shell: bash
-        run: |
-          pwd
-          ls -la
-          ls -la SocialRecipes.API
-
       - name: Run update-docker.sh
         shell: bash
         run: |
-          cd SocialRecipes.API
           pwd
           ls -la
           ./update-docker.sh
