@@ -130,7 +130,9 @@ jobs:
   update-docker:
     name: Update Docker
     runs-on: windows-latest
-    needs: build-and-test-docker-frontend
+    needs: | 
+      build-and-test-docker-frontend
+      build-and-test-API
     if: github.event_name != 'workflow_dispatch' || github.event.inputs.run_build_and_test == 'true'
     steps:
       - name: Debug Directory Structure
