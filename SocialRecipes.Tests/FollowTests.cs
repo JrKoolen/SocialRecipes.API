@@ -34,7 +34,6 @@ namespace SocialRecipes.Tests
             // Arrange
             if (userId.HasValue && followerId.HasValue && userId > 0 && followerId > 0)
             {
-                // Simulate successful repository call
                 _mockFollowerRepository
                     .Setup(repo => repo.FollowAsync(userId.Value, followerId.Value))
                     .Returns(Task.CompletedTask);
