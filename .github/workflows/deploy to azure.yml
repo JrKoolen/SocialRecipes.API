@@ -41,7 +41,8 @@ jobs:
       - name: Deploy API to ACI
         run: |
           az container create \
-            --resource-group <your-resource-group> \
+            --resource-group az group list --query "[].name" -o table
+
             --name socialrecipes-api \
             --image SocialRecipes.azurecr.io/socialrecipes-api:${{ github.sha }} \
             --cpu 1 --memory 1.5Gb \
@@ -54,7 +55,7 @@ jobs:
       - name: Deploy Frontend to ACI
         run: |
           az container create \
-            --resource-group <your-resource-group> \
+            --resource-group SocialRecipes \
             --name socialrecipes-frontend \
             --image SocialRecipes.azurecr.io/socialrecipes-frontend:${{ github.sha }} \
             --cpu 1 --memory 1.5Gb \
