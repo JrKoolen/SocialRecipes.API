@@ -55,7 +55,7 @@ jobs:
       - name: Deploy Frontend to ACI
         run: |
           az container create \
-          --resource-group SocialRecipes \  
+          --resource-group SocialRecipes \
           --name socialrecipes-frontend \
           --image socialrecipes.azurecr.io/socialrecipes-frontend:${{ github.sha }} \
           --cpu 1 \
@@ -64,4 +64,5 @@ jobs:
           --registry-username ${{ secrets.AZURE_ACR_USERNAME }} \
           --registry-password ${{ secrets.AZURE_ACR_PASSWORD }} \
           --dns-name-label socialrecipes-frontend-${{ github.sha }} \
-          --ports 80
+          --ports 80 \
+          --debug
