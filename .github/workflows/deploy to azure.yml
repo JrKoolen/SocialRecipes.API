@@ -38,6 +38,11 @@ jobs:
           docker build -f ./Frontend/Dockerfile -t SocialRecipes.azurecr.io/socialrecipes-frontend:${{ github.sha }} ./Frontend
           docker push SocialRecipes.azurecr.io/socialrecipes-frontend:${{ github.sha }}
 
+      - name: Build and Push Database Image
+        run: |
+          docker build -f ./db/Dockerfile -t SocialRecipes.azurecr.io/socialrecipes-database:${{ github.sha }} ./db
+          docker push SocialRecipes.azurecr.io/socialrecipes-database:${{ github.sha }}
+
       - name: Deploy API to ACI
         run: |
           az container create \
@@ -65,4 +70,20 @@ jobs:
           --registry-password ${{ secrets.AZURE_ACR_PASSWORD }} \
           --dns-name-label socialrecipes-frontend-${{ github.sha }} \
           --ports 80 \
+          --debug
+
+      - name: Deploy Database to ACI
+        run: |
+          az container create \
+          --resource-group SocialRecipes \
+          --name socialrecipes-database \
+          --image socialrecipes.azurecr.io/socialrecipes-database:${{ github.sha }} \
+          --cpu 1 \
+          --memory 2.0 \
+          --registry-login-server socialrecipes.azurecr.io \
+          --registry-username ${{ secrets.AZURE_ACR_USERNAME }} \
+          --registry-password ${{ secrets.AZURE_ACR_PASSWORD }} \
+          --dns-name-label socialrecipes-database-${{ github.sha }} \
+          --ports 5432 \
+          --environment-variables POSTGRES_USER=myuser POSTGRES_PASSWORD=mypassword POSTGRES_DB=mydatabase \
           --debug
