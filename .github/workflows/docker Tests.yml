@@ -129,27 +129,54 @@ jobs:
 
   update-docker:
     name: Update Docker
-    runs-on: windows-latest
-    needs:  
-      - build-and-test-docker-frontend
-      - build-and-test-API
-    if: github.event_name != 'workflow_dispatch' || github.event.inputs.run_build_and_test == 'true'
+    runs-on: ubuntu-latest
+
     steps:
-      - name: Debug Directory Structure
-        run: |
-          pwd
-          ls -la
-          ls -la /d/a/SocialRecipes.API
+      # Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Run update-docker.sh
-        run: |
-          cd /d/a/SocialRecipes.API
-          pwd
-          ./update-docker.sh
+      # Log in to Azure
+      - name: Log in to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Run update-docker.sh
+      # Log in to Azure Container Registry (ACR)
+      - name: Log in to ACR
         run: |
-          cd /d/a
-          pwd
-          ./update-docker.sh
+          az acr login --name <your-acr-name>
 
+      # Build and Push API Docker Image
+      - name: Build and Push API Image
+        run: |
+          docker build -f Dockerfile -t <your-acr-name>.azurecr.io/socialrecipes-api:${{ github.sha }} .
+          docker push <your-acr-name>.azurecr.io/socialrecipes-api:${{ github.sha }}
+
+      # Build and Push Frontend Docker Image
+      - name: Build and Push Frontend Image
+        run: |
+          docker build -f ./Frontend/Dockerfile -t <your-acr-name>.azurecr.io/socialrecipes-frontend:${{ github.sha }} ./Frontend
+          docker push <your-acr-name>.azurecr.io/socialrecipes-frontend:${{ github.sha }}
+
+      # Set up kubectl
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'latest'
+
+      # Configure Kubernetes context
+      - name: Configure AKS context
+        uses: azure/aks-set-context@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          cluster-name: <your-cluster-name>
+          resource-group: <your-resource-group>
+
+      # Deploy to AKS
+      - name: Deploy to AKS
+        run: |
+          kubectl set image deployment/api-deployment api=<your-acr-name>.azurecr.io/socialrecipes-api:${{ github.sha }}
+          kubectl set image deployment/frontend-deployment frontend=<your-acr-name>.azurecr.io/socialrecipes-frontend:${{ github.sha }}
+          kubectl rollout status deployment/api-deployment
+          kubectl rollout status deployment/frontend-deployment
