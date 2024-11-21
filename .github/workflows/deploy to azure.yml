@@ -40,17 +40,18 @@ jobs:
 
       - name: Deploy API to ACI
         run: |
-            az container create \
-            --resource-group SocialRecipes \
-            --name socialrecipes-api \
-            --image socialrecipes.azurecr.io/socialrecipes-api:${{ github.sha }} \
-            --cpu 1 --memory 1.5Gb \
-            --registry-login-server socialrecipes.azurecr.io \
-            --registry-username ${{ secrets.AZURE_ACR_USERNAME }} \
-            --registry-password ${{ secrets.AZURE_ACR_PASSWORD }} \
-            --dns-name-label socialrecipes-api-${{ github.sha }} \
-            --ports 80 \
-            --debug
+          az container create \
+          --resource-group SocialRecipes \
+          --name socialrecipes-api \
+          --image socialrecipes.azurecr.io/socialrecipes-api:${{ github.sha }} \
+          --cpu 1 \
+          --memory 1.5 \
+          --registry-login-server socialrecipes.azurecr.io \
+          --registry-username ${{ secrets.AZURE_ACR_USERNAME }} \
+          --registry-password ${{ secrets.AZURE_ACR_PASSWORD }} \
+          --dns-name-label socialrecipes-api-${{ github.sha }} \
+          --ports 80 \
+          --debug
   
       - name: Deploy Frontend to ACI
         run: |
