@@ -1,5 +1,4 @@
 name: CI/CD Pipeline
-# test
 on:
   push:
     branches:
@@ -127,56 +126,85 @@ jobs:
  #       git push origin release
 
 
-  update-docker:
-    name: Update Docker
+  build-and-deploy:
+    needs: 
+      - Build-and-test-API
+      - build-and-test-docker-frontend
+    name: Build and Deploy to azure container instances
     runs-on: ubuntu-latest
-
     steps:
-      # Checkout code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Log in to Azure
       - name: Log in to Azure
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # Log in to Azure Container Registry (ACR)
       - name: Log in to ACR
         run: |
-          az acr login --name <your-acr-name>
+          az acr login --name SocialRecipes
 
-      # Build and Push API Docker Image
+      - name: Docker Login to ACR
+        run: |
+          echo ${{ secrets.AZURE_ACR_PASSWORD }} | docker login SocialRecipes.azurecr.io --username ${{ secrets.AZURE_ACR_USERNAME }} --password-stdin
+
       - name: Build and Push API Image
         run: |
-          docker build -f Dockerfile -t <your-acr-name>.azurecr.io/socialrecipes-api:${{ github.sha }} .
-          docker push <your-acr-name>.azurecr.io/socialrecipes-api:${{ github.sha }}
+          docker build -f Dockerfile -t SocialRecipes.azurecr.io/socialrecipes-api:${{ github.sha }} .
+          docker push SocialRecipes.azurecr.io/socialrecipes-api:${{ github.sha }}
 
-      # Build and Push Frontend Docker Image
       - name: Build and Push Frontend Image
         run: |
-          docker build -f ./Frontend/Dockerfile -t <your-acr-name>.azurecr.io/socialrecipes-frontend:${{ github.sha }} ./Frontend
-          docker push <your-acr-name>.azurecr.io/socialrecipes-frontend:${{ github.sha }}
+          docker build -f ./Frontend/Dockerfile -t SocialRecipes.azurecr.io/socialrecipes-frontend:${{ github.sha }} ./Frontend
+          docker push SocialRecipes.azurecr.io/socialrecipes-frontend:${{ github.sha }}
 
-      # Set up kubectl
-      - name: Set up kubectl
-        uses: azure/setup-kubectl@v3
-        with:
-          version: 'latest'
-
-      # Configure Kubernetes context
-      - name: Configure AKS context
-        uses: azure/aks-set-context@v2
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-          cluster-name: <your-cluster-name>
-          resource-group: <your-resource-group>
-
-      # Deploy to AKS
-      - name: Deploy to AKS
+      - name: Build and Push Database Image
         run: |
-          kubectl set image deployment/api-deployment api=<your-acr-name>.azurecr.io/socialrecipes-api:${{ github.sha }}
-          kubectl set image deployment/frontend-deployment frontend=<your-acr-name>.azurecr.io/socialrecipes-frontend:${{ github.sha }}
-          kubectl rollout status deployment/api-deployment
-          kubectl rollout status deployment/frontend-deployment
+          docker build -f ./db/Dockerfile -t SocialRecipes.azurecr.io/socialrecipes-database:${{ github.sha }} ./db
+          docker push SocialRecipes.azurecr.io/socialrecipes-database:${{ github.sha }}
+
+      - name: Deploy API to ACI
+        run: |
+          az container create \
+          --resource-group SocialRecipes \
+          --name socialrecipes-api \
+          --image socialrecipes.azurecr.io/socialrecipes-api:${{ github.sha }} \
+          --cpu 1 \
+          --memory 1.5 \
+          --registry-login-server socialrecipes.azurecr.io \
+          --registry-username ${{ secrets.AZURE_ACR_USERNAME }} \
+          --registry-password ${{ secrets.AZURE_ACR_PASSWORD }} \
+          --dns-name-label socialrecipes-api-${{ github.sha }} \
+          --ports 80 \
+  
+      - name: Deploy Frontend to ACI
+        run: |
+          az container create \
+          --resource-group SocialRecipes \
+          --name socialrecipes-frontend \
+          --image socialrecipes.azurecr.io/socialrecipes-frontend:${{ github.sha }} \
+          --cpu 1 \
+          --memory 1.5 \
+          --registry-login-server socialrecipes.azurecr.io \
+          --registry-username ${{ secrets.AZURE_ACR_USERNAME }} \
+          --registry-password ${{ secrets.AZURE_ACR_PASSWORD }} \
+          --dns-name-label socialrecipes-frontend-${{ github.sha }} \
+          --ports 80 \
+          --debug
+
+      - name: Deploy Database to ACI
+        run: |
+          az container create \
+          --resource-group SocialRecipes \
+          --name socialrecipes-database \
+          --image socialrecipes.azurecr.io/socialrecipes-database:${{ github.sha }} \
+          --cpu 1 \
+          --memory 2.0 \
+          --registry-login-server socialrecipes.azurecr.io \
+          --registry-username ${{ secrets.AZURE_ACR_USERNAME }} \
+          --registry-password ${{ secrets.AZURE_ACR_PASSWORD }} \
+          --dns-name-label socialrecipes-database-${{ github.sha }} \
+          --ports 5432 \
+          --environment-variables POSTGRES_USER=myuser POSTGRES_PASSWORD=mypassword POSTGRES_DB=mydatabase \
+          --debug
