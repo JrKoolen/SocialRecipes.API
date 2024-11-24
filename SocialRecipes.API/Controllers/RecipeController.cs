@@ -18,119 +18,179 @@ namespace SocialRecipes.API.Controllers
             _recipeService = recipeService;
         }
 
+        /// <summary>
+        /// Creates a new recipe.
+        /// </summary>
+        /// <param name="recipeDto">The details of the recipe to be created.</param>
+        /// <returns>A success message if the recipe is created, or an error message if it fails.</returns>
         [HttpPost("CreateRecipe")]
-        public async Task<IActionResult> AddRecipeAsync([FromBody] AddRecipeDto recipeDto)
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> AddRecipeAsync([FromForm] AddRecipeDto recipeDto)
         {
             try
             {
                 _logger.LogInformation("Starting AddRecipeAsync in Controller.");
+
+                if (recipeDto == null || string.IsNullOrWhiteSpace(recipeDto.Title))
+                {
+                    _logger.LogWarning("Invalid input: Recipe data is null or missing title.");
+                    return BadRequest(new { message = "Recipe data is invalid. Please provide all required fields." });
+                }
+
                 var result = await _recipeService.AddRecipeAsync(recipeDto);
                 if (!result)
                 {
                     _logger.LogWarning("Recipe creation failed due to invalid data or service error.");
-                    return BadRequest("Failed to create recipe. Check input data.");
+                    return BadRequest(new { message = "Failed to create recipe. Check input data." });
                 }
 
                 _logger.LogInformation("Recipe created successfully.");
-                return Ok(new { message = "Recipe created successfully." });
+                return Ok(new { message = "Recipe created successfully.", recipeTitle = recipeDto.Title });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred in AddRecipeAsync in Controller.");
-                return StatusCode(500, "Internal server error. Please try again later.");
+                return StatusCode(500, new { message = "Internal server error. Please try again later." });
             }
         }
 
+        /// <summary>
+        /// Updates an existing recipe.
+        /// </summary>
+        /// <param name="recipe">The updated details of the recipe.</param>
+        /// <returns>A success message if the recipe is updated, or an error message if it fails.</returns>
         [HttpPost("UpdateRecipe")]
-        public async Task<IActionResult> UpdateRecipeAsync(RecipeDto recipe)
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UpdateRecipeAsync([FromForm] RecipeDto recipe)
         {
-            if (recipe == null)
+            try
             {
-                _logger.LogError("Recipe is null");
-                return BadRequest("Recipe is null.");
+                if (recipe == null)
+                {
+                    _logger.LogWarning("Recipe update failed: Recipe data is null.");
+                    return BadRequest(new { message = "Recipe data is null." });
+                }
+
+                _logger.LogInformation($"Updating recipe with ID {recipe.Id}.");
+                await _recipeService.UpdateRecipeAsync(recipe);
+                _logger.LogInformation($"Recipe with ID {recipe.Id} updated successfully.");
+                return Ok(new { message = $"Recipe with ID {recipe.Id} updated successfully.", recipe });
             }
-            _logger.LogInformation($"{recipe.Id} updated");
-            await _recipeService.UpdateRecipeAsync(recipe);
-            return Ok(new { message = "200", recipe.Id });
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while updating recipe with ID {recipe?.Id}.");
+                return StatusCode(500, new { message = "Internal server error. Please try again later." });
+            }
         }
 
+        /// <summary>
+        /// Retrieves a recipe by its ID.
+        /// </summary>
+        /// <param name="id">The ID of the recipe to retrieve.</param>
+        /// <returns>The details of the recipe, or a not found error if the recipe does not exist.</returns>
         [HttpGet("GetRecipeById/{id}")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetRecipeByIdAsync(int id)
         {
-            _logger.LogInformation($"Get recipe by id {id}");
-            var recipe = await _recipeService.GetRecipeByIdAsync(id);
-            if (recipe == null)
+            try
             {
-                return NotFound(new { message = "Recipe not found", id });
-            }
+                _logger.LogInformation($"Retrieving recipe with ID {id}.");
+                var recipe = await _recipeService.GetRecipeByIdAsync(id);
+                if (recipe == null)
+                {
+                    _logger.LogWarning($"Recipe with ID {id} not found.");
+                    return NotFound(new { message = $"Recipe with ID {id} not found." });
+                }
 
-            var response = new
+                var response = new
+                {
+                    recipe.Id,
+                    recipe.Title,
+                    recipe.Likes,
+                    recipe.Description,
+                    recipe.Body,
+                    recipe.UserId,
+                    recipe.Status,
+                    recipe.DateTime,
+                    ImageBase64 = recipe.Image != null ? Convert.ToBase64String(recipe.Image) : null
+                };
+
+                _logger.LogInformation($"Recipe with ID {id} retrieved successfully.");
+                return Ok(new { message = "Recipe retrieved successfully.", recipe = response });
+            }
+            catch (Exception ex)
             {
-                recipe.Id,
-                recipe.Title,
-                recipe.Likes,
-                recipe.Description,
-                recipe.Body,
-                recipe.UserId,
-                recipe.Status,
-                recipe.DateTime,
-                ImageBase64 = recipe.Image != null ? Convert.ToBase64String(recipe.Image) : null
-            };
-            return Ok(new { message = "200", recipe = response });
+                _logger.LogError(ex, $"An error occurred while retrieving recipe with ID {id}.");
+                return StatusCode(500, new { message = "Internal server error. Please try again later." });
+            }
         }
 
+        /// <summary>
+        /// Retrieves all recipes created by a specific user.
+        /// </summary>
+        /// <param name="userId">The ID of the user whose recipes to retrieve.</param>
+        /// <returns>A list of recipes created by the user.</returns>
         [HttpGet("GetAllRecipesFromUser/{userId}")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllRecipesFromUserAsync(int userId)
         {
-            _logger.LogInformation($"Get all recipes from user {userId}");
-            var recipes = await _recipeService.GetAllRecipesFromUserAsync(userId);
-            return Ok(new { message = "200", recipes });
-        }
-
-        [HttpGet("GetAllRecipes")]
-        public async Task<IActionResult> GetAllRecipesAsync()
-        {
-            _logger.LogInformation("Get all recipes");
-            var recipes = await _recipeService.GetAllRecipesAsync();
-
-            var response = recipes.Select(recipe => new
+            try
             {
-                recipe.Id,
-                recipe.Title,
-                recipe.Likes,
-                recipe.Description,
-                recipe.Body,
-                recipe.UserId,
-                recipe.Status,
-                recipe.DateTime,
-                ImageBase64 = recipe.Image != null ? Convert.ToBase64String(recipe.Image) : null
-            });
+                _logger.LogInformation($"Retrieving all recipes from user with ID {userId}.");
+                var recipes = await _recipeService.GetAllRecipesFromUserAsync(userId);
+                if (recipes == null || !recipes.Any())
+                {
+                    _logger.LogWarning($"No recipes found for user with ID {userId}.");
+                    return NotFound(new { message = $"No recipes found for user with ID {userId}." });
+                }
 
-            return Ok(new { message = "200", recipes = response });
+                _logger.LogInformation($"Successfully retrieved recipes for user with ID {userId}.");
+                return Ok(new { message = $"All recipes from user with ID {userId} retrieved successfully.", recipes });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while retrieving recipes for user with ID {userId}.");
+                return StatusCode(500, new { message = "Internal server error. Please try again later." });
+            }
         }
 
-        [HttpGet("GetAllRecipesFromStatus/{status}")]
-        public async Task<IActionResult> GetAllRecipesFromStatusAsync(string status)
-        {
-            _logger.LogInformation($"Get all recipes by status {status}");
-            var recipes = await _recipeService.GetAllRecipesFromStatusAsync(status);
-            return Ok(new { message = "200", recipes });
-        }
-
-        [HttpGet("GetAllRecipesFromStatusAndUser/{status}/{userId}")]
-        public async Task<IActionResult> GetAllRecipesFromStatusAndUserAsync(string status, int userId)
-        {
-            _logger.LogInformation($"Get all recipes by status {status} and user {userId}");
-            var recipes = await _recipeService.GetAllRecipesFromStatusAndUserAsync(status, userId);
-            return Ok(new { message = "200", recipes });
-        }
-
-        [HttpDelete("DeleteRecipeFromId")]
+        /// <summary>
+        /// Deletes a recipe by its ID.
+        /// </summary>
+        /// <param name="id">The ID of the recipe to delete.</param>
+        /// <returns>A success message if the recipe is deleted, or an error if it fails.</returns>
+        [HttpDelete("DeleteRecipeFromId/{id}")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> RemoveRecipeFromIdAsync(int id)
         {
-            _logger.LogInformation($"{id} deleted");
-            await _recipeService.DeleteRecipeByIdAsync(id);
-            return Ok(new { message = "200", id });
+            try
+            {
+                _logger.LogInformation($"Attempting to delete recipe with ID {id}.");
+                 await _recipeService.DeleteRecipeByIdAsync(id);
+
+                _logger.LogInformation($"Recipe with ID {id} deleted successfully.");
+                return Ok(new { message = $"Recipe with ID {id} deleted successfully." });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while deleting recipe with ID {id}.");
+                return StatusCode(500, new { message = "Internal server error. Please try again later." });
+            }
         }
     }
 }

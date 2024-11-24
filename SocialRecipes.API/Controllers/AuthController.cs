@@ -8,6 +8,7 @@ using System.Text;
 using Microsoft.Extensions.Options;
 using SocialRecipes.Services.Services;
 using SocialRecipes.Domain.Dto.General;
+using System.Security.Authentication;
 
 [ApiController]
 [Route("[controller]")]
@@ -23,32 +24,115 @@ public class AuthController : ControllerBase
         _jwtSettings = jwtSettings.Value;
         _authService = authService; 
     }
-
+    /// <summary>
+    /// Authenticates a user based on their username and password.
+    /// </summary>
+    /// <param name="login">The user's login credentials (username and password).</param>
+    /// <returns>
+    /// A JWT token if authentication is successful; otherwise, an unauthorized error.
+    /// </returns>
     [HttpPost("login")]
-    public async Task<IActionResult> LoginAsync([FromBody] LoginDto login)
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> LoginAsync([FromForm] LoginDto login)
     {
-        UserDto isValidUser = await _authService.LoginAsync(login);
-        if (isValidUser is not null)
+        try
         {
-            var token = GenerateJwtToken(login.Username);
-            return Ok(new { token, id  = isValidUser.Id });
-        }
+            _logger.LogInformation("Starting LoginAsync.");
 
-        return Unauthorized("Invalid username or password.");
+            if (login == null || string.IsNullOrWhiteSpace(login.Username) || string.IsNullOrWhiteSpace(login.Password))
+            {
+                _logger.LogWarning("Invalid login credentials provided.");
+                return Unauthorized(new { message = "Invalid username or password." });
+            }
+
+            UserDto isValidUser = await _authService.LoginAsync(login);
+
+            if (isValidUser is not null)
+            {
+                _logger.LogInformation($"User {login.Username} authenticated successfully.");
+                var token = GenerateJwtToken(login.Username);
+                return Ok(new
+                {
+                    message = "Login successful.",
+                    token,
+                    userId = isValidUser.Id
+                });
+            }
+
+            _logger.LogWarning($"Authentication failed for user {login.Username}.");
+            return Unauthorized(new { message = "Invalid username or password." });
+        }
+        catch (ArgumentNullException ex)
+        {
+            _logger.LogError(ex, "Null argument passed during login.");
+            return BadRequest(new { message = "Required data is missing. Please provide all required fields." });
+        }
+        catch (AuthenticationException ex)
+        {
+            _logger.LogError(ex, "Authentication error occurred.");
+            return Unauthorized(new { message = "Authentication failed. Please check your credentials." });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An unexpected error occurred during login.");
+            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Internal server error. Please try again later." });
+        }
     }
 
+    /// <summary>
+    /// Registers a new user with the provided details.
+    /// </summary>
+    /// <param name="addUser">The user details for registration.</param>
+    /// <returns>
+    /// A success message if the user is registered successfully,
+    /// or an error message if the registration fails.
+    /// </returns>
     [HttpPost("register")]
-    public async Task<IActionResult> RegisterAsync([FromBody] AddUserDto addUser)
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> RegisterAsync([FromForm] AddUserDto addUser)
     {
-        Console.WriteLine(addUser.Name);
-        var isRegistered = await _authService.RegisterAsync(addUser);
-        if (isRegistered)
+        try
         {
-            return Ok("User registered successfully.");
-        }
+            _logger.LogInformation("Starting user registration process.");
 
-        return BadRequest("Username already exists or registration failed.");
+            if (addUser == null || string.IsNullOrWhiteSpace(addUser.Name) || string.IsNullOrWhiteSpace(addUser.Password))
+            {
+                _logger.LogWarning("Invalid registration details provided.");
+                return BadRequest(new { message = "Invalid input data. Please provide all required fields." });
+            }
+
+            var isRegistered = await _authService.RegisterAsync(addUser);
+
+            if (isRegistered)
+            {
+                _logger.LogInformation($"User {addUser.Name} registered successfully.");
+                return Ok(new
+                {
+                    message = "User registered successfully.",
+                    username = addUser.Name
+                });
+            }
+            _logger.LogWarning($"User registration failed for {addUser.Name}. Username might already exist.");
+            return BadRequest(new { message = "Username already exists or registration failed." });
+        }
+        catch (ArgumentException ex)
+        {
+            _logger.LogError(ex, "Invalid argument provided during registration.");
+            return BadRequest(new { message = "Invalid registration details. Please check your input." });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An unexpected error occurred during registration.");
+            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Internal server error. Please try again later." });
+        }
     }
+
 
     private string GenerateJwtToken(string username)
     {
@@ -58,8 +142,8 @@ public class AuthController : ControllerBase
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(new[] {
-                new Claim(ClaimTypes.Name, username)
-            }),
+            new Claim(ClaimTypes.Name, username)
+        }),
             Expires = DateTime.UtcNow.AddHours(1),
             Issuer = _jwtSettings.Issuer,
             Audience = _jwtSettings.Audience,
