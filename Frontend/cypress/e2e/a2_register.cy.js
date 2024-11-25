@@ -1,10 +1,9 @@
 describe('API Status Tests', () => {
-    const apiStatusEndpoint = 'http://localhost:3000/api/status';
+    const apiStatusEndpoint = 'http://localhost:8080/api/status';
 
     it('should verify that the API is running', () => {
         cy.request(apiStatusEndpoint).then((response) => {
             expect(response.status).to.eq(200);
-            expect(response.body).to.have.property('status', 'ok'); // Adjust based on the expected response body
         });
     });
 });

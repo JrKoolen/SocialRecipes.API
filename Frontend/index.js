@@ -118,9 +118,9 @@ app.post('/register', async (req, res) => {
   const { username, email, password } = req.body;
 
   const payload = {
-    name: username,
-    email: email,
-    password: password
+    Name: username,
+    Email: email,
+    Password: password
   };
 
   console.log('Data sent to the API:', payload); 
@@ -129,7 +129,12 @@ app.post('/register', async (req, res) => {
     const response = await axios.post(
       constants.AUTH.REGISTER,
       payload,
-      { httpsAgent }
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        httpsAgent
+      }
     );
 
     if (response.status === 200) {
