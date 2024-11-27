@@ -72,30 +72,44 @@ app.get('/login', (req, res) => {
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
+  const payload = {
+    Username: username,
+    Password: password
+  };
+
+  console.log('Data sent to the API:', payload);
+
   try {
     const response = await axios.post(
       constants.AUTH.LOGIN,
-      { username, password },
-      { httpsAgent: new https.Agent({ rejectUnauthorized: false }) }
+      payload,
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        httpsAgent: new https.Agent({ rejectUnauthorized: false })
+      }
     );
 
-    const { token } = response.data;
-
-    if (token) {
+    if (response.status === 200 && response.data.token) {
       req.session.user = {
         username,
-        token,
-        id : response.data.id,
-        isLoggedIn: true 
+        token: response.data.token,
+        id: response.data.id,
+        isLoggedIn: true
       };
-      console.log(`User ${username} logged in with token.`);
+      console.log(`User ${username} logged in successfully.`);
       return res.redirect('/user-page');
     } else {
-      res.render('login', { errorMessage: 'Invalid username or password' });
+      res.render('login', {
+        errorMessage: 'Invalid username or password.'
+      });
     }
   } catch (error) {
-    console.error('Error logging in:', error.message);
-    res.render('login', { errorMessage: 'Login failed. Please try again.' });
+    console.error('Error logging in:', error.response ? error.response.data : error.message);
+    res.render('login', {
+      errorMessage: 'An error occurred during login. Please try again.'
+    });
   }
 });
 
