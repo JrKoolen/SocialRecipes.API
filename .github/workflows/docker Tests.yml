@@ -111,7 +111,7 @@ jobs:
         working-directory: ./Frontend
         config: baseUrl=http://localhost:3000
         wait-on: http://localhost:3000
-        browser: chrome
+        browser: edge
 
     - name: Stop Docker Compose Services
       run: |
