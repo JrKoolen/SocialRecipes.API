@@ -19,20 +19,10 @@ describe('Login Page Tests', () => {
     });
   });
 
-  //it('should login successfully with valid credentials', () => {
- //   cy.visit('http://localhost:3000/login');
- //   cy.get('input[name="username"]').type('testuser'); 
- //   cy.get('input[name="password"]').type('Password123');
- //   cy.get('button[type="submit"]').click();
-
- //   cy.url().should('include', '/user-page'); 
- //   cy.contains('Welcome').should('be.visible');
-// });
-
   it('should show an error with invalid credentials', () => {
     cy.visit('http://localhost:3000/login');
-    cy.get('input[name="username"]').type('invalidUsername');
-    cy.get('input[name="password"]').type('wrongpassword');
+    cy.get('input[name="username"]').type('invalidUsername1');
+    cy.get('input[name="password"]').type('wrongpassword1');
     cy.get('button[type="submit"]').click();
 
   cy.contains('Login failed. Please try again.').should('be.visible');
