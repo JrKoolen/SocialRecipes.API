@@ -22,11 +22,11 @@ describe('Acceptance Test: As a user i want to be able to create a account and l
         cy.contains('Login').should('be.visible');
 
         cy.visit(`${baseUrl}login`);
-        cy.get('input[name="username"]').type(username); 
-        cy.get('input[name="password"]').type(password);
+        cy.get('input[name="username"]').type('Jan'); 
+        cy.get('input[name="password"]').type('Jan');
         cy.get('button[type="submit"]').click();
     
-        //cy.url().should('include', '/user-page'); 
+        cy.url().should('include', '/user-page'); 
         cy.contains('Welcome').should('be.visible'); });
   
   });   

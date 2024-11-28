@@ -41,7 +41,7 @@ describe('Acceptance Test: As a user i want to be able to create a recipe', () =
     
 
         //cy.url().should('include', '/recipes'); 
-       //cy.contains('Recipe created successfully').should('be.visible'); 
+       // cy.contains('Recipe created successfully').should('be.visible'); 
         });
     
 });

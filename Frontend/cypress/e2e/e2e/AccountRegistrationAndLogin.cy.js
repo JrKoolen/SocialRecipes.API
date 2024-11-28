@@ -106,8 +106,8 @@ describe('Register Tests', () => {
 
       it('should login with valid credentials', () => {
         cy.visit(`${baseUrl}login`);
-        cy.get('input[name="username"]').type(uniqueUsername);
-        cy.get('input[name="password"]').type(uniquePassword);
+        cy.get('input[name="username"]').type('Jan');
+        cy.get('input[name="password"]').type('Jan');
         cy.get('button[type="submit"]').click();
     
       cy.url().should('include', '/user-page'); 
