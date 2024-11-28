@@ -300,5 +300,5 @@ app.get('/recipe/:id', async (req, res) => {
 });
 
 app.listen(80, () => {
-  console.log('Server running on http://localhost:80');
+  console.log('Server running on http://localhost:3000');
 });
