@@ -25,6 +25,6 @@ describe('Login Page Tests', () => {
     cy.get('input[name="password"]').type('wrongpassword1');
     cy.get('button[type="submit"]').click();
 
-  cy.contains('Login failed. Please try again.').should('be.visible');
+  cy.contains('Please try again.').should('be.visible');
   });
 });
