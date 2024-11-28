@@ -13,17 +13,6 @@ describe('API Status Tests', () => {
     });
 });
 
-describe('Seed Database', () => {
-    it('should seed a test user', () => {
-      cy.request('POST', 'http://localhost:8080/api/seed-user', {
-        username: 'Jan',
-        password: 'Jan',
-      }).then((response) => {
-        expect(response.status).to.eq(201);
-      });
-    });
-});
-
 const uniqueEmail = `testuser-${Date.now()}@example.com`;
 const uniqueUsername = `testuser-${Date.now()}`;
 const uniquePassword = `Password123${Date.now()}`;
