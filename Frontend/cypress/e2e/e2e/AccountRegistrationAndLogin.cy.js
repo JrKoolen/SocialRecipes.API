@@ -6,10 +6,21 @@ describe('API Status Tests', () => {
         });
     });
 
-    it('should verify that the API is running', () => {
+    it('should verify that the database is running', () => {
         cy.request('http://localhost:8080/api/status/database').then((response) => {
             expect(response.status).to.eq(200);
         });
+    });
+});
+
+describe('Seed Database', () => {
+    it('should seed a test user', () => {
+      cy.request('POST', 'http://localhost:8080/api/seed-user', {
+        username: 'Jan',
+        password: 'Jan',
+      }).then((response) => {
+        expect(response.status).to.eq(201);
+      });
     });
 });
 
