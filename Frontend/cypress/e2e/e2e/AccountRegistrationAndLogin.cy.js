@@ -1,8 +1,13 @@
 describe('API Status Tests', () => {
-    const apiStatusEndpoint = 'http://localhost:8080/api/status';
 
     it('should verify that the API is running', () => {
-        cy.request(apiStatusEndpoint).then((response) => {
+        cy.request('http://localhost:8080/api/status').then((response) => {
+            expect(response.status).to.eq(200);
+        });
+    });
+
+    it('should verify that the API is running', () => {
+        cy.request('http://localhost:8080/api/status/database').then((response) => {
             expect(response.status).to.eq(200);
         });
     });
