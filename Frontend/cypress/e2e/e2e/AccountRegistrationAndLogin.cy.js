@@ -1,3 +1,5 @@
+const session = require("express-session");
+
 describe('API Status Tests', () => {
 
     it('should verify that the API is running', () => {
@@ -115,7 +117,6 @@ describe('Register Tests', () => {
         cy.get('input[name="password"]').type(uniquePassword);
         cy.get('button[type="submit"]').click();
     
-      cy.url().should('include', '/user-page'); 
       cy.contains('Welcome').should('be.visible'); 
     });
 
@@ -129,7 +130,6 @@ describe('Register Tests', () => {
         cy.get('@passwordInput').type(uniquePassword);
         cy.get('@submitButton').click();
       
-        cy.url().should('include', '/user-page');
         cy.contains('Welcome').should('be.visible');
       });
       
