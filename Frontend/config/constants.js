@@ -1,4 +1,4 @@
-const BASE_URL = process.env.API_BASE_URL ||'http://localhost:8080';
+const BASE_URL = process.env.API_BASE_URL ||'http://socialrecipes-api-container:8080';
 // http://localhost:8080
 // http://socialrecipes-api-container:8080
 
