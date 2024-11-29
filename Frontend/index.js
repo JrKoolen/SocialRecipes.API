@@ -13,9 +13,20 @@ const path = require('path');
 const fs = require('fs');
 const app = express();
 
+const querystring = require('querystring');
+const cors = require('cors');
+
+
+const corsOptions = {
+  origin: 'http://localhost:3000', 
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+};
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); 
+app.use(cors(corsOptions));
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -95,10 +106,11 @@ app.post('/login', async (req, res) => {
       req.session.user = {
         username,
         token: response.data.token,
-        id: response.data.id,
+        id: response.data.userId,
         isLoggedIn: true
       };
-      console.log(`User ${username} logged in successfully.`);
+      console.log(response.data);
+      console.log(`User ${username} logged in successfully. user id:${req.session.user.id}`);
       return res.redirect('/user-page');
     } else {
       res.render('login', {
@@ -183,7 +195,7 @@ app.get('/user-page', async (req, res) => {
     );
     
     const recipes = Array.isArray(response.data.recipes) ? response.data.recipes : [];
-    console.log('Recipes:', recipes);
+    //console.log('Recipes:', recipes);
     res.render('user-page', { recipes });
   } catch (error) {
     console.error('Error fetching recipes:', error.message);
@@ -211,46 +223,37 @@ app.get('/create-recipe', ensureAuthenticated, (req, res) => {
 
 app.post('/create-recipe', upload.single('image'), async (req, res) => {
   const { title, body, description } = req.body;
-  const userId = req.session.user ? req.session.user.id : null;
-
-  const payload = {
-    recipeDto: {
-      title,
-      body,
-      description,
-      userId,
-      status: "private"
-    }
-  };
-
-  if (req.file) {
-    const fs = require('fs');
-    try {
-      let imageBase64 = fs.readFileSync(req.file.path, { encoding: 'base64' });
-      if (imageBase64.startsWith("data:image")) {
-        imageBase64 = imageBase64.split(",")[1];
-      }
-      payload.recipeDto.image = imageBase64; 
-    } catch (error) {
-      console.error("Error reading image file:", error.message);
-      return res.render('create-recipe', { errorMessage: 'Error processing image. Please try again.' });
-    }
-  }
-
-  console.log('Data sent to the API:', JSON.stringify(payload, null, 2)); 
 
   try {
-    const agent = new https.Agent({ rejectUnauthorized: false });
+    // Read the image file and convert it to Base64
+    let base64Image = null;
+    if (req.file) {
+      const filePath = path.resolve(req.file.path);
+      const fileData = fs.readFileSync(filePath);
+      base64Image = fileData.toString('base64');
+    }
 
+    // Build the payload
+    const payload = {
+      Title: title,
+      Body: body,
+      Description: description,
+      UserId: req.session.user ? req.session.user.id : null,
+      Status: 'private',
+      Image: base64Image // Add Base64 image string to the payload
+    };
+
+    //console.log('Data sent to the API:', payload);
+
+    // Send the payload to the API
     const response = await axios.post(
       constants.RECIPE.CREATE_RECIPE,
       payload,
       {
         headers: {
-          Authorization: `Bearer ${req.session.user.token}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/x-www-form-urlencoded'
         },
-        httpsAgent: agent 
+        httpsAgent
       }
     );
 
@@ -262,14 +265,14 @@ app.post('/create-recipe', upload.single('image'), async (req, res) => {
       });
     }
   } catch (error) {
-    console.error('Error creating recipe:', error.response ? error.response.data : error.message);
+    console.error('Error creating recipe:', error.message);
     res.render('create-recipe', {
-      errorMessage: 'An error occurred during recipe creation. Please try again.'
+      errorMessage: 'An error occurred while creating the recipe. Please try again.'
     });
   } finally {
     if (req.file) {
       fs.unlink(req.file.path, (err) => {
-        if (err) console.error("Error deleting temp image file:", err.message);
+        if (err) console.error('Error deleting temp file:', err.message);
       });
     }
   }
@@ -280,25 +283,47 @@ app.get('/confirm-account', (req, res) => {
 });
 
 app.get('/recipe/:id', async (req, res) => {
-  const recipeId = req.params.id;
   try {
-    const response = await axios.get(constants.RECIPE.GET_ALL_RECIPES_FROM_USER(req.session.id), { httpsAgent });
-    const recipe = response.data.recipe;
+    console.log(`${constants.RECIPE.GET_ALL_RECIPES_FROM_USER(req.session.user.id)}`);
+
+    const response = await axios.get(
+      constants.RECIPE.GET_ALL_RECIPES_FROM_USER(req.session.user.id),
+      {
+        headers: {
+          Authorization: `Bearer ${req.session.user.token}`
+        },
+        httpsAgent: new https.Agent({ rejectUnauthorized: false }) 
+      }
+    );
+
+    const recipes = response.data.recipes || [];
+
+    const recipe = recipes.find((r) => r.id === parseInt(req.params.id, 10));
 
     if (recipe) {
+      recipe.imageBase64 = recipe.image;
+
+      recipe.description = recipe.description || 'No description provided.';
+
       if (recipe.body) {
         recipe.body = marked.parse(recipe.body);
       }
-      res.render('recipe', { recipe, activePage: 'recipe', isLoggedIn: req.session.user && req.session.user.isLoggedIn  });
+      res.render('recipe', { 
+        recipe, 
+        activePage: 'recipe', 
+        isLoggedIn: req.session.user && req.session.user.isLoggedIn 
+      });
     } else {
       res.status(404).send('Recipe not found');
     }
   } catch (error) {
-    console.error('Error fetching recipe:', error);
+    console.error('Error fetching recipe:', error.response?.data || error.message);
     res.status(500).send('Failed to fetch recipe.');
   }
 });
 
+
 app.listen(3000, () => {
   console.log('Server running on http://localhost:3000');
 });
+

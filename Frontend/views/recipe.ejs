@@ -12,8 +12,8 @@
   <div class="main-content">
     <% if (recipe.imageBase64) { %>
       <div class="centered-image-container">
-      <img src="data:image/jpeg;base64,<%= recipe.imageBase64 %>" alt="<%= recipe.title %>" class="centered-image">
-    </div>
+        <img src="data:image/jpeg;base64,<%= recipe.imageBase64 %>" alt="<%= recipe.title %>" class="centered-image">
+      </div>
     <% } %>
 
     <h1><%= recipe.title %></h1>
@@ -29,8 +29,6 @@
         <%- recipe.body %>  
       </div>
     <% } %>
-    
-    <button>Like</button>
   </div>
 </body>
 </html>
