@@ -121,19 +121,27 @@ describe('Register Tests', () => {
     });
 
       it('should login with valid credentials', () => {
-        cy.visit('/login');
+        cy.visit(`${baseUrl}/login`);
         cy.get('input[name="username"]').as('usernameInput');
         cy.get('input[name="password"]').as('passwordInput');
         cy.get('button[type="submit"]').as('submitButton');
       
         cy.get('@usernameInput').type(uniqueUsername);
         cy.get('@passwordInput').type(uniquePassword);
-        cy.get('@submitButton').click();
+        cy.get('button[type="submit"]').click();
       
         cy.contains('Welcome').should('be.visible');
       });
-      
 
+      it('should login successfully with valid credentials', () => {
+        cy.visit('http://localhost:3000/login');
+        cy.get('input[name="username"]').type('testuser'); 
+        cy.get('input[name="password"]').type('Password123');
+        cy.get('button[type="submit"]').click();
+    
+        cy.url().should('include', '/user-page'); 
+        cy.contains('Welcome').should('be.visible');
+      });
       
       
 });
