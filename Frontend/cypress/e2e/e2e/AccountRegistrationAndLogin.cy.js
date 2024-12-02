@@ -121,7 +121,7 @@ describe('Register Tests', () => {
     });
 
       it('should login with valid credentials', () => {
-        cy.visit(`${baseUrl}/login`);
+        cy.visit(`${baseUrl}login`);
         cy.get('input[name="username"]').as('usernameInput');
         cy.get('input[name="password"]').as('passwordInput');
         cy.get('button[type="submit"]').as('submitButton');

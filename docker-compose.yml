@@ -23,7 +23,7 @@ services:
       - socialrecipes-network
     depends_on:
       - api
-
+      
   mysql-db:
     image: mysql:8.0
     container_name: socialrecipes-mysql-db

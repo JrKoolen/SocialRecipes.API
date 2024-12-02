@@ -1,6 +1,6 @@
-console.log('Current directory:', __dirname);
 const express = require('express');
 const session = require('express-session');
+const FileStore = require('session-file-store')(session);
 const multer = require('multer');
 const constants = require('./config/constants');
 const setLocals = require('./middleware/local');
@@ -10,40 +10,48 @@ const marked = require('marked');
 const https = require('https');
 const axios = require('axios');
 const path = require('path');
+const dotenv = require('dotenv');
 const fs = require('fs');
 const app = express();
-
 const querystring = require('querystring');
 const cors = require('cors');
 
+const envFile = process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development';
+dotenv.config({ path: envFile });
+
+console.log(`Environment: ${process.env.NODE_ENV}`);
+
 
 const corsOptions = {
-  origin: 'http://localhost:3000', 
+  origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true
+  credentials: true,
 };
-
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true })); 
 app.use(cors(corsOptions));
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
-
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/assets', express.static('assets'));
 
-app.use(session({
-  secret: crypto.randomBytes(64).toString('hex'), 
-  resave: false,
-  saveUninitialized: true,
-  cookie: {
-    secure: process.env.NODE_ENV === 'production', 
-    httpOnly: true, 
-    maxAge: 1000 * 60 * 60 * 24 
-  }
-}));
+app.use(
+  session({
+    store: new FileStore(),
+    secret: 'your-secret-key',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === 'production',
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24, // 24 hours
+    },
+  })
+);
+
+console.log('Current directory:', __dirname);
+
 
 app.use(setLocals);
 
@@ -323,7 +331,9 @@ app.get('/recipe/:id', async (req, res) => {
 });
 
 
-app.listen(3000, () => {
-  console.log('Server running on http://localhost:3000');
+const PORT = process.env.PORT || 3001; 
+
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
 
