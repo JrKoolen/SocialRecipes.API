@@ -21,7 +21,6 @@ dotenv.config({ path: envFile });
 
 console.log(`Environment: ${process.env.NODE_ENV}`);
 
-
 const corsOptions = {
   origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
@@ -38,14 +37,19 @@ app.use('/assets', express.static('assets'));
 
 app.use(
   session({
-    store: new FileStore(),
+    store: new FileStore({
+      path: './sessions',
+      retries: 5, 
+      retryDelay: 5,
+      reapInterval: 3600,
+      logFn: console.log, }),
     secret: 'your-secret-key',
     resave: false,
     saveUninitialized: false,
     cookie: {
       secure: process.env.NODE_ENV === 'production',
       httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 24, // 24 hours
+      maxAge: 1000 * 60 * 60 * 24, 
     },
   })
 );
@@ -88,12 +92,32 @@ app.get('/login', (req, res) => {
   res.render('login', { activePage: 'login', errorMessage: null, isLoggedIn: req.session.user && req.session.user.isLoggedIn  });
 });
 
+
+function waitForSession(fileName, timeout = 10000, interval = 100) {
+  return new Promise((resolve, reject) => {
+      const startTime = Date.now();
+      const filePath = path.join(process.cwd(), 'sessions', fileName); 
+
+      const checkFile = () => {
+          if (fs.existsSync(`${filePath}.json`)) {
+              resolve(true); 
+          } else if (Date.now() - startTime > timeout) {
+              reject(new Error(`Timeout: File ${filePath} was not found within ${timeout}ms`));
+          } else {
+              setTimeout(checkFile, interval); 
+          }
+      };
+
+      checkFile();
+  });
+}
+
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
   const payload = {
     Username: username,
-    Password: password
+    Password: password,
   };
 
   console.log('Data sent to the API:', payload);
@@ -104,9 +128,9 @@ app.post('/login', async (req, res) => {
       payload,
       {
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
-        httpsAgent: new https.Agent({ rejectUnauthorized: false })
+        httpsAgent: new https.Agent({ rejectUnauthorized: false }),
       }
     );
 
@@ -115,23 +139,45 @@ app.post('/login', async (req, res) => {
         username,
         token: response.data.token,
         id: response.data.userId,
-        isLoggedIn: true
+        isLoggedIn: true,
       };
+
       console.log(response.data);
-      console.log(`User ${username} logged in successfully. user id:${req.session.user.id}`);
-      return res.redirect('/user-page');
-    } else {
-      res.render('login', {
-        errorMessage: 'Invalid username or password.'
-      });
-    }
-  } catch (error) {
-    console.error('Error logging in:', error.response ? error.response.data : error.message);
-    res.render('login', {
-      errorMessage: 'An error occurred during login. Please try again.'
+      console.log(`User ${username} logged in successfully. user id: ${req.session.user.id}`);
+      req.session.save(async (err) => {
+        if (err) {
+            console.error('Error saving session:', err);
+            return res.status(500).render('login', {
+                errorMessage: 'An error occurred while saving your session. Please try again.',
+            });
+        }
+
+        try {
+            await waitForSession(req.sessionID);
+            console.log(`Session file is available: ${req.sessionID}`);
+            
+            return res.redirect('/user-page');
+        } catch (sessionError) {
+            console.error(`Error waiting for session file: ${sessionError.message}`);
+            return res.status(500).render('login', {
+                errorMessage: 'Session file creation timed out. Please try again.',
+            });
+        }
     });
-  }
+} else {
+    console.log('Invalid username or password');
+    return res.status(401).render('login', {
+        errorMessage: 'Invalid username or password.',
+    });
+}
+} catch (error) {
+console.error('Error logging in:', error.response ? error.response.data : error.message);
+return res.status(500).render('login', {
+    errorMessage: 'An error occurred during login. Please try again.',
 });
+}
+});
+
 
 app.get('/logout', (req, res) => {
   req.session.destroy((err) => {
