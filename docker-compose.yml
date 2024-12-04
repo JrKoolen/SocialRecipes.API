@@ -21,6 +21,8 @@ services:
       - "3000:3000"
     networks:
       - socialrecipes-network
+    volumes:
+      - ./sessions:/app/sessions
     depends_on:
       - api
       
