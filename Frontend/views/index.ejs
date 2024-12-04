@@ -3,21 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Recipe Cards</title>
+  <title>Featured Recipes</title>
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
   <%- include('partials/navbar') %>
-  <div class="main-content">
-    <h1>Featured recipes</h1>
+  <div class="recipe-grid">
+    <h1>Featured Recipes</h1>
     <div class="recipe-grid" id="recipeGrid">
       <% if (recipes && recipes.length > 0) { %>
         <% recipes.forEach(function(recipe) { %>
-          <div class="recipe-card">
-            <img src="data:image/jpeg;base64,<%= recipe.imageBase64 %>" alt="<%= recipe.title %>" style="max-width: 100%; height: auto;">
+          <div class="recipe-card" data-id="<%= recipe.id %>">
+            <img 
+              src="data:image/jpeg;base64,<%= recipe.image %>" 
+              alt="<%= recipe.title %>" 
+              style="max-width: 100%; height: auto;">
             <div class="card-content">
               <h3 class="recipe-title"><%= recipe.title %></h3>
-              <%= recipe.description ? recipe.description : 'No description available' %>
+              <p><%= recipe.description ? recipe.description : 'No description available' %></p>
             </div>
           </div>
         <% }) %>
@@ -26,5 +29,17 @@
       <% } %>
     </div>
   </div>
+  <script>
+    const recipeCards = document.querySelectorAll('.recipe-card');
+
+    recipeCards.forEach(card => {
+      card.addEventListener('click', function() {
+        const recipeId = this.getAttribute('data-id');
+        if (recipeId) {
+          window.location.href = `/recipe/${recipeId}`;
+        }
+      });
+    });
+  </script>
 </body>
 </html>

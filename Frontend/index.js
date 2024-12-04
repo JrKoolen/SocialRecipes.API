@@ -5,7 +5,6 @@ const multer = require('multer');
 const constants = require('./config/constants');
 const setLocals = require('./middleware/local');
 const upload = multer({ dest: 'uploads/' });
-const crypto = require('crypto');
 const marked = require('marked');
 const https = require('https');
 const axios = require('axios');
@@ -70,22 +69,10 @@ const httpsAgent = new https.Agent({
   rejectUnauthorized: false, 
 });
 
-app.get('/', async (req, res) => {
-  try {
-    const response = await axios.get(constants.RECIPE.GET_ALL_RECIPES, { httpsAgent });
-    const recipes = response.data.recipes || [];
-
-    if (Array.isArray(recipes)) {
-      res.render('index', { recipes });
-    } else {
-      console.error('Error: Expected an array for recipes, received:', recipes);
-      res.render('index', { recipes: [] });
-    }
-  } catch (error) {
-    console.error('Error fetching recipes:', error);
-    res.render('index', { recipes: [] });
-  }
+app.get('/', (req, res) => {
+  res.redirect('/recipes');
 });
+
 
 
 app.get('/login', (req, res) => {
@@ -249,7 +236,6 @@ app.get('/user-page', async (req, res) => {
     );
     
     const recipes = Array.isArray(response.data.recipes) ? response.data.recipes : [];
-    //console.log('Recipes:', recipes);
     res.render('user-page', { recipes });
   } catch (error) {
     console.error('Error fetching recipes:', error.message);
@@ -260,8 +246,9 @@ app.get('/user-page', async (req, res) => {
 
 app.get('/recipes', async (req, res) => {
   try {
-    const response = await axios.get(constants.RECIPE.GET_ALL_RECIPES, { httpsAgent });
-    const recipes = Array.isArray(response.data.recipes) ? response.data.recipes : [];
+    const response = await axios.get(`${constants.RECIPE.GET_FEATURED_RECIPES}?amount=20`, { httpsAgent });
+    const recipes = Array.isArray(response.data) ? response.data : [];
+    
     
     res.render('recipes', { recipes });
   } catch (error) {
@@ -279,7 +266,6 @@ app.post('/create-recipe', upload.single('image'), async (req, res) => {
   const { title, body, description } = req.body;
 
   try {
-    // Read the image file and convert it to Base64
     let base64Image = null;
     if (req.file) {
       const filePath = path.resolve(req.file.path);
@@ -287,19 +273,16 @@ app.post('/create-recipe', upload.single('image'), async (req, res) => {
       base64Image = fileData.toString('base64');
     }
 
-    // Build the payload
     const payload = {
       Title: title,
       Body: body,
       Description: description,
       UserId: req.session.user ? req.session.user.id : null,
       Status: 'private',
-      Image: base64Image // Add Base64 image string to the payload
+      Image: base64Image 
     };
 
-    //console.log('Data sent to the API:', payload);
 
-    // Send the payload to the API
     const response = await axios.post(
       constants.RECIPE.CREATE_RECIPE,
       payload,
@@ -338,34 +321,30 @@ app.get('/confirm-account', (req, res) => {
 
 app.get('/recipe/:id', async (req, res) => {
   try {
-    console.log(`${constants.RECIPE.GET_ALL_RECIPES_FROM_USER(req.session.user.id)}`);
 
     const response = await axios.get(
-      constants.RECIPE.GET_ALL_RECIPES_FROM_USER(req.session.user.id),
+      constants.RECIPE.GET_RECIPE_BY_ID(req.params.id),
       {
         headers: {
-          Authorization: `Bearer ${req.session.user.token}`
+          'Content-Type': 'application/x-www-form-urlencoded, application/json',
         },
-        httpsAgent: new https.Agent({ rejectUnauthorized: false }) 
+        httpsAgent
       }
     );
 
-    const recipes = response.data.recipes || [];
+    const recipe = response.data.recipe;
 
-    const recipe = recipes.find((r) => r.id === parseInt(req.params.id, 10));
-
-    if (recipe) {
-      recipe.imageBase64 = recipe.image;
-
-      recipe.description = recipe.description || 'No description provided.';
-
-      if (recipe.body) {
-        recipe.body = marked.parse(recipe.body);
-      }
-      res.render('recipe', { 
-        recipe, 
-        activePage: 'recipe', 
-        isLoggedIn: req.session.user && req.session.user.isLoggedIn 
+    if (recipe && recipe.id === parseInt(req.params.id, 10)) {
+      const recipeData = {
+        id: recipe.id,
+        title: recipe.title,
+        description: recipe.description || 'No description provided.',
+        body: recipe.body ? marked.parse(recipe.body) : null, 
+        imageBase64: recipe.imageBase64 || null, 
+      };
+      res.render('recipe', {
+        recipe: recipeData, 
+        activePage: 'recipe',
       });
     } else {
       res.status(404).send('Recipe not found');

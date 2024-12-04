@@ -202,5 +202,47 @@ namespace SocialRecipes.Services.Services
                 throw new ApplicationException("An error occurred while updating the recipe. Please try again later.", ex);
             }
         }
+
+        public async Task<RecipeDto[]> GetFeaturedRecipesAsync(string status, int featuredCount)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(status))
+                {
+                    _logger.LogWarning("Invalid status: '{Status}'. Status cannot be null or empty.", status);
+                    throw new ArgumentException("Status cannot be null or empty.", nameof(status));
+                }
+
+                if (featuredCount <= 0)
+                {
+                    _logger.LogWarning("Invalid featuredCount: {FeaturedCount}. It must be greater than zero.", featuredCount);
+                    throw new ArgumentException("Featured count must be greater than zero.", nameof(featuredCount));
+                }
+
+                _logger.LogInformation("Retrieving featured recipes with status '{Status}' and top {FeaturedCount} likes.", status, featuredCount);
+
+                var recipes = await _recipeRepository.GetAllRecipesFromStatusAsync(status);
+
+                if (recipes == null || recipes.Length == 0)
+                {
+                    _logger.LogInformation("No recipes found with status '{Status}'.", status);
+                    return Array.Empty<RecipeDto>();
+                }
+
+                var featuredRecipes = recipes
+                    .OrderByDescending(recipe => recipe.Likes) 
+                    .Take(featuredCount)
+                    .ToArray();
+
+                _logger.LogInformation("Successfully retrieved {Count} featured recipes with status '{Status}'.", featuredRecipes.Length, status);
+                return featuredRecipes;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while retrieving featured recipes with status '{Status}'.", status);
+                throw new ApplicationException("An error occurred while retrieving featured recipes. Please try again later.", ex);
+            }
+        }
+
     }
 }

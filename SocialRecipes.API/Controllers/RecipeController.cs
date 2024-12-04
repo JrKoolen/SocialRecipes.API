@@ -192,5 +192,39 @@ namespace SocialRecipes.API.Controllers
                 return StatusCode(500, new { message = "Internal server error. Please try again later." });
             }
         }
+
+        /// <summary>
+        /// Retrieves all recipes that are featured.
+        /// </summary>
+        /// <returns>A list of featured recipes.</returns>
+        [HttpGet("GetFeaturedRecipes")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetFeaturedRecipes(int amount)
+        {
+            try
+            {
+                _logger.LogInformation("Retrieving all featured recipes.");
+                var featuredRecipes = await _recipeService.GetFeaturedRecipesAsync("private", amount); 
+
+                if (featuredRecipes == null || featuredRecipes.Length == 0)
+                {
+                    _logger.LogInformation("No featured recipes found.");
+                    return NotFound("No featured recipes found.");
+                }
+
+                _logger.LogInformation("Successfully retrieved {Count} featured recipes.", featuredRecipes.Length);
+                return Ok(featuredRecipes);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while retrieving featured recipes.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while retrieving featured recipes. Please try again later.");
+            }
+        }
+
+
     }
 }

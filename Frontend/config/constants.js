@@ -18,7 +18,8 @@ module.exports = {
     GET_ALL_RECIPES: `${BASE_URL}/Recipe/GetAllRecipes`,
     GET_ALL_RECIPES_FROM_STATUS: (status) => `${BASE_URL}/Recipe/GetAllRecipesFromStatus/${status}`,
     GET_ALL_RECIPES_FROM_STATUS_AND_USER: (status, userId) => `${BASE_URL}/Recipe/GetAllRecipesFromStatusAndUser/${status}/${userId}`,
-    DELETE_RECIPE_BY_ID: (recipeId) => `${BASE_URL}/Recipe/DeleteRecipeFromId?id=${recipeId}` 
+    DELETE_RECIPE_BY_ID: (recipeId) => `${BASE_URL}/Recipe/DeleteRecipeFromId?id=${recipeId}` ,
+    GET_FEATURED_RECIPES: `${BASE_URL}/Recipe/GetFeaturedRecipes`
   },
   FOLLOW: {
     FOLLOW_USER: (userId) => `${BASE_URL}/Follow/Follow/${userId}`,

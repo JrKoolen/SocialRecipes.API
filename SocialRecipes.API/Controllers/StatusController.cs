@@ -44,15 +44,12 @@ namespace SocialRecipes.API.Controllers
         {
             try
             {
-                // Check database connectivity (e.g., by running a lightweight query)
                 await _dbContext.Database.CanConnectAsync();
 
-                // If successful, return OK
                 return Ok(new { status = "Database is running", timestamp = DateTime.UtcNow });
             }
             catch (Exception ex)
             {
-                // If there's an error, return a 500 response
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
                     status = "Database connection failed",

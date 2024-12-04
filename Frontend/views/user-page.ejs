@@ -25,16 +25,12 @@
     <div class="recipe-grid" id="recipeGrid">
       <% recipes.forEach(function(recipe) { %>
         <div class="recipe-card" data-id="<%= recipe.id %>">
-          <img src="data:image/jpeg;base64,<%= recipe.imageBase64 %>" alt="<%= recipe.title %>">
+          <img src="data:image/jpeg;base64,<%= recipe.image %>" alt="<%= recipe.title %>">
           <div class="card-content">
             <h3 class="recipe-title"><%= recipe.title %></h3>
             <p class="recipe-description">
               <%= recipe.description ? recipe.description : 'No description available' %>
             </p>
-            <div class="like-section">
-              <button class="like-button">Like</button>
-              <span class="like-count"><%= recipe.likes %> Likes</span>
-            </div>
           </div>
         </div>
       <% }) %>
