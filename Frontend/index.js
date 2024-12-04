@@ -42,7 +42,7 @@ app.use(
       retryDelay: 5,
       reapInterval: 3600,
       logFn: console.log, }),
-    secret: 'your-secret-key',
+    secret: 'T8x!g5#Lk92z@Q7P$G1%XcMZ5L!7DfNlR',
     resave: false,
     saveUninitialized: false,
     cookie: {
