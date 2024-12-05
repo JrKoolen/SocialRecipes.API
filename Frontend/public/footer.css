@@ -2,9 +2,12 @@
     padding: 27px 39px;
     background-color: var(--main-color);
     width: 100%;
-    position: fixed;
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+    
     left: 0;
-    bottom: 0;
+    bottom: 100;
     z-index: 1000;
 }
   
@@ -12,14 +15,17 @@
 display: flex;
 gap: 20px;
 }
+
 .footer-section, .footer-address, .footer-contact, .footer-social {
 line-height: normal;
 color: #fff;
 }
+
 .footer-section, .footer-address, .footer-contact, .footer-social {
 flex-direction: column;
 display: flex;
 }
+
 .footer-section {
 width: 20%;
 margin-left: 35vw;
