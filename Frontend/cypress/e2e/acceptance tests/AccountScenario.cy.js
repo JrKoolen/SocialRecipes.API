@@ -1,5 +1,5 @@
 describe('Acceptance Test: As a user i want to be able to create a account and login', () => {
-    const baseUrl = 'http://localhost:3000/';
+    const baseUrl = 'http://localhost:3001/';
     const uniqueEmail = `testuser-${Date.now()}@example.com`;
     const username = `testuser-${Date.now()}`;
     const password = `Password123${Date.now()}`;
@@ -27,6 +27,9 @@ describe('Acceptance Test: As a user i want to be able to create a account and l
         cy.get('button[type="submit"]').click();
     
         cy.url().should('include', '/user-page'); 
-        cy.contains('Welcome').should('be.visible'); });
-  
+        cy.contains('Welcome').should('be.visible'); 
+        cy.visit(`${baseUrl}logout`);
+        cy.contains('Login').should('be.visible');
+    
+    });
   });   

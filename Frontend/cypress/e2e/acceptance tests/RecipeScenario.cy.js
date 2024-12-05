@@ -1,5 +1,5 @@
 describe('Acceptance Test: As a user i want to be able to create a recipe', () => {
-    const baseUrl = 'http://localhost:3000/';
+    const baseUrl = 'http://localhost:3001/';
     const uniqueEmail = `testuser-${Date.now()}@example.com`;
     const username = `testuser-${Date.now()}`;
     const password = `Password123${Date.now()}`;
@@ -40,8 +40,8 @@ describe('Acceptance Test: As a user i want to be able to create a recipe', () =
         cy.get('button[type="submit"]').click();
     
 
-        //cy.url().should('include', '/recipes'); 
-        // cy.contains('Recipe created successfully').should('be.visible'); 
+        cy.visit(`${baseUrl}user-page`);
+        cy.contains('My Delicious Recipe').should('be.visible');
         });
     
 });

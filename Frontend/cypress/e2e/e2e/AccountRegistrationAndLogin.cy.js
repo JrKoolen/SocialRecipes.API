@@ -20,7 +20,7 @@ const uniqueUsername = `testuser-${Date.now()}`;
 const uniquePassword = `Password123${Date.now()}`;
 
 describe('Register Tests', () => {
-    const baseUrl = 'http://localhost:3000/';
+    const baseUrl = 'http://localhost:3001/';
     const RegisterFields = {
         username: 'input#username',
         email: 'input#email',
@@ -119,29 +119,4 @@ describe('Register Tests', () => {
     
       cy.contains('Welcome').should('be.visible'); 
     });
-
-      it('should login with valid credentials', () => {
-        cy.visit(`${baseUrl}login`);
-        cy.get('input[name="username"]').as('usernameInput');
-        cy.get('input[name="password"]').as('passwordInput');
-        cy.get('button[type="submit"]').as('submitButton');
-      
-        cy.get('@usernameInput').type(uniqueUsername);
-        cy.get('@passwordInput').type(uniquePassword);
-        cy.get('button[type="submit"]').click();
-      
-        cy.contains('Welcome').should('be.visible');
-      });
-
-      it('should login successfully with valid credentials', () => {
-        cy.visit('http://localhost:3000/login');
-        cy.get('input[name="username"]').type('testuser'); 
-        cy.get('input[name="password"]').type('Password123');
-        cy.get('button[type="submit"]').click();
-    
-        cy.url().should('include', '/user-page'); 
-        cy.contains('Welcome').should('be.visible');
-      });
-      
-      
 });

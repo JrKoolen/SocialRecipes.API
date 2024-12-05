@@ -1,5 +1,5 @@
 describe('Create Account Page', () => {
-    const baseUrl = 'http://localhost:3000/register';
+    const baseUrl = 'http://localhost:3001/register';
 
     const formFields = {
         username: 'input#username',
