@@ -1,39 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= recipe.title %></title>
-  <link rel="stylesheet" href="/recipe.css">
-  <link rel="stylesheet" href="/styles.css">
-</head>
-<body>
-  <%- include('partials/navbar', { activePage: activePage }) %>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= recipe.title %></title>
+    <link rel="stylesheet" href="/recipe.css">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/footer.css">
+    <link rel="stylesheet" href="/header.css">
+    <link rel="stylesheet" href="/color.css">
+    <%- include('partials/header') %>
+  </head>
+  <body>
+      <div class="recipe-container">
+        <% if (recipe.imageBase64) { %>
+          <div class="recipe-image">
+            <img src="data:image/jpeg;base64,<%= recipe.imageBase64 %>" alt="<%= recipe.title %>">
+          </div>
+        <% } %>
 
-  <div class="recipe-container">
-    <% if (recipe.imageBase64) { %>
-      <div class="recipe-image">
-        <img src="data:image/jpeg;base64,<%= recipe.imageBase64 %>" alt="<%= recipe.title %>">
-      </div>
-    <% } %>
+        <h1 class="recipe-title"><%= recipe.title %></h1>
 
-    <h1 class="recipe-title"><%= recipe.title %></h1>
+        <% if (recipe.description) { %>
+          <div class="recipe-description">
+            <p><%= recipe.description %></p>
+          </div>
+        <% } else { %>
+          <div class="recipe-description">
+            <p>No description provided.</p>
+          </div>
+        <% } %>
 
-    <% if (recipe.description) { %>
-      <div class="recipe-description">
-        <p><%= recipe.description %></p>
+        <% if (recipe.body) { %>
+          <div class="recipe-body">
+            <%- recipe.body %>
+          </div>
+        <% } %>
       </div>
-    <% } else { %>
-      <div class="recipe-description">
-        <p>No description provided.</p>
-      </div>
-    <% } %>
-
-    <% if (recipe.body) { %>
-      <div class="recipe-body">
-        <%- recipe.body %>
-      </div>
-    <% } %>
-  </div>
-</body>
+      <footer>
+        <%- include('partials/footer') %>
+      </footer>
+  </body>
 </html>

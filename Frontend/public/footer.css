@@ -1,0 +1,121 @@
+.footer {
+    padding: 27px 39px;
+    background-color: var(--main-color);
+    width: 100%;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    z-index: 1000;
+}
+  
+.footer-container {
+display: flex;
+gap: 20px;
+}
+.footer-section, .footer-address, .footer-contact, .footer-social {
+line-height: normal;
+color: #fff;
+}
+.footer-section, .footer-address, .footer-contact, .footer-social {
+flex-direction: column;
+display: flex;
+}
+.footer-section {
+width: 20%;
+margin-left: 35vw;
+}
+
+.footer-links, .footer-copyright {
+font-family: Montserrat, sans-serif;
+font-size: 15px;
+font-weight: 400;
+}
+.footer-links {
+margin-top: 56px;
+}
+
+.footer-copyright {
+margin-top: 5px;
+font-size: 15px;
+}
+
+.footer-address {
+width: 23%;
+margin-left: 20px;
+}
+
+.footer-address-details {
+display: flex;
+gap: 16px;
+font-size: 16px;
+font-weight: 400;
+}
+
+.footer-address-logo {
+width: 90px;
+aspect-ratio: 1;
+object-fit: auto;
+object-position: center;
+}
+.footer-address-info {
+display: flex;
+flex-direction: column;
+margin: auto 0;
+}
+.footer-address-city {
+font-family: Montserrat, sans-serif;
+font-weight: 700;
+}
+.footer-address-building, .footer-address-street {
+font-family: Montserrat, sans-serif;
+}
+.footer-address-building {
+margin-top: 20px;
+}
+.footer-address-street {
+margin-top: 6px;
+}
+.footer-contact {
+width: 22%;
+margin-left: 20px;
+}
+
+.footer-contact-details {
+font-size: 16px;
+font-weight: 400;
+margin: auto;
+margin-left: 390px;
+margin-top: 12px;
+}
+
+.footer-contact-phone, .footer-contact-email {
+font-family: Montserrat, sans-serif;
+}
+.footer-contact-email {
+margin-top: 6px;
+}
+.footer-social {
+width: 16%;
+margin-left: 20px;
+}
+
+.footer-social-icons {
+display: flex;
+gap: 18px;
+margin-top: 3px;
+margin-left: 400px;
+}
+
+.footer-social-icon {
+width: 40px;
+aspect-ratio: 1;
+object-fit: auto;
+object-position: center;
+}
+
+.footer-social-icon-larger {
+width: 40px;
+aspect-ratio: 1.04;
+object-fit: auto;
+object-position: center;
+}

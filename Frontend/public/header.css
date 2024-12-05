@@ -1,0 +1,46 @@
+.header {
+display: flex;
+justify-content: center;
+align-items: center;
+padding: 10px 20px;
+background-color: var(--main-color);
+color: white;
+position: fixed;
+
+width: 100%;
+top: 0;
+
+z-index: 1000;
+box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.logo a {
+text-decoration: none;
+}
+
+.logo-img {
+height: 40px;
+}
+
+.nav-links {
+display: flex;
+gap: 20px;
+}
+
+.nav-links a {
+text-decoration: none;
+color: white;
+font-size: 16px;
+padding: 5px 10px;
+transition: background-color 0.3s;
+}
+
+.nav-links a:hover {
+background-color: var(--highlight-color);
+border-radius: 5px;
+}
+
+.nav-links a.active {
+background-color: var(--active-color);
+border-radius: 5px;
+}

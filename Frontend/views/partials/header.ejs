@@ -1,0 +1,19 @@
+<div class="header">
+    <div class="logo">
+      <a href="/">
+        <img src="/assets/logo.png" alt="Logo" class="logo-img">
+      </a>
+    </div>
+    <div class="nav-links">
+      <a href="/" class="<%= activePage === 'home' ? 'active' : '' %>">Home</a>
+      <% if (!isLoggedIn) { %>
+        <a href="/login" class="<%= activePage === 'login' ? 'active' : '' %>">Login</a>
+        <a href="/register" class="<%= activePage === 'register' ? 'active' : '' %>">Register</a>
+      <% } else { %>
+        <a href="/create-recipe" class="<%= activePage === 'create-recipe' ? 'active' : '' %>">Create Recipe</a>
+        <a href="/user-page" class="<%= activePage === 'user-page' ? 'active' : '' %>">My Profile</a>
+        <a href="/logout" class="<%= activePage === 'logout' ? 'active' : '' %>">Logout</a>
+      <% } %>
+    </div>
+  </div>
+  

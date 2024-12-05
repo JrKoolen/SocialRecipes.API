@@ -5,9 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Recipe Cards</title>
   <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/footer.css">
+  <link rel="stylesheet" href="/header.css">
+  <link rel="stylesheet" href="/color.css">
+  <%- include('partials/header') %>
 </head>
 <body>
-  <%- include('partials/navbar') %>
   <div class="main-content">
     <h1>Search recipes</h1>
     <div class="search-bar">
@@ -44,7 +47,6 @@
           }
         });
       });
-      //remove later ?
       document.querySelectorAll('.like-button').forEach(button => {
         button.addEventListener('click', function(event) {
           event.stopPropagation(); 
@@ -62,5 +64,8 @@
         });
       });
     </script>
+    <footer>
+      <%- include('partials/footer') %>
+    </footer>
 </body>
 </html>

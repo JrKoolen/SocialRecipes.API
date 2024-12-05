@@ -1,32 +1,34 @@
 const express = require('express');
+const path = require('path');
+const fs = require('fs');
+const querystring = require('querystring');
+const https = require('https');
+
 const session = require('express-session');
 const FileStore = require('session-file-store')(session);
 const multer = require('multer');
+const marked = require('marked');
+const axios = require('axios');
+const cors = require('cors');
+const dotenv = require('dotenv');
+
 const constants = require('./config/constants');
 const setLocals = require('./middleware/local');
-const upload = multer({ dest: 'uploads/' });
-const marked = require('marked');
-const https = require('https');
-const axios = require('axios');
-const path = require('path');
-const dotenv = require('dotenv');
-const fs = require('fs');
-const app = express();
-const querystring = require('querystring');
-const cors = require('cors');
-
 const envFile = process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development';
-dotenv.config({ path: envFile });
 
-console.log(`Environment: ${process.env.NODE_ENV}`);
+const PORT = process.env.PORT || 3001; 
+dotenv.config({ path: envFile });
 
 const corsOptions = {
   origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
 };
-app.use(cors(corsOptions));
 
+
+const app = express();
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
@@ -53,10 +55,13 @@ app.use(
   })
 );
 
-console.log('Current directory:', __dirname);
-
+const upload = multer({ dest: 'uploads/' });
 
 app.use(setLocals);
+
+const httpsAgent = new https.Agent({
+  rejectUnauthorized: false, 
+});
 
 function ensureAuthenticated(req, res, next) {
   if (req.session.user && req.session.user.isLoggedIn) {
@@ -65,26 +70,10 @@ function ensureAuthenticated(req, res, next) {
   res.redirect('/login');
 }
 
-const httpsAgent = new https.Agent({
-  rejectUnauthorized: false, 
-});
-
-app.get('/', (req, res) => {
-  res.redirect('/recipes');
-});
-
-
-
-app.get('/login', (req, res) => {
-  res.render('login', { activePage: 'login', errorMessage: null, isLoggedIn: req.session.user && req.session.user.isLoggedIn  });
-});
-
-
 function waitForSession(fileName, timeout = 10000, interval = 100) {
   return new Promise((resolve, reject) => {
       const startTime = Date.now();
       const filePath = path.join(process.cwd(), 'sessions', fileName); 
-
       const checkFile = () => {
           if (fs.existsSync(`${filePath}.json`)) {
               resolve(true); 
@@ -94,10 +83,17 @@ function waitForSession(fileName, timeout = 10000, interval = 100) {
               setTimeout(checkFile, interval); 
           }
       };
-
       checkFile();
   });
 }
+
+app.get('/', (req, res) => {
+  res.redirect('/recipes');
+});
+
+app.get('/login', (req, res) => {
+  res.render('login', { activePage: 'login', errorMessage: null, isLoggedIn: req.session.user && req.session.user.isLoggedIn  });
+});
 
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
@@ -138,7 +134,6 @@ app.post('/login', async (req, res) => {
                 errorMessage: 'An error occurred while saving your session. Please try again.',
             });
         }
-
         try {
             await waitForSession(req.sessionID);
             console.log(`Session file is available: ${req.sessionID}`);
@@ -151,20 +146,18 @@ app.post('/login', async (req, res) => {
             });
         }
     });
-} else {
+  } else {
     console.log('Invalid username or password');
     return res.status(401).render('login', {
         errorMessage: 'Invalid username or password.',
     });
-}
-} catch (error) {
-console.error('Error logging in:', error.response ? error.response.data : error.message);
-return res.status(500).render('login', {
+    }} catch (error) {
+    console.error('Error logging in:', error.response ? error.response.data : error.message);
+    return res.status(500).render('login', {
     errorMessage: 'An error occurred during login. Please try again.',
+    });
+  }
 });
-}
-});
-
 
 app.get('/logout', (req, res) => {
   req.session.destroy((err) => {
@@ -175,7 +168,6 @@ app.get('/logout', (req, res) => {
     res.redirect('/login');
   });
 });
-
 
 app.get('/register', (req, res) => {
   res.render('register', { errorMessage: null });
@@ -243,7 +235,6 @@ app.get('/user-page', async (req, res) => {
   }
 });
 
-
 app.get('/recipes', async (req, res) => {
   try {
     const response = await axios.get(`${constants.RECIPE.GET_FEATURED_RECIPES}?amount=20`, { httpsAgent });
@@ -256,7 +247,6 @@ app.get('/recipes', async (req, res) => {
     res.render('recipes', { recipes: [] });
   }
 });
-
 
 app.get('/create-recipe', ensureAuthenticated, (req, res) => {
   res.render('create-recipe');
@@ -354,9 +344,6 @@ app.get('/recipe/:id', async (req, res) => {
     res.status(500).send('Failed to fetch recipe.');
   }
 });
-
-
-const PORT = process.env.PORT || 3001; 
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

@@ -1,11 +1,12 @@
 .recipe-container {
     max-width: 800px;
-    margin: 100px auto 20px;
+    margin: 100px auto 20vh;
     padding: 20px;
     background-color: #fff; 
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
     border-radius: 10px; 
     font-family: Arial, sans-serif;
+    
   }
   
   .recipe-image img {
