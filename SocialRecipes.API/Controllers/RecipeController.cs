@@ -40,15 +40,15 @@ namespace SocialRecipes.API.Controllers
                     return BadRequest(new { message = "Recipe data is invalid. Please provide all required fields." });
                 }
 
-                var result = await _recipeService.AddRecipeAsync(recipeDto);
-                if (!result)
-                {
-                    _logger.LogWarning("Recipe creation failed due to invalid data or service error.");
-                    return BadRequest(new { message = "Failed to create recipe. Check input data." });
-                }
+                await _recipeService.AddRecipeAsync(recipeDto);
 
                 _logger.LogInformation("Recipe created successfully.");
                 return Ok(new { message = "Recipe created successfully.", recipeTitle = recipeDto.Title });
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "Invalid recipe data provided.");
+                return BadRequest(new { message = ex.Message });
             }
             catch (Exception ex)
             {
@@ -56,6 +56,7 @@ namespace SocialRecipes.API.Controllers
                 return StatusCode(500, new { message = "Internal server error. Please try again later." });
             }
         }
+
 
         /// <summary>
         /// Updates an existing recipe.

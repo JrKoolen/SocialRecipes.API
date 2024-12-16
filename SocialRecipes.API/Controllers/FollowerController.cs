@@ -35,17 +35,19 @@ namespace SocialRecipes.API.Controllers
             try
             {
                 _logger.LogInformation($"User {followerId} attempting to follow user with ID {userId}.");
-
-                var result = await _followerService.FollowAsync(userId, followerId);
-
-                if (!result)
-                {
-                    _logger.LogWarning($"Failed to follow user with ID {userId}.");
-                    return BadRequest(new { message = "Failed to follow the user.", userId });
-                }
-
+                await _followerService.FollowAsync(userId, followerId);
                 _logger.LogInformation($"User {followerId} successfully followed user with ID {userId}.");
                 return Ok(new { message = "Successfully followed the user.", userId });
+            }
+            catch (ArgumentNullException ex)
+            {
+                _logger.LogWarning(ex, $"Invalid arguments for follow operation: {ex.Message}");
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, $"Invalid operation: {ex.Message}");
+                return BadRequest(new { message = ex.Message });
             }
             catch (Exception ex)
             {
@@ -138,17 +140,20 @@ namespace SocialRecipes.API.Controllers
             try
             {
                 _logger.LogInformation($"User {followerId} attempting to unfollow user with ID {userId}.");
-
-                var result = await _followerService.RemoveFollowAsync(userId, followerId);
-
-                if (!result)
-                {
-                    _logger.LogWarning($"Failed to unfollow user with ID {userId}.");
-                    return BadRequest(new { message = "Failed to unfollow the user.", userId });
-                }
+                await _followerService.RemoveFollowAsync(userId, followerId);
 
                 _logger.LogInformation($"User {followerId} successfully unfollowed user with ID {userId}.");
                 return Ok(new { message = "Successfully unfollowed the user.", userId });
+            }
+            catch (ArgumentNullException ex)
+            {
+                _logger.LogWarning(ex, $"Invalid arguments for unfollow operation: {ex.Message}");
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, $"Invalid operation: {ex.Message}");
+                return BadRequest(new { message = ex.Message });
             }
             catch (Exception ex)
             {
@@ -156,5 +161,6 @@ namespace SocialRecipes.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Internal server error. Please try again later." });
             }
         }
+
     }
 }

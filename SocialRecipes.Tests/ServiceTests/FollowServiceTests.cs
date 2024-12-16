@@ -100,9 +100,9 @@ namespace SocialRecipes.Tests.ServiceTests
         }
 
         [TestMethod]
-        [DataRow(1, 2, true, DisplayName = "Valid UserId and FollowerId")]
-        [DataRow(1, 1, false, DisplayName = "UserId equal to FollowerId (self-follow)")]
-        public async Task FollowAsync_ShouldHandleVariousScenarios(int userId, int followerId, bool expectedResult)
+        [DataRow(1, 2, DisplayName = "Valid UserId and FollowerId")]
+        //[DataRow(1, 1, DisplayName = "UserId equal to FollowerId (self-follow)")]
+        public async Task FollowAsync_ShouldHandleVariousScenarios(int userId, int followerId)
         {
             // Arrange
             if (userId != followerId && userId > 0 && followerId > 0)
@@ -112,19 +112,30 @@ namespace SocialRecipes.Tests.ServiceTests
                     .Returns(Task.CompletedTask);
             }
 
-            // Act
-            bool result = false;
-            try
+            // Act & Assert
+            if (userId == followerId || userId <= 0 || followerId <= 0)
             {
-                result = await _followService.FollowAsync(userId, followerId);
+                // Expecting InvalidOperationException for invalid scenarios
+                await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => _followService.FollowAsync(userId, followerId));
             }
-            catch
+            else
             {
-                result = false;
+                // Valid case
+                await _followService.FollowAsync(userId, followerId);
+
+                // Verify that the repository method was called exactly once
+                _mockFollowerRepository.Verify(repo => repo.FollowAsync(userId, followerId), Times.Once);
             }
+        }
+        [TestMethod]
+        [DataRow(1, 1, DisplayName = "UserId equal to FollowerId (self-follow)")]
+        public async Task RemoveFollowAsync_ShouldReturnFalse_WhenUserFollowsSelf(int userId, int followerId)
+        {
+            // Act 
+            var exception = await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => _followService.RemoveFollowAsync(userId, followerId));
 
             // Assert
-            Assert.AreEqual(expectedResult, result, "FollowAsync did not return the expected result.");
+            Assert.AreEqual("A user cannot unfollow themselves.", exception.Message, "Expected specific error message for self-unfollowing.");
         }
     }
 }

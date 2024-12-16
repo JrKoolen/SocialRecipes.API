@@ -1,11 +1,25 @@
-﻿namespace SocialRecipes.DAL.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+
+namespace SocialRecipes.DAL.Models
 {
     public class User
     {
         public int Id { get; set; }
+
+        [Required]
+        [Column(TypeName = "varchar(255)")] 
         public string Name { get; set; }
+
+        [Required]
+        [Column(TypeName = "varchar(255)")] 
         public string Email { get; set; }
+
+        [Required]
+        [Column(TypeName = "varchar(255)")] 
         public string Password { get; set; }
+
+        [Column(TypeName = "datetime")] 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public ICollection<Recipe> Recipes { get; set; }

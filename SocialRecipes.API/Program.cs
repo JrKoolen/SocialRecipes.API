@@ -93,6 +93,14 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 var app = builder.Build();
+//using (var scope = app.Services.CreateScope())
+//{
+//    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+ //   dbContext.Database.Migrate();
+
+//}
+
+
 var logger = app.Services.GetRequiredService<ILogger<Program>>();
 logger.LogInformation("Application configuration started.");
 

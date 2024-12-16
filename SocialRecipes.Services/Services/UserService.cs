@@ -15,76 +15,48 @@ namespace SocialRecipes.Services.Services
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
-
+        // After coming back to the code after receiving feedback i did the following
+        // Moved logging to the controller because its a form of output and should be done in the controller.
+        // But if it is needed in the service layer it can be done.
+        // So i removed logger from the injection.
+        // I also removed the try catch block because it was to excessive and not needed
+        // In some functions i always returned True and the function was async so i changed it to void.
+        // Kept the Logger injection for now but should be removed.
         public async Task CreateUserAsync(AddUserDto userInput)
         {
-            try
+            if (userInput == null)
             {
-                if (userInput == null)
-                {
-                    _logger.LogWarning("Attempted to create a user with null input.");
-                    throw new ArgumentNullException(nameof(userInput), "User input cannot be null.");
-                }
+                throw new ArgumentNullException(nameof(userInput), "User input cannot be null.");
+            }
 
-                _logger.LogInformation("Creating a new user with Name: {Name}, Email: {Email}.", userInput.Name, userInput.Email);
-                await _userRepository.AddUserAsync(userInput);
-                _logger.LogInformation("User with Name: {Name}, Email: {Email} created successfully.", userInput.Name, userInput.Email);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while creating a user with Name: {Name}, Email: {Email}.", userInput?.Name, userInput?.Email);
-                throw new ApplicationException("An error occurred while creating the user. Please try again later.", ex);
-            }
+            await _userRepository.AddUserAsync(userInput);
         }
 
         public async Task DeleteUserByIdAsync(int id)
         {
-            try
+            if (id <= 0)
             {
-                if (id <= 0)
-                {
-                    _logger.LogWarning("Invalid UserId: {Id}. Must be greater than zero.", id);
-                    throw new ArgumentOutOfRangeException(nameof(id), "UserId must be greater than zero.");
-                }
+                throw new ArgumentOutOfRangeException(nameof(id), "UserId must be greater than zero.");
+            }
 
-                _logger.LogInformation("Deleting user with UserId: {Id}.", id);
-                await _userRepository.DeleteUserByIdAsync(id);
-                _logger.LogInformation("User with UserId: {Id} deleted successfully.", id);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while deleting the user with UserId: {Id}.", id);
-                throw new ApplicationException("An error occurred while deleting the user. Please try again later.", ex);
-            }
+            await _userRepository.DeleteUserByIdAsync(id);
         }
 
         public async Task<UserDto> GetUserByIdAsync(int id)
         {
-            try
+            if (id <= 0)
             {
-                if (id <= 0)
-                {
-                    _logger.LogWarning("Invalid UserId: {Id}. Must be greater than zero.", id);
-                    throw new ArgumentOutOfRangeException(nameof(id), "UserId must be greater than zero.");
-                }
-
-                _logger.LogInformation("Retrieving user with UserId: {Id}.", id);
-                var user = await _userRepository.GetUserByIdAsync(id);
-
-                if (user == null)
-                {
-                    _logger.LogWarning("User with UserId: {Id} not found.", id);
-                    throw new KeyNotFoundException($"User with ID {id} not found.");
-                }
-
-                _logger.LogInformation("User with UserId: {Id} retrieved successfully.", id);
-                return user;
+                throw new ArgumentOutOfRangeException(nameof(id), "UserId must be greater than zero.");
             }
-            catch (Exception ex)
+
+            var user = await _userRepository.GetUserByIdAsync(id);
+
+            if (user == null)
             {
-                _logger.LogError(ex, "An error occurred while retrieving the user with UserId: {Id}.", id);
-                throw new ApplicationException("An error occurred while retrieving the user. Please try again later.", ex);
+                throw new KeyNotFoundException($"User with ID {id} not found.");
             }
+
+            return user;
         }
     }
 }

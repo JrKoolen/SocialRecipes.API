@@ -2,7 +2,7 @@
     padding: 27px 39px;
     background-color: var(--main-color);
     width: 100%;
-    position: absolute;
+    position: fixed;
     justify-content: center;
     align-items: center;
     
