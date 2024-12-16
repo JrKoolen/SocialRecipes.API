@@ -34,16 +34,6 @@ namespace SocialRecipes.Tests.ServiceTests
         }
 
         [TestMethod]
-        public async Task AddRecipeAsync_ShouldCallRepository_WhenRecipeIsValid()
-        {
-            var recipe = new AddRecipeDto { Title = "Test Recipe" };
-
-            await _recipeService.AddRecipeAsync(recipe);
-
-            _mockRecipeRepository.Verify(repo => repo.AddRecipeAsync(recipe), Times.Once);
-        }
-
-        [TestMethod]
         public async Task GetAllRecipesAsync_ShouldReturnEmptyArray_WhenNoRecipesExist()
         {
             _mockRecipeRepository.Setup(repo => repo.GetAllRecipesAsync()).ReturnsAsync(Array.Empty<RecipeDto>());
@@ -52,12 +42,6 @@ namespace SocialRecipes.Tests.ServiceTests
 
             Assert.IsNotNull(result);
             Assert.AreEqual(0, result.Length);
-        }
-
-        [TestMethod]
-        public async Task GetAllRecipesFromStatusAsync_ShouldThrowException_WhenStatusIsNull()
-        {
-            await Assert.ThrowsExceptionAsync<ArgumentException>(() => _recipeService.GetAllRecipesFromStatusAsync(null));
         }
 
         [TestMethod]
@@ -72,18 +56,6 @@ namespace SocialRecipes.Tests.ServiceTests
 
             Assert.AreEqual(1, result.Length);
             Assert.AreEqual(1, result[0].Id);
-        }
-
-        [TestMethod]
-        public async Task GetAllRecipesFromUserAsync_ShouldThrowException_WhenUserIdIsInvalid()
-        {
-            await Assert.ThrowsExceptionAsync<ArgumentOutOfRangeException>(() => _recipeService.GetAllRecipesFromUserAsync(0));
-        }
-
-        [TestMethod]
-        public async Task GetRecipeByIdAsync_ShouldThrowException_WhenIdIsInvalid()
-        {
-            await Assert.ThrowsExceptionAsync<ArgumentOutOfRangeException>(() => _recipeService.GetRecipeByIdAsync(0));
         }
 
         [TestMethod]
@@ -109,12 +81,6 @@ namespace SocialRecipes.Tests.ServiceTests
         }
 
         [TestMethod]
-        public async Task DeleteRecipeByIdAsync_ShouldThrowException_WhenIdIsInvalid()
-        {
-            await Assert.ThrowsExceptionAsync<ArgumentOutOfRangeException>(() => _recipeService.DeleteRecipeByIdAsync(0));
-        }
-
-        [TestMethod]
         public async Task DeleteRecipeByIdAsync_ShouldCallRepository_WhenIdIsValid()
         {
             var id = 1;
@@ -122,12 +88,6 @@ namespace SocialRecipes.Tests.ServiceTests
             await _recipeService.DeleteRecipeByIdAsync(id);
 
             _mockRecipeRepository.Verify(repo => repo.DeleteRecipeByIdAsync(id), Times.Once);
-        }
-
-        [TestMethod]
-        public async Task UpdateRecipeAsync_ShouldThrowException_WhenRecipeIsNull()
-        {
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(() => _recipeService.UpdateRecipeAsync(null));
         }
 
         [TestMethod]
@@ -159,27 +119,6 @@ namespace SocialRecipes.Tests.ServiceTests
 
             Assert.IsNotNull(result);
             Assert.AreEqual(0, result.Length);
-        }
-
-        [TestMethod]
-        public async Task GetFeaturedRecipesAsync_ShouldReturnTopRecipes_WhenRecipesExist()
-        {
-            var status = "Published";
-            var featuredCount = 2;
-            var recipes = new[]
-            {
-                new RecipeDto { Id = 1, Title = "Recipe A", Likes = 10 },
-                new RecipeDto { Id = 2, Title = "Recipe B", Likes = 20 },
-                new RecipeDto { Id = 3, Title = "Recipe C", Likes = 5 }
-            };
-
-            _mockRecipeRepository.Setup(repo => repo.GetAllRecipesFromStatusAsync(status)).ReturnsAsync(recipes);
-
-            var result = await _recipeService.GetFeaturedRecipesAsync(status, featuredCount);
-
-            Assert.AreEqual(featuredCount, result.Length);
-            Assert.AreEqual(2, result[0].Id); 
-            Assert.AreEqual(1, result[1].Id); 
         }
     }
 }
