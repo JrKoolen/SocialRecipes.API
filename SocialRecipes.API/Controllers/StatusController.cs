@@ -15,7 +15,8 @@ namespace SocialRecipes.API.Controllers
         {
             _dbContext = dbContext;
         }
-
+        // temp maybe turn these controllers off when in production and is meant for infra debugging only 
+        
         /// <summary>
         /// Retrieves the current status of the API.
         /// </summary>
