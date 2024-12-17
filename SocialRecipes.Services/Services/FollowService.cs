@@ -7,12 +7,10 @@ namespace SocialRecipes.Services.Services
     public class FollowService
     {
         private readonly IFollowerRepository _followerRepository;
-        private readonly ILogger<FollowService> _logger;
 
-        public FollowService(IFollowerRepository followerRepository, ILogger<FollowService> logger)
+        public FollowService(IFollowerRepository followerRepository)
         {
             _followerRepository = followerRepository ?? throw new ArgumentNullException(nameof(followerRepository));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
         // After coming back to the code after receiving feedback i did the following
         // Moved logging to the controller because its a form of output and should be done in the controller.

@@ -10,10 +10,9 @@ namespace SocialRecipes.Services.Services
         private readonly IUserRepository _userRepository;
         private readonly ILogger<UserService> _logger;
 
-        public UserService(IUserRepository userRepository, ILogger<UserService> logger)
+        public UserService(IUserRepository userRepository)
         {
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
         // After coming back to the code after receiving feedback i did the following
         // Moved logging to the controller because its a form of output and should be done in the controller.

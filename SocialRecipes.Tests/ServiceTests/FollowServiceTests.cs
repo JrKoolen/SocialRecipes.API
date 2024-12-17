@@ -20,7 +20,7 @@ namespace SocialRecipes.Tests.ServiceTests
         {
             _mockFollowerRepository = new Mock<IFollowerRepository>();
             _mockLogger = new Mock<ILogger<FollowService>>();
-            _followService = new FollowService(_mockFollowerRepository.Object, _mockLogger.Object);
+            _followService = new FollowService(_mockFollowerRepository.Object);
         }
 
         [TestMethod]
@@ -115,15 +115,13 @@ namespace SocialRecipes.Tests.ServiceTests
             // Act & Assert
             if (userId == followerId || userId <= 0 || followerId <= 0)
             {
-                // Expecting InvalidOperationException for invalid scenarios
+                // Expecting 
                 await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => _followService.FollowAsync(userId, followerId));
             }
             else
             {
                 // Valid case
                 await _followService.FollowAsync(userId, followerId);
-
-                // Verify that the repository method was called exactly once
                 _mockFollowerRepository.Verify(repo => repo.FollowAsync(userId, followerId), Times.Once);
             }
         }

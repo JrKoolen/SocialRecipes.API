@@ -7,12 +7,10 @@ namespace SocialRecipes.Services.Services
     public class CommentService
     {
         private readonly ICommentRepository _commentRepository;
-        private readonly ILogger<CommentService> _logger;
 
-        public CommentService(ICommentRepository commentRepository, ILogger<CommentService> logger)
+        public CommentService(ICommentRepository commentRepository)
         {
             _commentRepository = commentRepository ?? throw new ArgumentNullException(nameof(commentRepository));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
         // After coming back to the code after receiving feedback i did the following
         // Moved logging to the controller because its a form of output and should be done in the controller.

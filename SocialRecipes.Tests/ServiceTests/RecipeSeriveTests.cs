@@ -23,7 +23,7 @@ namespace SocialRecipes.Tests.ServiceTests
         {
             _mockRecipeRepository = new Mock<IRecipeRepository>();
             _mockLogger = new Mock<ILogger<RecipeService>>();
-            _recipeService = new RecipeService(_mockRecipeRepository.Object, _mockLogger.Object);
+            _recipeService = new RecipeService(_mockRecipeRepository.Object);
         }
 
         [TestMethod]

@@ -8,12 +8,10 @@ namespace SocialRecipes.Services.Services
     public class RecipeService
     {
         private readonly IRecipeRepository _recipeRepository;
-        private readonly ILogger<RecipeService> _logger;
 
-        public RecipeService(IRecipeRepository recipeRepository, ILogger<RecipeService> logger)
+        public RecipeService(IRecipeRepository recipeRepository)
         {
             _recipeRepository = recipeRepository ?? throw new ArgumentNullException(nameof(recipeRepository));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
         // After coming back to the code after receiving feedback i did the following
         // Moved logging to the controller because its a form of output and should be done in the controller.
