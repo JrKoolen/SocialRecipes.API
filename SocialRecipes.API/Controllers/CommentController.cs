@@ -9,9 +9,9 @@ namespace SocialRecipes.API.Controllers
     public class CommentController : ControllerBase
     {
         private readonly CommentService _commentService;
-        private readonly ILogger<AuthController> _logger;
+        private readonly ILogger<CommentController> _logger;
 
-        public CommentController(ILogger<AuthController> logger, CommentService commentService)
+        public CommentController(ILogger<CommentController> logger, CommentService commentService)
         {
             _commentService = commentService;
             _logger = logger;
