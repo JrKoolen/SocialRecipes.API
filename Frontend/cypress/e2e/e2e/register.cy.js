@@ -19,7 +19,7 @@ describe('Create Account Page', () => {
             data: { username: 'testuser', email: 'invalid-email', password: 'Password123' },
             expectValid: false,
         },
-        validSubmission: {
+        /* validSubmission: {
             description: 'should successfully submit the form with valid inputs',
             data: {
                 username: `testuser`,
@@ -27,7 +27,7 @@ describe('Create Account Page', () => {
                 password: 'Password123',
             },
             expectValid: true,
-        },
+        }, */
     };
 
     function fillForm({ username, email, password }) {

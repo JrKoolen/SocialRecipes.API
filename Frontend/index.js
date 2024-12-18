@@ -14,10 +14,11 @@ const dotenv = require('dotenv');
 
 const constants = require('./config/constants');
 const setLocals = require('./middleware/local');
+const { waitForSession } = require('./src/utils/utils'); 
 const envFile = process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development';
 
-const PORT = process.env.PORT || 3001; 
 dotenv.config({ path: envFile });
+const PORT = process.env.PORT || 3001; 
 
 const corsOptions = {
   origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
@@ -25,6 +26,11 @@ const corsOptions = {
   credentials: true,
 };
 
+
+
+module.exports = {
+  waitForSession,
+};
 
 const app = express();
 
@@ -51,6 +57,7 @@ app.use(
       secure: process.env.NODE_ENV === 'production',
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24, 
+      sameSite: process.env.NODE_ENV === 'production' ? 'Strict' : 'Lax',
     },
   })
 );
@@ -70,22 +77,6 @@ function ensureAuthenticated(req, res, next) {
   res.redirect('/login');
 }
 
-function waitForSession(fileName, timeout = 10000, interval = 100) {
-  return new Promise((resolve, reject) => {
-      const startTime = Date.now();
-      const filePath = path.join(process.cwd(), 'sessions', fileName); 
-      const checkFile = () => {
-          if (fs.existsSync(`${filePath}.json`)) {
-              resolve(true); 
-          } else if (Date.now() - startTime > timeout) {
-              reject(new Error(`Timeout: File ${filePath} was not found within ${timeout}ms`));
-          } else {
-              setTimeout(checkFile, interval); 
-          }
-      };
-      checkFile();
-  });
-}
 
 app.get('/', (req, res) => {
   res.redirect('/recipes');
@@ -124,7 +115,7 @@ app.post('/login', async (req, res) => {
         id: response.data.userId,
         isLoggedIn: true,
       };
-
+      console.log('Session:', req.session);
       console.log(response.data);
       console.log(`User ${username} logged in successfully. user id: ${req.session.user.id}`);
       req.session.save(async (err) => {
@@ -344,6 +335,8 @@ app.get('/recipe/:id', async (req, res) => {
     res.status(500).send('Failed to fetch recipe.');
   }
 });
+
+
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

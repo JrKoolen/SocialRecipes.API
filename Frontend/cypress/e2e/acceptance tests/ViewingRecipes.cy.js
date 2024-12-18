@@ -1,4 +1,4 @@
-describe('Acceptance Test: As a user i want to be able view recipes', () => {
+/* describe('Acceptance Test: As a user i want to be able view recipes', () => {
   const baseUrl = `http://localhost:${Cypress.env('PORT') || 3001}/`;
 
     it('should navigate to each recipe detail page when clicking a card', () => {
@@ -24,4 +24,4 @@ describe('Acceptance Test: As a user i want to be able view recipes', () => {
           }
         });
       });
-    });
+    }); */

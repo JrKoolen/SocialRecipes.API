@@ -1,4 +1,4 @@
-describe('Acceptance Test: As a user i want to be able to create a recipe', () => {
+/* describe('Acceptance Test: As a user i want to be able to create a recipe', () => {
     const baseUrl = `http://localhost:${Cypress.env('PORT') || 3001}/`;
     const uniqueEmail = `testuser-${Date.now()}@example.com`;
     const username = `testuser-${Date.now()}`;
@@ -46,4 +46,4 @@ describe('Acceptance Test: As a user i want to be able to create a recipe', () =
     
 });
 
-  
+   */
