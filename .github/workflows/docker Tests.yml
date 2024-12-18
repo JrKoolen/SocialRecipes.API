@@ -22,14 +22,17 @@ jobs:
         node-version: '16'
 
     - name: Install Dependencies
+      working-directory: ./Frontend
       run: npm install
 
     - name: Run Tests
+      working-directory: ./Frontend
       run: |
         npm test -- --coverage
         ls -la coverage # Verify coverage reports exist
 
     - name: SonarQube Analysis
+      working-directory: ./Frontend
       env:
         SONAR_HOST_URL: http://localhost:9000
         SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
