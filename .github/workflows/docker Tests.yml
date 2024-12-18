@@ -27,9 +27,7 @@ jobs:
 
     - name: Run Tests
       working-directory: ./Frontend
-      run: |
-        npm test -- --coverage
-        ls -la coverage # Verify coverage reports exist
+      run: npx nyc npx qunit
 
     - name: SonarQube Analysis
       working-directory: ./Frontend
