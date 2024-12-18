@@ -52,6 +52,7 @@ jobs:
         run: npm install
 
       - name: Run QUnit Tests
+        working-directory: ./Frontend
         run: npm test 
         
   build-and-test-docker-frontend:
