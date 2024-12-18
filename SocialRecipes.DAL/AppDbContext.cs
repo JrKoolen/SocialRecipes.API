@@ -15,39 +15,8 @@ namespace SocialRecipes.DAL
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Set default string to varchar(255)
-            foreach (var property in modelBuilder.Model.GetEntityTypes()
-                .SelectMany(t => t.GetProperties())
-                .Where(p => p.ClrType == typeof(string)))
-            {
-                property.SetColumnType("varchar(255)");
-            }
-
-            // Set default DateTime to datetime
-            foreach (var property in modelBuilder.Model.GetEntityTypes()
-                .SelectMany(t => t.GetProperties())
-                .Where(p => p.ClrType == typeof(DateTime)))
-            {
-                property.SetColumnType("datetime");
-            }
-
-            // Configure Message entity relationships
-            modelBuilder.Entity<Message>(entity =>
-            {
-                entity.HasOne(m => m.Sender)
-                    .WithMany(u => u.SentMessages)
-                    .HasForeignKey(m => m.SenderId)
-                    .OnDelete(DeleteBehavior.Restrict); // Prevent cascading delete
-
-                entity.HasOne(m => m.Receiver)
-                    .WithMany(u => u.ReceivedMessages)
-                    .HasForeignKey(m => m.ReceiverId)
-                    .OnDelete(DeleteBehavior.Restrict); // Prevent cascading delete
-            });
-
-            // Configure Follower composite key and relationships
             modelBuilder.Entity<Follower>()
-                .HasKey(f => new { f.FollowedUserId, f.FollowingUserId });
+        .HasKey(f => new { f.FollowedUserId, f.FollowingUserId });
 
             modelBuilder.Entity<Follower>()
                 .HasOne(f => f.FollowedUser)
@@ -55,41 +24,44 @@ namespace SocialRecipes.DAL
                 .HasForeignKey(f => f.FollowedUserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+
             modelBuilder.Entity<Follower>()
-                .HasOne(f => f.FollowingUser)
-                .WithMany()
-                .HasForeignKey(f => f.FollowingUserId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasKey(f => new { f.FollowedUserId, f.FollowingUserId });
 
-            // Configure Recipe.Image as longblob
-            modelBuilder.Entity<Recipe>()
-                .Property(r => r.Image)
-                .HasColumnType("longblob");
-
-            // Add unique index for User.Email
             modelBuilder.Entity<User>()
-                .HasIndex(u => u.Email)
-                .IsUnique();
+                .HasMany(u => u.Recipes)
+                .WithOne(r => r.User)
+                .HasForeignKey(r => r.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            // Apply snake_case naming convention
-            foreach (var entity in modelBuilder.Model.GetEntityTypes())
-            {
-                entity.SetTableName(ToSnakeCase(entity.GetTableName()));
+            modelBuilder.Entity<Recipe>()
+                .HasMany(r => r.Comments)
+                .WithOne(c => c.Recipe)
+                .HasForeignKey(c => c.RecipeId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-                foreach (var property in entity.GetProperties())
-                {
-                    property.SetColumnName(ToSnakeCase(property.Name));
-                }
-            }
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Comments)
+                .WithOne(c => c.User)
+                .HasForeignKey(c => c.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            // Utility function to convert to snake_case
-            string ToSnakeCase(string input)
-            {
-                return string.Concat(input.Select((x, i) =>
-                    i > 0 && char.IsUpper(x) ? "_" + x : x.ToString())).ToLower();
-            }
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.SentMessages)
+                .WithOne(m => m.Sender)
+                .HasForeignKey(m => m.SenderId)
+                .OnDelete(DeleteBehavior.NoAction);
 
-            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.ReceivedMessages)
+                .WithOne(m => m.Receiver)
+                .HasForeignKey(m => m.ReceiverId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<User>().ToTable("users");
+            modelBuilder.Entity<Comment>().ToTable("comments");
+            modelBuilder.Entity<Follower>().ToTable("followers");
+            modelBuilder.Entity<Recipe>().ToTable("recipes");
         }
     }
 }

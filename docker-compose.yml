@@ -46,3 +46,4 @@ networks:
 
 volumes:
   mysql_data:
+  sessions:
