@@ -35,7 +35,7 @@ jobs:
         name: TestResults
         path: test-results.trx
 
-  QunitFronedendTests:
+  Qunit-Frontend-Tests:
     runs-on: ubuntu-latest
 
     steps:
@@ -149,7 +149,7 @@ jobs:
     needs: 
       - Build-and-test-API
       - build-and-test-docker-frontend
-      - QunitFronedendTests
+      - Qunit-Frontend-Tests
     name: Build and Deploy to azure container instances
     runs-on: ubuntu-latest
     steps:
@@ -192,6 +192,7 @@ jobs:
           --image socialrecipes.azurecr.io/socialrecipes-api:${{ github.sha }} \
           --cpu 1 \
           --memory 1.5 \
+          --os-type Linux \
           --registry-login-server socialrecipes.azurecr.io \
           --registry-username ${{ secrets.AZURE_ACR_USERNAME }} \
           --registry-password ${{ secrets.AZURE_ACR_PASSWORD }} \
@@ -206,6 +207,7 @@ jobs:
           --image socialrecipes.azurecr.io/socialrecipes-frontend:${{ github.sha }} \
           --cpu 1 \
           --memory 1.5 \
+          --os-type Linux \
           --registry-login-server socialrecipes.azurecr.io \
           --registry-username ${{ secrets.AZURE_ACR_USERNAME }} \
           --registry-password ${{ secrets.AZURE_ACR_PASSWORD }} \
@@ -221,6 +223,7 @@ jobs:
           --image socialrecipes.azurecr.io/socialrecipes-database:${{ github.sha }} \
           --cpu 1 \
           --memory 2.0 \
+          --os-type Linux \
           --registry-login-server socialrecipes.azurecr.io \
           --registry-username ${{ secrets.AZURE_ACR_USERNAME }} \
           --registry-password ${{ secrets.AZURE_ACR_PASSWORD }} \
