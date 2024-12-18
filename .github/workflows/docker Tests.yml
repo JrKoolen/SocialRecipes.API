@@ -35,6 +35,41 @@ jobs:
         name: TestResults
         path: test-results.trx
 
+jobs:
+  build-and-analyze:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+
+    - name: Install Dependencies
+      run: npm install
+
+    - name: Run Tests
+      run: |
+        npm test -- --coverage
+        ls -la coverage # Verify coverage reports exist
+
+    - name: SonarQube Analysis
+      env:
+        SONAR_HOST_URL: http://localhost:9000
+        SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
+      run: |
+        npx sonarqube-scanner \
+          -Dsonar.projectKey=your-project-key \
+          -Dsonar.sources=./src \
+          -Dsonar.tests=./test \
+          -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
+          -Dsonar.host.url=$SONAR_HOST_URL \
+          -Dsonar.login=$SONAR_TOKEN
+
+
   Qunit-Frontend-Tests:
     runs-on: ubuntu-latest
 
