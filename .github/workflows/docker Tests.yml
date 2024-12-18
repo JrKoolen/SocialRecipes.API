@@ -53,7 +53,7 @@ jobs:
 
       - name: Run QUnit Tests
         working-directory: ./Frontend
-        run: npm test 
+        run: npx qunit
         
   build-and-test-docker-frontend:
     name: Build and Test frontend & docker
