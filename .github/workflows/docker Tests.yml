@@ -48,6 +48,7 @@ jobs:
           node-version: '16'
 
       - name: Install Dependencies
+        working-directory: ./Frontend
         run: npm install
 
       - name: Run QUnit Tests
