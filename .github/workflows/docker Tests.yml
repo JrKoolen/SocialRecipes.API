@@ -10,7 +10,7 @@ on:
 
 jobs:
   build-and-analyze:
-    name: build and analyze with sonarqube:
+    name: build and analyze with sonarqube
     runs-on: ubuntu-latest
 
     steps:
@@ -72,7 +72,7 @@ jobs:
   
 
   Qunit-Frontend-Tests:
-    name Qunit Frontend Tests:
+    name: Qunit Frontend Tests
     runs-on: ubuntu-latest
 
     steps:
