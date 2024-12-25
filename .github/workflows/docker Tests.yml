@@ -69,6 +69,10 @@ jobs:
         run: | 
           npx lighthouse http://localhost:3000 --output html --output-path lighthouse-report.html --chrome-flags="--headless" --only-categories=performance --only-categories=accessibility --only-categories=best-practices --only-categories=seo
 #         #node lighthouseTests.mjs
+      - name: List Files in Reports Directory
+        run: |
+          echo "Contents of the reports directory:"
+          ls -R reports
 
       - name: Upload Report
         uses: actions/upload-artifact@v3
