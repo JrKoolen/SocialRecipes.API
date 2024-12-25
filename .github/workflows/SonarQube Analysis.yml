@@ -10,7 +10,7 @@ on:
 
 jobs:
   build-and-analyze:
-    name: build and analyze with sonarqube
+    name: Build and Analyze with SonarQube
     runs-on: ubuntu-latest
 
     steps:
@@ -21,6 +21,11 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: '16'
+
+    - name: Start SonarQube Docker Container
+      run: |
+        docker run -d --name sonarqube -p 9000:9000 sonarqube:community
+        sleep 60 # Wait for SonarQube to fully initialize
 
     - name: Install Dependencies
       working-directory: ./Frontend
@@ -43,3 +48,7 @@ jobs:
           -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
           -Dsonar.host.url=$SONAR_HOST_URL \
           -Dsonar.login=$SONAR_TOKEN
+
+    - name: Stop SonarQube Docker Container
+      if: always()
+      run: docker stop sonarqube && docker rm sonarqube
