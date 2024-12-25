@@ -62,7 +62,7 @@ jobs:
 
       - name: Start Server
         working-directory: ./Frontend
-        run: npm run start & 
+        run: npm run start
 
       - name: Run Lighthouse Tests
         working-directory: ./Frontend
