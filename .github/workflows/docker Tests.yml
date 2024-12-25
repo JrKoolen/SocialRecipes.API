@@ -68,13 +68,13 @@ jobs:
         working-directory: ./Frontend
         run: | 
           npx lighthouse http://localhost:3000 --output html --output-path lighthouse-report.html --chrome-flags="--headless" --only-categories=performance --only-categories=accessibility --only-categories=best-practices --only-categories=seo
-#         node lighthouseTests.mjs
+#         #node lighthouseTests.mjs
 
       - name: Upload Report
         uses: actions/upload-artifact@v3
         with:
-          name: lighthouse-report
-          path: lighthouse-report.html
+          name: lighthouse-report-json
+          path: reports/lighthouse-report.json
 
   Build-and-test-API:
     name: Build and Test API
