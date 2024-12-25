@@ -57,12 +57,15 @@ jobs:
           node-version: '18'
 
       - name: Install Dependencies
+        working-directory: ./Frontend
         run: npm install
 
       - name: Start Server
+        working-directory: ./Frontend
         run: npm run start & 
 
       - name: Run Lighthouse Tests
+        working-directory: ./Frontend
         run: node test/lighthousetests.mjs
 
       - name: Upload Report
