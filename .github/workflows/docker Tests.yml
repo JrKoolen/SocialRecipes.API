@@ -67,8 +67,8 @@ jobs:
       - name: Run Lighthouse Tests
         working-directory: ./Frontend
         run: | 
-          ls -la
-          node test/lighthousetests.mjs
+          npx lighthouse http://localhost:3000 --output html --output-path lighthouse-report.html --chrome-flags="--headless" --only-categories=performance --only-categories=accessibility --only-categories=best-practices --only-categories=seo
+#         node lighthouseTests.mjs
 
       - name: Upload Report
         uses: actions/upload-artifact@v3
