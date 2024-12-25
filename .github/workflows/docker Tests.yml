@@ -70,17 +70,18 @@ jobs:
           npx lighthouse http://localhost:3000 --output html --output-path lighthouse-report.html --chrome-flags="--headless" --only-categories=performance --only-categories=accessibility --only-categories=best-practices --only-categories=seo
 #         #node lighthouseTests.mjs
       - name: List Files in Reports Directory
+        working-directory: ./Frontend
         run: |
           echo "Contents of the reports directory:"
           cd ./Frontend
           ls
-          ls -R reports
+          ls -R uploads
 
       - name: Upload Report
         uses: actions/upload-artifact@v3
         with:
           name: lighthouse-report-json
-          path: reports/lighthouse-report.json
+          path: uploads/lighthouse-report.json
 
   Build-and-test-API:
     name: Build and Test API
