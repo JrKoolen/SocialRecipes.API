@@ -73,7 +73,6 @@ jobs:
         working-directory: ./Frontend
         run: |
           echo "Contents of the reports directory:"
-          cd ./Frontend
           ls
           ls -R uploads
 
