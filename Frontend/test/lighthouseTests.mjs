@@ -1,6 +1,7 @@
 import fs from 'fs';
 import lighthouse from 'lighthouse';
 import * as chromeLauncher from 'chrome-launcher';
+// s
 
 async function runLighthouse(url, options = {}, config = null) {
     let chrome;
