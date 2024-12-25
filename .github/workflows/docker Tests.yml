@@ -72,6 +72,7 @@ jobs:
       - name: List Files in Reports Directory
         run: |
           echo "Contents of the reports directory:"
+          cd frontend
           ls
           ls -R reports
 
