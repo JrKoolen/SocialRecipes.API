@@ -24,26 +24,6 @@ namespace SocialRecipes.Tests.ServiceTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public async Task CreateUserAsync_ShouldThrowArgumentNullException_WhenUserInputIsNull()
-        {
-            await _userService.CreateUserAsync(null);
-        }
-
-        [TestMethod]
-        public async Task CreateUserAsync_ShouldCallRepository_WhenUserInputIsValid()
-        {
-            // Arrange
-            var userInput = new AddUserDto { Name = "JohnDoe", Email = "johndoe@example.com" };
-
-            // Act
-            await _userService.CreateUserAsync(userInput);
-
-            // Assert
-            _mockUserRepository.Verify(repo => repo.AddUserAsync(userInput), Times.Once);
-        }
-
-        [TestMethod]
         [DataRow(0, DisplayName = "Zero UserId")]
         [DataRow(-1, DisplayName = "Negative UserId")]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]

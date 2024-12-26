@@ -30,7 +30,6 @@ namespace SocialRecipes.Tests.ControllerTests
             _followController = new FollowController(_mockLogger.Object, _followService);
         }
 
-
         [TestMethod]
         public async Task FollowAsync_ShouldReturnBadRequest_WhenArgumentExceptionOccurs()
         {
@@ -51,7 +50,6 @@ namespace SocialRecipes.Tests.ControllerTests
 
             _mockFollowerRepository.Verify(repo => repo.FollowAsync(userId, followerId), Times.Once);
         }
-
 
         [TestMethod]
         public async Task RemoveFollowAsync_ShouldReturnBadRequest_WhenArgumentExceptionOccurs()

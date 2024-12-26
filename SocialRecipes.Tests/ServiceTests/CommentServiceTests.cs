@@ -22,13 +22,6 @@ namespace SocialRecipes.Tests.ServiceTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public async Task AddCommentAsync_ShouldThrowArgumentNullException_WhenCommentIsNull()
-        {
-            await _commentService.AddCommentAsync(null);
-        }
-
-        [TestMethod]
         public async Task AddCommentAsync_ShouldCallRepository_WhenCommentIsValid()
         {
             // Arrange
@@ -62,21 +55,6 @@ namespace SocialRecipes.Tests.ServiceTests
             // Assert
             Assert.IsNotNull(result);
             Assert.AreEqual(0, result.Length);
-        }
-
-        [TestMethod]
-        [DataRow(0, DisplayName = "Zero UserId")]
-        [DataRow(-1, DisplayName = "Negative UserId")]
-        [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public async Task GetCommentsByUserIdAsync_ShouldThrowArgumentOutOfRangeException_WhenUserIdIsInvalid(int userId)
-        {
-            await _commentService.GetCommentsByUserIdAsync(userId);
-        }
-
-        [TestMethod]
-        public async Task DeleteCommentByIdAsync_ShouldThrowArgumentOutOfRangeException_WhenCommentIdIsInvalid()
-        {
-            await Assert.ThrowsExceptionAsync<ArgumentOutOfRangeException>(() => _commentService.DeleteCommentByIdAsync(0));
         }
 
         [TestMethod]

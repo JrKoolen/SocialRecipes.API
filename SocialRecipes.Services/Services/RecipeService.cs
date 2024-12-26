@@ -13,13 +13,7 @@ namespace SocialRecipes.Services.Services
         {
             _recipeRepository = recipeRepository ?? throw new ArgumentNullException(nameof(recipeRepository));
         }
-        // After coming back to the code after receiving feedback i did the following
-        // Moved logging to the controller because its a form of output and should be done in the controller.
-        // But if it is needed in the service layer it can be done.
-        // So i removed logger from the injection.
-        // I also removed the try catch block because it was to excessive and not needed
-        // In some functions i always returned True and the function was async so i changed it to void.
-        // Kept the Logger injection for now but should be removed.
+
         public async Task AddRecipeAsync(AddRecipeDto recipe)
         {
             if (recipe == null)
@@ -139,7 +133,5 @@ namespace SocialRecipes.Services.Services
                 .Take(featuredCount)
                 .ToArray();
         }
-
-
     }
 }

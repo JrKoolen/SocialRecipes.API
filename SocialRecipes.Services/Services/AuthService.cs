@@ -1,6 +1,7 @@
 ﻿using SocialRecipes.Services.IRepositories;
 using SocialRecipes.Domain.Dto.IN;
 using System.Threading.Tasks;
+using SocialRecipes.Domain.Logic;
 using SocialRecipes.Domain.Dto.General;
 
 namespace SocialRecipes.Services.Services
@@ -19,9 +20,19 @@ namespace SocialRecipes.Services.Services
             return await _authRepository.LoginAsync(loginDto);
         }
 
-        public async Task<bool> RegisterAsync(AddUserDto addUserDto)
+        public async Task<string> RegisterAsync(AddUserDto addUserDto)
         {
-            return await _authRepository.RegisterAsync(addUserDto);
+            ProcessName processName = new ProcessName(addUserDto.Name);
+            string response = processName.Process();
+            await _authRepository.RegisterAsync(addUserDto);
+            if (await _authRepository.RegisterAsync(addUserDto))
+            {
+                return response;
+            }
+            else 
+            {
+                return "User already exists";
+            }
         }
     }
 }

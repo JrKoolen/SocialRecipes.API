@@ -107,19 +107,19 @@ public class AuthController : ControllerBase
                 return BadRequest(new { message = "Invalid input data. Please provide all required fields." });
             }
 
-            var isRegistered = await _authService.RegisterAsync(addUser);
+            string response = await _authService.RegisterAsync(addUser);
 
-            if (isRegistered)
+            if (response.Contains("valid"))
             {
                 _logger.LogInformation($"User {addUser.Name} registered successfully.");
                 return Ok(new
                 {
-                    message = "User registered successfully.",
+                    message = response,
                     username = addUser.Name
                 });
             }
             _logger.LogWarning($"User registration failed for {addUser.Name}. Username might already exist.");
-            return BadRequest(new { message = "Username already exists or registration failed." });
+            return BadRequest(new { message = response });
         }
         catch (ArgumentException ex)
         {
