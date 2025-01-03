@@ -1,4 +1,4 @@
-describe('Acceptance Test: As a user i want to be able to create a recipe', () => {
+describe('Seting up the e2e tests:', () => {
     const baseUrl = `http://localhost:${Cypress.env('PORT') || 3000}/`;
     const uniqueEmail = `testuser-${Date.now()}@example.com`;
     const username = `test${Date.now()}`;
@@ -24,8 +24,8 @@ describe('Acceptance Test: As a user i want to be able to create a recipe', () =
 
     it('should be able to login after registration', () => {
         cy.visit(`${baseUrl}login`);
-        cy.get('input[name="username"]').type("Jan"); 
-        cy.get('input[name="password"]').type("Jan");
+        cy.get('input[name="username"]').type(username); 
+        cy.get('input[name="password"]').type(password);
         cy.get('button[type="submit"]').click();
 
         cy.url().should('include', '/user-page'); 
@@ -35,8 +35,8 @@ describe('Acceptance Test: As a user i want to be able to create a recipe', () =
     it('should be able to create a recipe after login', () => {
 
         cy.visit(`${baseUrl}login`);
-        cy.get('input[name="username"]').type("Jan"); 
-        cy.get('input[name="password"]').type("Jan");
+        cy.get('input[name="username"]').type(username); 
+        cy.get('input[name="password"]').type(password);
         cy.get('button[type="submit"]').click();
 
         cy.visit(`${baseUrl}create-recipe`);
@@ -54,8 +54,8 @@ describe('Acceptance Test: As a user i want to be able to create a recipe', () =
 
     it('recipes from user should be visible', () => {
         cy.visit(`${baseUrl}login`);
-        cy.get('input[name="username"]').type("Jan"); 
-        cy.get('input[name="password"]').type("Jan");
+        cy.get('input[name="username"]').type(username); 
+        cy.get('input[name="password"]').type(password);
         cy.get('button[type="submit"]').click();
 
         cy.visit(`${baseUrl}user-page`);
@@ -103,7 +103,7 @@ describe('Acceptance Test: As a user i want to be able to create a recipe', () =
             }
         });
     });
-    
+
     it ('should be able to logout', () => {
         cy.visit(`${baseUrl}logout`);
         cy.contains('Login').should('be.visible');
