@@ -109,7 +109,7 @@ public class AuthController : ControllerBase
 
             string response = await _authService.RegisterAsync(addUser);
 
-            if (response.Contains("valid"))
+            if (response.Contains("User created succesfully"))
             {
                 _logger.LogInformation($"User {addUser.Name} registered successfully.");
                 return Ok(new

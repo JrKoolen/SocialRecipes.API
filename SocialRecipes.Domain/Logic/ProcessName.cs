@@ -15,7 +15,7 @@ namespace SocialRecipes.Domain.Logic
         readonly char[] invalidChars = new char[] { '@', '#', '$', '%', '^', '&', '*', '(', ')', '!', '~', '<', '>', '/', '\\', '|', '[', ']', '{', '}', ';', ':', '"', '\'', '?' };
         private string name { get; set;}
         private int minLength = 4;
-        private int maxLength = 12;
+        private int maxLength = 20;
         bool containsInvalidChars;
 
         public ProcessName(string name)
@@ -35,7 +35,7 @@ namespace SocialRecipes.Domain.Logic
                 case string n when n.Any(ch => invalidChars.Contains(ch)):
                     return "Name cannot contain special characters.";
                 default:
-                    return name + " is valid";
+                    return "valid";
             }
         }
     }

@@ -24,14 +24,14 @@ namespace SocialRecipes.Services.Services
         {
             ProcessName processName = new ProcessName(addUserDto.Name);
             string response = processName.Process();
-            await _authRepository.RegisterAsync(addUserDto);
-            if (await _authRepository.RegisterAsync(addUserDto))
+            if (response.Contains("valid"))
             {
-                return response;
+                await _authRepository.RegisterAsync(addUserDto);
+                return "User created succesfully";
             }
             else 
             {
-                return "User already exists";
+                return response;
             }
         }
     }
