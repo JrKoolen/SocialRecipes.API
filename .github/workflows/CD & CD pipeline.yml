@@ -35,6 +35,7 @@ jobs:
         run: | 
           npx lighthouse http://localhost:3000 --output html --output-path lighthouse-report.html --chrome-flags="--headless" --only-categories=performance --only-categories=accessibility --only-categories=best-practices --only-categories=seo
 #         #node lighthouseTests.mjs
+
       - name: List Files in Reports Directory
         working-directory: ./Frontend
         run: |
@@ -117,8 +118,6 @@ jobs:
         cd /home/runner/work/SocialRecipes.API  
         pwd
         ls -la SocialRecipes.API
-
-
 
     - name: Remove Conflicting Docker Packages
       run: |
