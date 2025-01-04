@@ -20,8 +20,8 @@ describe('Login Page Tests', () => {
     });
   
     it('should allow entering username and password', () => {
-      cy.get('input#username').type('testuser');
-      cy.get('input#password').type('password123');
+      cy.get('input#username').type('test');
+      cy.get('input#password').type('test');
   
       cy.get('input#username').should('have.value', 'test');
       cy.get('input#password').should('have.value', 'test');
