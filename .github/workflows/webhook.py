@@ -29,10 +29,10 @@ def get_latest_workflow_status():
                 else:
                     save_commit(commit_hash)
                     print(f"New Workflow Run Detected:")
-                    print(f"  Commit: {commit_hash}")
-                    print(f"  Status: {status}")
-                    print(f"  Conclusion: {conclusion}")
-                    print(f"  Details: {html_url}")
+                    print(f"Commit: {commit_hash}")
+                    print(f"Status: {status}")
+                    print(f"Conclusion: {conclusion}")
+                    print(f"Details: {html_url}")
             else:
                 print("No new workflow runs detected.")
         else:
