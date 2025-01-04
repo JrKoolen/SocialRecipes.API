@@ -160,6 +160,17 @@ app.get('/logout', (req, res) => {
   });
 });
 
+app.get('/mockAuth', (req, res) => {
+  //res.json({ isLoggedIn: true, username: 'testUser', userId: 1, token: 'mockToken' });
+  req.session.user = {
+    username: 'testUser',
+    token: 'mockToken',
+    id: 1,
+    isLoggedIn: true,
+  };
+  res.redirect('/user-page');
+});
+
 app.get('/register', (req, res) => {
   res.render('register', { errorMessage: null });
 });

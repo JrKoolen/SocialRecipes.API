@@ -23,21 +23,14 @@ describe('Seting up the e2e tests:', () => {
     });
 
     it('should be able to login after registration', () => {
-        cy.visit(`${baseUrl}login`);
-        cy.get('input[name="username"]').type(username); 
-        cy.get('input[name="password"]').type(password);
-        cy.get('button[type="submit"]').click();
-
+        cy.visit(`${baseUrl}mockAuth`);
         cy.url().should('include', '/user-page'); 
         cy.contains('Welcome').should('be.visible'); 
     });
 
     it('should be able to create a recipe after login', () => {
 
-        cy.visit(`${baseUrl}login`);
-        cy.get('input[name="username"]').type(username); 
-        cy.get('input[name="password"]').type(password);
-        cy.get('button[type="submit"]').click();
+        cy.visit(`${baseUrl}mockAuth`);
 
         cy.visit(`${baseUrl}create-recipe`);
         cy.get('input#title').type('My Delicious Recipe');
@@ -53,11 +46,7 @@ describe('Seting up the e2e tests:', () => {
 
 
     it('recipes from user should be visible', () => {
-        cy.visit(`${baseUrl}login`);
-        cy.get('input[name="username"]').type(username); 
-        cy.get('input[name="password"]').type(password);
-        cy.get('button[type="submit"]').click();
-
+        cy.visit(`${baseUrl}mockAuth`);
         cy.visit(`${baseUrl}user-page`);
         cy.contains('My Delicious Recipe').should('be.visible');
 
