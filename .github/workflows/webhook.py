@@ -1,0 +1,54 @@
+import requests
+import time
+import json
+import os
+
+REPO_OWNER = "JrKoolen"
+REPO_NAME = "SocialRecipes.API"
+WORKFLOW_FILE_NAME = "CD%20%26%20CD%20pipeline.yml" 
+STATE_FILE = "last_commit.json"  
+CHECK_INTERVAL = 5 * 60  
+
+def get_latest_workflow_status():
+    url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/actions/workflows/{WORKFLOW_FILE_NAME}/runs"
+    response = requests.get(url)
+    
+    if response.status_code == 200:
+        data = response.json()
+        if "workflow_runs" in data and len(data["workflow_runs"]) > 0:
+            latest_run = data["workflow_runs"][0]
+            commit_hash = latest_run["head_sha"]
+            status = latest_run["status"]
+            conclusion = latest_run["conclusion"]
+            html_url = latest_run["html_url"]
+
+            if is_new_commit(commit_hash):
+                save_commit(commit_hash)
+                print(f"New Workflow Run Detected:")
+                print(f"  Commit: {commit_hash}")
+                print(f"  Status: {status}")
+                print(f"  Conclusion: {conclusion}")
+                print(f"  Details: {html_url}")
+            else:
+                print("No new workflow runs detected.")
+        else:
+            print("No workflow runs found.")
+    else:
+        print(f"Failed to fetch workflow runs: {response.status_code} {response.text}")
+
+def is_new_commit(commit_hash):
+    if not os.path.exists(STATE_FILE):
+        return True  
+
+    with open(STATE_FILE, "r") as file:
+        data = json.load(file)
+        return data.get("last_commit") != commit_hash
+
+def save_commit(commit_hash):
+    with open(STATE_FILE, "w") as file:
+        json.dump({"last_commit": commit_hash}, file)
+
+if __name__ == "__main__":
+    while True:
+        get_latest_workflow_status()
+        time.sleep(CHECK_INTERVAL)
