@@ -33,6 +33,9 @@ def get_latest_workflow_status():
                     print(f"Status: {status}")
                     print(f"Conclusion: {conclusion}")
                     print(f"Details: {html_url}")
+
+                    if status == "completed" and conclusion == "success":
+                        execute_shell_file()
             else:
                 print("No new workflow runs detected.")
         else:
@@ -52,9 +55,22 @@ def save_commit(commit_hash):
     with open(STATE_FILE, "w") as file:
         json.dump({"last_commit": commit_hash}, file)
 
+import subprocess
+
 def execute_shell_file():
+    script_path = r"C:\Users\Jeroe\Documents\GitHub\SocialRecipes.API\update-Docker.sh"
+    
+    if not os.path.exists(script_path):
+        print(f"Shell script not found at: {script_path}")
+        return
+
+    bash_path = r"C:\Program Files\Git\bin\bash.exe"  
+    if not os.path.exists(bash_path):
+        print(f"Bash executable not found at: {bash_path}")
+        return
+
     try:
-        subprocess.run(["C:\Users\Jeroe\Documents\GitHub\SocialRecipes.API\update-Docker.sh"], check=True)
+        subprocess.run([bash_path, script_path], check=True)
         print("Shell script executed successfully.")
     except subprocess.CalledProcessError as e:
         print(f"Error executing shell script: {e}")
