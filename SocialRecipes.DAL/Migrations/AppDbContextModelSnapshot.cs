@@ -26,27 +26,22 @@ namespace SocialRecipes.DAL.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("content");
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime")
-                        .HasColumnName("created_at");
+                        .HasColumnType("datetime");
 
                     b.Property<int>("RecipeId")
-                        .HasColumnType("int")
-                        .HasColumnName("recipe_id");
+                        .HasColumnType("int");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("int")
-                        .HasColumnName("user_id");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -54,59 +49,50 @@ namespace SocialRecipes.DAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("comments");
+                    b.ToTable("comments", (string)null);
                 });
 
             modelBuilder.Entity("SocialRecipes.DAL.Models.Follower", b =>
                 {
                     b.Property<int>("FollowedUserId")
-                        .HasColumnType("int")
-                        .HasColumnName("followed_user_id");
+                        .HasColumnType("int");
 
                     b.Property<int>("FollowingUserId")
-                        .HasColumnType("int")
-                        .HasColumnName("following_user_id");
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("FollowingDate")
-                        .HasColumnType("datetime")
-                        .HasColumnName("following_date");
+                        .HasColumnType("datetime");
 
                     b.HasKey("FollowedUserId", "FollowingUserId");
 
                     b.HasIndex("FollowingUserId");
 
-                    b.ToTable("followers");
+                    b.ToTable("followers", (string)null);
                 });
 
             modelBuilder.Entity("SocialRecipes.DAL.Models.Message", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("content");
+                        .HasColumnType("text");
 
                     b.Property<bool>("IsRead")
-                        .HasColumnType("bit")
-                        .HasColumnName("is_read");
+                        .HasColumnType("bit");
 
                     b.Property<int>("ReceiverId")
-                        .HasColumnType("int")
-                        .HasColumnName("receiver_id");
+                        .HasColumnType("int");
 
                     b.Property<int>("SenderId")
-                        .HasColumnType("int")
-                        .HasColumnName("sender_id");
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("SentAt")
-                        .HasColumnType("datetime")
-                        .HasColumnName("sent_at");
+                        .HasColumnType("datetime");
 
                     b.HasKey("Id");
 
@@ -114,96 +100,79 @@ namespace SocialRecipes.DAL.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("messages");
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("SocialRecipes.DAL.Models.Recipe", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Body")
                         .IsRequired()
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("body");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("DateTime")
-                        .HasColumnType("datetime")
-                        .HasColumnName("date_time");
+                        .HasColumnType("datetime");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("description");
+                        .HasColumnType("text");
 
                     b.Property<byte[]>("Image")
                         .IsRequired()
-                        .HasColumnType("longblob")
-                        .HasColumnName("image");
+                        .HasColumnType("longblob");
 
                     b.Property<int>("Likes")
-                        .HasColumnType("int")
-                        .HasColumnName("likes");
+                        .HasColumnType("int");
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("status");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("title");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("int")
-                        .HasColumnName("user_id");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("recipes");
+                    b.ToTable("recipes", (string)null);
                 });
 
             modelBuilder.Entity("SocialRecipes.DAL.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime")
-                        .HasColumnName("created_at");
+                        .HasColumnType("datetime");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("email");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("name");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("password");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Email")
-                        .IsUnique();
-
-                    b.ToTable("users");
+                    b.ToTable("users", (string)null);
                 });
 
             modelBuilder.Entity("SocialRecipes.DAL.Models.Comment", b =>
@@ -236,7 +205,7 @@ namespace SocialRecipes.DAL.Migrations
                     b.HasOne("SocialRecipes.DAL.Models.User", "FollowingUser")
                         .WithMany()
                         .HasForeignKey("FollowingUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("FollowedUser");
@@ -249,13 +218,13 @@ namespace SocialRecipes.DAL.Migrations
                     b.HasOne("SocialRecipes.DAL.Models.User", "Receiver")
                         .WithMany("ReceivedMessages")
                         .HasForeignKey("ReceiverId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SocialRecipes.DAL.Models.User", "Sender")
                         .WithMany("SentMessages")
                         .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Receiver");

@@ -8,7 +8,7 @@ REPO_OWNER = "JrKoolen"
 REPO_NAME = "SocialRecipes.API"
 WORKFLOW_FILE_NAME = "CD%20%26%20CD%20pipeline.yml" 
 STATE_FILE = "last_commit.json"  
-CHECK_INTERVAL = 5 * 60  
+CHECK_INTERVAL = 10 * 60  
 
 def get_latest_workflow_status():
     url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/actions/workflows/{WORKFLOW_FILE_NAME}/runs"
@@ -37,7 +37,7 @@ def get_latest_workflow_status():
                     if status == "completed" and conclusion == "success":
                         execute_shell_file()
             else:
-                print("No new workflow runs detected.")
+                print(f"No new workflow runs detected. {time.strftime('%Y-%m-%d %H:%M:%S')}, {data.get('last_commit')}")
         else:
             print("No workflow runs found.")
     else:

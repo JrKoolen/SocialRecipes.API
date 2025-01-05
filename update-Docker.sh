@@ -15,6 +15,3 @@ docker-compose up --build -d
 
 echo "Checking running containers..."
 docker ps
-
-echo "Press Enter to exit..."
-read -r
