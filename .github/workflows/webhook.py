@@ -55,11 +55,8 @@ def save_commit(commit_hash):
     with open(STATE_FILE, "w") as file:
         json.dump({"last_commit": commit_hash}, file)
 
-import subprocess
-
 def execute_shell_file():
     script_path = r"C:\Users\Jeroe\Documents\GitHub\SocialRecipes.API\update-Docker.sh"
-    
     if not os.path.exists(script_path):
         print(f"Shell script not found at: {script_path}")
         return

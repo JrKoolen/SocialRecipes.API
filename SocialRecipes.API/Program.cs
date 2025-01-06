@@ -12,7 +12,7 @@ using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
-
+Settings settings = new Settings();
 builder.Configuration.AddEnvironmentVariables();
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
@@ -23,13 +23,7 @@ var jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>();
 
 if (jwtSettings == null)
 {
-    jwtSettings = new JwtSettings
-    {
-        Secret = "T8x!g5#Lk92z@Q7P$G1%XcMZ5L!7DfNlR",
-        Issuer = "http://localhost",
-        Audience = "http://localhost"
-    };
-
+    jwtSettings = settings.GetJwtSettings();
     Console.WriteLine("JwtSettings were missing in the configuration. Using fallback values.");
 }
 
@@ -38,7 +32,7 @@ builder.Services.AddSingleton(jwtSettings);
 var connstring = configuration.GetConnectionString("DefaultConnection");
 if (connstring == null)
 {
-    connstring = "Server=mysql-db;Database=socialrecipesdb;User Id=root;Password=rootpassword;";
+    connstring = settings.GetConnectionString();
 }
 
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -75,9 +69,9 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = jwtSettings.Issuer,
-        ValidAudience = jwtSettings.Audience,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret))
+        ValidIssuer = jwtSettings.GetIssuer(),
+        ValidAudience = jwtSettings.GetIssuer(),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.GetSecret()))
     };
 });
 

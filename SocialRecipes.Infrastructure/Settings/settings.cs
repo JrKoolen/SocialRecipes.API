@@ -1,15 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
+using SocialRecipes.Infrastructure.Settings;
 
 namespace SocialRecipes.Infrastructure.Settings
 {
-    public class settings
+    public class Settings
     {
-        private readonly string _connectionString;
-        private readonly string _databaseName;
-        private readonly string jwtSecret;
+        private readonly string _connectionString = "Server=localhost;Database=SocialRecipes;User Id=sa;Password=Password1234;";
+        private JwtSettings jwtSettings;
+
+        public Settings()
+        {
+            jwtSettings = new JwtSettings();
+
+        }
+
+        public string GetConnectionString()
+        {
+            return _connectionString;
+        }
+
+        public JwtSettings GetJwtSettings()
+        {
+            return jwtSettings;
+        }
     }
 }

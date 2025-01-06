@@ -137,7 +137,7 @@ public class AuthController : ControllerBase
     private string GenerateJwtToken(string username)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.UTF8.GetBytes(_jwtSettings.Secret);
+        var key = Encoding.UTF8.GetBytes(_jwtSettings.GetIssuer());
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
@@ -145,8 +145,8 @@ public class AuthController : ControllerBase
             new Claim(ClaimTypes.Name, username)
         }),
             Expires = DateTime.UtcNow.AddHours(1),
-            Issuer = _jwtSettings.Issuer,
-            Audience = _jwtSettings.Audience,
+            Issuer = _jwtSettings.GetIssuer(),
+            Audience = _jwtSettings.GetIssuer(),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
 
