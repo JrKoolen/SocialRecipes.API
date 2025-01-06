@@ -52,7 +52,6 @@ public class AuthController : ControllerBase
 
             if (isValidUser is not null)
             {
-              //  _logger.LogInformation($"User {login.Username} authenticated successfully.");
                 var token = GenerateJwtToken(login.Username);
                 return Ok(new
                 {
@@ -61,8 +60,6 @@ public class AuthController : ControllerBase
                     userId = isValidUser.Id
                 });
             }
-
-           // _logger.LogWarning($"Authentication failed for user {login.Username}.");
             return Unauthorized(new { message = "Invalid username or password." });
         }
         catch (ArgumentNullException ex)
@@ -118,7 +115,6 @@ public class AuthController : ControllerBase
                     username = addUser.Name
                 });
             }
-           // _logger.LogWarning($"User registration failed for {addUser.Name}. Username might already exist.");
             return BadRequest(new { message = response });
         }
         catch (ArgumentException ex)
