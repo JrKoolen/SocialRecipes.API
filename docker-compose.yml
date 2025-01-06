@@ -2,13 +2,12 @@ services:
   api:
     build:
       dockerfile: Dockerfile       
-    container_name: socialrecipes-api-container
     deploy:
       replicas: 2
       restart_policy:
         condition: on-failure  
-    ports:
-      - "8080:8080"
+    # ports:
+    #   - "8080:8080"
     networks:
       - socialrecipes-network
     environment:
@@ -20,13 +19,12 @@ services:
   frontend:
     build:
       context: ./Frontend  
-    container_name: socialrecipesfrontend-container
     deploy:
       replicas: 2
       restart_policy:
         condition: on-failure  
-    ports:
-      - "3000:3000"
+    # ports:
+    #   - "3000:3000"
     networks:
       - socialrecipes-network
     volumes:

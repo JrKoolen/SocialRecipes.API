@@ -10,8 +10,7 @@ else
 fi
 
 echo "Rebuilding and restarting Docker containers..."
-docker-compose down
-docker-compose up --build -d
+docker-compose up --build -d --scale app=2
 
 echo "Checking running containers..."
 docker ps
