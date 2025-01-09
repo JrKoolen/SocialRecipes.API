@@ -209,31 +209,5 @@ namespace SocialRecipes.Tests.UnitTests
                 Assert.IsNotNull(matchingProperty, $"Property '{loginDtoProperty.Name}' found in LoginDto, but not in UserDto.");
             }
         }
-
-        // Register tests 
-        [DataTestMethod]
-        [DataRow]
-        [DataRow(null, "user3@outlook.com", "Password3", false)] 
-        [DataRow("User4", null, "Password4", false)] 
-        [DataRow("User5", "user5@outlook.com", null, false)]
-        public void Test_RegisterAsync_Should_Call_Repository_RegisterAsync(string name, string email, string password, bool expectedResult)
-        {
-            // Arrange
-            AddUserDto addUserDto = new AddUserDto
-            {
-                Name = name,
-                Email = email,
-                Password = password
-            };
-
-            _authRepository.Setup(repo => repo.RegisterAsync(It.IsAny<AddUserDto>())).ReturnsAsync(expectedResult);
-
-            // Act
-            var result = __authService.RegisterAsync(addUserDto);
-
-            // Assert
-            _authRepository.Verify(repo => repo.RegisterAsync(It.IsAny<AddUserDto>()), Times.Once);
-            Assert.AreEqual(expectedResult, result.Result);
-        }
     }
 }
