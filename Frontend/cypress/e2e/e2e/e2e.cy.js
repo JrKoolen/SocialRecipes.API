@@ -11,6 +11,27 @@ describe('Seting up the e2e tests:', () => {
         submitButton: 'button[type="submit"]',
     };
 
+    describe('API /status Endpoint', () => {
+        it('should return a successful response', () => {
+          cy.request('http://localhost:8080/api/status') 
+            .then((response) => {
+              expect(response.status).to.eq(200);
+            });
+        });
+        it('should return a successful response', () => {
+            cy.request('http://localhost:8080/api/status/database') 
+              .then((response) => {
+                expect(response.status).to.eq(200);
+              });
+          });
+        it('should return a successful response', () => {
+            cy.request('http://localhost:8080/api/User/GetTotalUsers') 
+              .then((response) => {
+                expect(response.status).to.eq(200);
+              });
+          });
+      });
+
     it('should create a account with unique credentials', () =>{
         cy.visit(`${baseUrl}register`);
         cy.get(formFields.username).type(username);

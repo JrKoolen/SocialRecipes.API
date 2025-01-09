@@ -65,12 +65,7 @@ jobs:
 
     - name: Build
       run: dotnet build --no-restore
-
-    - name: Run Migrations
-      env:
-        ConnectionStrings__DefaultConnection: "Server=mysql-db;Database=socialrecipesdb;User Id=root;Password=rootpassword;"
-      run: dotnet ef database update
-
+      
     - name: Test
       run: dotnet test --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx"
 
