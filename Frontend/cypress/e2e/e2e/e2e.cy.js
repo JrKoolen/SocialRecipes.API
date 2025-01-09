@@ -13,19 +13,19 @@ describe('Seting up the e2e tests:', () => {
 
     describe('API /status Endpoint', () => {
         it('should return a successful response', () => {
-          cy.request('http://localhost:8080/api/status') 
+          cy.request('http://socialrecipes-api-container:8080/api/status') 
             .then((response) => {
               expect(response.status).to.eq(200);
             });
         });
         it('should return a successful response', () => {
-            cy.request('http://localhost:8080/api/status/database') 
+            cy.request('http://socialrecipes-api-container:8080/api/status/database') 
               .then((response) => {
                 expect(response.status).to.eq(200);
               });
           });
         it('should return a successful response', () => {
-            cy.request('http://localhost:8080/api/User/GetTotalUsers') 
+            cy.request('http://socialrecipes-api-container:8080/api/User/GetTotalUsers') 
               .then((response) => {
                 expect(response.status).to.eq(200);
               });
