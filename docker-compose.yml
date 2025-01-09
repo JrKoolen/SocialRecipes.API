@@ -25,6 +25,17 @@ services:
       - ./sessions:/app/sessions
     depends_on:
       - api
+
+  admin:
+    build:
+      context: ./admin 
+    container_name: socialrecipesadmin-container
+    ports:
+      - "3001:80" 
+    networks:
+      - socialrecipes-network
+    depends_on:
+      - api
       
   mysql-db:
     image: mysql:8.0

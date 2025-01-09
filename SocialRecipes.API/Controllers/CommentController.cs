@@ -5,7 +5,7 @@ using SocialRecipes.Services.Services;
 namespace SocialRecipes.API.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class CommentController : ControllerBase
     {
         private readonly CommentService _commentService;

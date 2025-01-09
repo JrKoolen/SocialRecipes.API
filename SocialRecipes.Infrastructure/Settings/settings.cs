@@ -12,7 +12,8 @@ namespace SocialRecipes.Infrastructure.Settings
 {
     public class Settings
     {
-        private readonly string _connectionString = "Server=localhost;Database=SocialRecipes;User Id=sa;Password=Password1234;";
+        private readonly string _connectionString = "Server=mysql-db;Database=socialrecipesdb;User Id=root;Password=rootpassword;";
+
         private JwtSettings jwtSettings;
 
         public Settings()

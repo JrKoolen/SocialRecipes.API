@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SocialRecipes.Tests.LogicTests
+namespace SocialRecipes.Domain.SwaggerExamples
 {
-    internal class ProcessNameTests
+    internal class ErrorResponseExample
     {
     }
 }

@@ -19,7 +19,7 @@ namespace SocialRecipes.DAL.Repositories
         {
             var user = await _context.Users
                 .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.Name == loginDto.Username);
+                .FirstOrDefaultAsync(u => u.Name == loginDto.Name);
 
             if (user == null)
             {
@@ -34,22 +34,22 @@ namespace SocialRecipes.DAL.Repositories
             return userDto;
         }
 
-        public async Task<bool> RegisterAsync(AddUserDto addUserDto)
+        public async Task<bool> RegisterAsync(AddUserDto addUser)
         {
             var userExists = await _context.Users
-                .AnyAsync(u => u.Name == addUserDto.Name);
+                .AnyAsync(u => u.Name == addUser.Name);
 
             if (userExists)
             {
                 return false; 
             }
 
-            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(addUserDto.Password);
+            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(addUser.Password);
 
             var newUser = new User
             {
-                Name = addUserDto.Name,
-                Email = addUserDto.Email,
+                Name = addUser.Name,
+                Email = addUser.Email,
                 Password = hashedPassword,
                 CreatedAt = DateTime.Now
             };

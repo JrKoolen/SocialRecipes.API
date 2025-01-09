@@ -17,6 +17,17 @@ namespace SocialRecipes.DAL.Repositories
 
         public async Task AddUserAsync(AddUserDto user)
         {
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user), "User data cannot be null.");
+            }
+
+            if (string.IsNullOrWhiteSpace(user.Name) || string.IsNullOrWhiteSpace(user.Email) || string.IsNullOrWhiteSpace(user.Password))
+            {
+                throw new ArgumentException("register not complete");
+            }
+
+
             var newUser = new User
             {
                 Name = user.Name,
@@ -38,6 +49,12 @@ namespace SocialRecipes.DAL.Repositories
             }
         }
 
+        public Task<int> GetTotalUsersAsync()
+        {
+            var  totalUsers = _context.Users.CountAsync();
+            return totalUsers;
+        }
+
         public async Task<UserDto> GetUserByIdAsync(int id)
         {
             var user = await _context.Users
@@ -53,7 +70,6 @@ namespace SocialRecipes.DAL.Repositories
                     Email = user.Email
                 };
             }
-
             return null;
         }
     }

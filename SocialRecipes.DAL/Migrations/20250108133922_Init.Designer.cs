@@ -12,8 +12,8 @@ using SocialRecipes.DAL;
 namespace SocialRecipes.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250105010735_main")]
-    partial class main
+    [Migration("20250108133922_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

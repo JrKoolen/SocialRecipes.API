@@ -188,5 +188,11 @@ namespace SocialRecipes.DAL.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
+        public Task<int> GetTotalRecipesAsync()
+        {
+            var totalRecipes = _context.Recipes.CountAsync();
+            return totalRecipes;
+        }
     }
 }

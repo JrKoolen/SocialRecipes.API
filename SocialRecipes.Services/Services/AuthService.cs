@@ -1,7 +1,6 @@
 ﻿using SocialRecipes.Services.IRepositories;
 using SocialRecipes.Domain.Dto.IN;
 using System.Threading.Tasks;
-using SocialRecipes.Domain.Logic;
 using SocialRecipes.Domain.Dto.General;
 
 namespace SocialRecipes.Services.Services
@@ -15,24 +14,14 @@ namespace SocialRecipes.Services.Services
             _authRepository = authRepository;
         }
 
-        public async Task<UserDto> LoginAsync(LoginDto loginDto)
+        public virtual async Task<UserDto> LoginAsync(LoginDto loginDto)
         {
             return await _authRepository.LoginAsync(loginDto);
         }
 
-        public async Task<string> RegisterAsync(AddUserDto addUserDto)
+        public virtual async Task<bool> RegisterAsync(AddUserDto addUserDto)
         {
-            ProcessName processName = new ProcessName(addUserDto.Name);
-            string response = processName.Process();
-            if (response.Contains("valid"))
-            {
-                await _authRepository.RegisterAsync(addUserDto);
-                return "User created succesfully";
-            }
-            else 
-            {
-                return response;
-            }
+            return await _authRepository.RegisterAsync(addUserDto);
         }
     }
 }

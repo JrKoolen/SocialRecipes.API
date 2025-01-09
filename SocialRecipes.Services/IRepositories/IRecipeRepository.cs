@@ -11,6 +11,7 @@ namespace SocialRecipes.Services.IRepositories
         Task<RecipeDto[]> GetAllRecipesAsync();
         Task<RecipeDto[]> GetAllRecipesFromStatusAsync(string status);
         Task<RecipeDto[]> GetAllRecipesFromStatusAndUserAsync(string status, int userId);
+        Task<int>GetTotalRecipesAsync();
         Task DeleteRecipeByIdAsync(int id);
         Task UpdateRecipeAsync(RecipeDto recipe);
     }

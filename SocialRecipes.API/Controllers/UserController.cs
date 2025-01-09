@@ -6,7 +6,7 @@ using SocialRecipes.Services.Services;
 namespace SocialRecipes.API.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
         private readonly ILogger<UserController> _logger;
@@ -18,6 +18,33 @@ namespace SocialRecipes.API.Controllers
             _userService = userService;
         }
 
+        [HttpGet("GetTotalUsers")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetTotalUsers()
+        {
+
+            try
+            {
+                _logger.LogInformation("Attempting to retrieve all users.");
+                int userCount = await _userService.GetTotalUsersAsync();
+                _logger.LogInformation("Successfully retrieved all users.");
+                return Ok(userCount);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while attempting to retrieve all users.");
+                return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
+                {
+                    Title = "Internal Server Error",
+                    Status = StatusCodes.Status500InternalServerError,
+                    Detail = "An unexpected error occurred while processing your request.",
+                    Instance = "/users"
+                });
+            }
+        }
+
         /// <summary>
         /// Deletes a user by their ID.
         /// </summary>
@@ -25,7 +52,7 @@ namespace SocialRecipes.API.Controllers
         /// <returns>
         /// A success message if the user is deleted successfully, or an error message if the user does not exist.
         /// </returns>
-        [HttpDelete("{id}")]
+        [HttpDelete("DeleteUser/{id}")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]

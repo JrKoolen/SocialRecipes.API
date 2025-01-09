@@ -8,6 +8,7 @@ namespace SocialRecipes.Services.IRepositories
     {
         Task AddUserAsync(AddUserDto user); 
         Task<UserDto> GetUserByIdAsync(int id); 
-        Task DeleteUserByIdAsync(int userId); 
+        Task DeleteUserByIdAsync(int userId);
+        Task<int>GetTotalUsersAsync();
     }
 }

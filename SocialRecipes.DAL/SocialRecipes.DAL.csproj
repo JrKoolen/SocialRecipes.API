@@ -30,4 +30,8 @@
     <ProjectReference Include="..\SocialRecipes.Services\SocialRecipes.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

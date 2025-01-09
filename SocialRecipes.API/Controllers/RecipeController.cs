@@ -6,7 +6,7 @@ using SocialRecipes.Domain.Dto.IN;
 namespace SocialRecipes.API.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class RecipeController : Controller
     {
         private readonly ILogger<RecipeController> _logger;
@@ -168,6 +168,57 @@ namespace SocialRecipes.API.Controllers
         }
 
         /// <summary>
+        /// Retrieves all recipes that are featured.
+        /// </summary>
+        /// <returns>A list of featured recipes.</returns>
+        [HttpGet("GetFeaturedRecipes")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetFeaturedRecipes(int amount)
+        {
+            try
+            {
+                _logger.LogInformation("Retrieving all featured recipes.");
+                var featuredRecipes = await _recipeService.GetFeaturedRecipesAsync("private", amount);
+
+                if (featuredRecipes == null || featuredRecipes.Length == 0)
+                {
+                    _logger.LogInformation("No featured recipes found.");
+                    return NotFound("No featured recipes found.");
+                }
+
+                _logger.LogInformation("Successfully retrieved {Count} featured recipes.", featuredRecipes.Length);
+                return Ok(featuredRecipes);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while retrieving featured recipes.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while retrieving featured recipes. Please try again later.");
+            }
+        }
+
+        [HttpGet("GetTotalRecipes")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetTotalRecipes()
+        {
+            try
+            {
+                _logger.LogInformation("Attempting to retrieve all recipes.");
+                int recipeCount = await _recipeService.GetTotalRecipesAsync();
+                _logger.LogInformation("Successfully retrieved all recipes.");
+                return Ok(recipeCount);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while attempting to retrieve all recipes.");
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Internal server error. Please try again later." });
+            }
+        }
+        /// <summary>
         /// Deletes a recipe by its ID.
         /// </summary>
         /// <param name="id">The ID of the recipe to delete.</param>
@@ -193,39 +244,5 @@ namespace SocialRecipes.API.Controllers
                 return StatusCode(500, new { message = "Internal server error. Please try again later." });
             }
         }
-
-        /// <summary>
-        /// Retrieves all recipes that are featured.
-        /// </summary>
-        /// <returns>A list of featured recipes.</returns>
-        [HttpGet("GetFeaturedRecipes")]
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetFeaturedRecipes(int amount)
-        {
-            try
-            {
-                _logger.LogInformation("Retrieving all featured recipes.");
-                var featuredRecipes = await _recipeService.GetFeaturedRecipesAsync("private", amount); 
-
-                if (featuredRecipes == null || featuredRecipes.Length == 0)
-                {
-                    _logger.LogInformation("No featured recipes found.");
-                    return NotFound("No featured recipes found.");
-                }
-
-                _logger.LogInformation("Successfully retrieved {Count} featured recipes.", featuredRecipes.Length);
-                return Ok(featuredRecipes);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while retrieving featured recipes.");
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while retrieving featured recipes. Please try again later.");
-            }
-        }
-
-
     }
 }

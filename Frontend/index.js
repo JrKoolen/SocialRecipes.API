@@ -21,9 +21,9 @@ dotenv.config({ path: envFile });
 const PORT = process.env.PORT || 3001; 
 
 const corsOptions = {
-  origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true,
+origin: [process.env.CORS_ORIGIN || 'http://localhost:3000', 'http://localhost:3001', 'http://localhost:8081'],
+methods: ['GET', 'POST', 'PUT', 'DELETE'],
+credentials: true,
 };
 
 
@@ -90,7 +90,7 @@ app.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
   const payload = {
-    Username: username,
+    Name: username,
     Password: password,
   };
 
