@@ -16,17 +16,13 @@ namespace SocialRecipes.DAL
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Follower>()
-        .HasKey(f => new { f.FollowedUserId, f.FollowingUserId });
+                .HasKey(f => new { f.FollowedUserId, f.FollowingUserId });
 
             modelBuilder.Entity<Follower>()
                 .HasOne(f => f.FollowedUser)
                 .WithMany(u => u.Followers)
                 .HasForeignKey(f => f.FollowedUserId)
                 .OnDelete(DeleteBehavior.Restrict);
-
-
-            modelBuilder.Entity<Follower>()
-                .HasKey(f => new { f.FollowedUserId, f.FollowingUserId });
 
             modelBuilder.Entity<User>()
                 .HasMany(u => u.Recipes)
@@ -62,6 +58,7 @@ namespace SocialRecipes.DAL
             modelBuilder.Entity<Comment>().ToTable("comments");
             modelBuilder.Entity<Follower>().ToTable("followers");
             modelBuilder.Entity<Recipe>().ToTable("recipes");
+            modelBuilder.Entity<Message>().ToTable("messages");
         }
     }
 }

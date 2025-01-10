@@ -6,11 +6,13 @@ namespace SocialRecipes.DAL.Models
 {
     public class Comment
     {
-        public int? Id { get; set; } = 0;
+        [Key]
+        public int Id { get; set; } = 0;
 
-        public int? RecipeId { get; set; }
-
-        public int? UserId { get; set; }
+        [ForeignKey("RecipeId")]
+        public int RecipeId { get; set; } = 0;
+        [ForeignKey("UserId")]
+        public int UserId { get; set; } = 0;
 
         [Required] 
         [Column(TypeName = "text")] 

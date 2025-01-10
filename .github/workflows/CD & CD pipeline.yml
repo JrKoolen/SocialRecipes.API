@@ -34,7 +34,6 @@ jobs:
         working-directory: ./Frontend
         run: | 
           npx lighthouse http://localhost:3000 --output html --output-path lighthouse-report.html --chrome-flags="--headless" --only-categories=performance --only-categories=accessibility --only-categories=best-practices --only-categories=seo
-#         #node lighthouseTests.mjs
 
       - name: List Files in Reports Directory
         working-directory: ./Frontend
@@ -99,7 +98,7 @@ jobs:
         
   build-and-test-docker-frontend:
     name: Docker compose build & cypress
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - name: Checkout Code
       uses: actions/checkout@v3
@@ -176,22 +175,13 @@ jobs:
       run: |
         docker-compose down
 
- #   - name: Merge to Release Branch
- #     run: |
- #       git config user.name "github-actions[bot]"
- #       git config user.email "github-actions[bot]@users.noreply.github.com"
- #       git checkout release
- #       git merge master -m "CI/CD: Merge master into release [skip ci]"
- #       git push origin release
-
-
   build-and-deploy:
     needs: 
       - Build-and-test-API
       - build-and-test-docker-frontend
       - Qunit-Frontend-Tests
     name: Build and Deploy to azure container instances
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -253,6 +243,8 @@ jobs:
           --registry-password ${{ secrets.AZURE_ACR_PASSWORD }} \
           --dns-name-label socialrecipes-frontend-${{ github.sha }} \
           --ports 3000 \
+          --protocol TCP \
+          --ip-address Public \
           --debug
 
       - name: Deploy Database to ACI

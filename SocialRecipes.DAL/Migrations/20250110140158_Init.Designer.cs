@@ -12,7 +12,7 @@ using SocialRecipes.DAL;
 namespace SocialRecipes.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250108133922_Init")]
+    [Migration("20250110140158_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -37,7 +37,7 @@ namespace SocialRecipes.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime");
 
                     b.Property<int>("RecipeId")
@@ -63,7 +63,7 @@ namespace SocialRecipes.DAL.Migrations
                     b.Property<int>("FollowingUserId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("FollowingDate")
+                    b.Property<DateTime?>("FollowingDate")
                         .HasColumnType("datetime");
 
                     b.HasKey("FollowedUserId", "FollowingUserId");
@@ -94,7 +94,7 @@ namespace SocialRecipes.DAL.Migrations
                     b.Property<int>("SenderId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("SentAt")
+                    b.Property<DateTime?>("SentAt")
                         .HasColumnType("datetime");
 
                     b.HasKey("Id");
@@ -103,7 +103,7 @@ namespace SocialRecipes.DAL.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("Messages");
+                    b.ToTable("messages", (string)null);
                 });
 
             modelBuilder.Entity("SocialRecipes.DAL.Models.Recipe", b =>
@@ -126,7 +126,6 @@ namespace SocialRecipes.DAL.Migrations
                         .HasColumnType("text");
 
                     b.Property<byte[]>("Image")
-                        .IsRequired()
                         .HasColumnType("longblob");
 
                     b.Property<int>("Likes")
