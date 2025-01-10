@@ -228,6 +228,8 @@ jobs:
           --registry-password ${{ secrets.AZURE_ACR_PASSWORD }} \
           --dns-name-label socialrecipes-api-${{ github.sha }} \
           --ports 8080 \
+          --protocol TCP \
+          --ip-address Public \
   
       - name: Deploy Frontend to ACI
         run: |
@@ -261,5 +263,5 @@ jobs:
           --registry-password ${{ secrets.AZURE_ACR_PASSWORD }} \
           --dns-name-label socialrecipes-database-${{ github.sha }} \
           --ports 3006 \
-          --environment-variables POSTGRES_USER=myuser POSTGRES_PASSWORD=mypassword POSTGRES_DB=mydatabase \
+          --environment-variables POSTGRES_USER=root POSTGRES_PASSWORD=rootpassword POSTGRES_DB=socialrecipesdb \
           --debug
