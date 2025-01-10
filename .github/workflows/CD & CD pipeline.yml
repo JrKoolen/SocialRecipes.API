@@ -254,7 +254,7 @@ jobs:
           az container create \
           --resource-group SocialRecipes \
           --name socialrecipes-database \
-          --image mysql:latest \
+          --image socialrecipes.azurecr.io/socialrecipes-database:${{ github.sha }} \
           --cpu 1 \
           --memory 2.0 \
           --os-type Linux \
@@ -262,7 +262,7 @@ jobs:
           --registry-username ${{ secrets.AZURE_ACR_USERNAME }} \
           --registry-password ${{ secrets.AZURE_ACR_PASSWORD }} \
           --dns-name-label socialrecipes-database-${{ github.sha }} \
-          --ports 3306 \
+          --ports 3006 \
           --environment-variables MYSQL_ROOT_PASSWORD=rootpassword MYSQL_DATABASE=socialrecipesdb MYSQL_USER=myuser MYSQL_PASSWORD=mypassword \
           --ip-address Public \
           --debug
