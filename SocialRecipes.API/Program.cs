@@ -78,16 +78,16 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-//builder.Services.AddCors(options =>
-//{
-//options.AddPolicy("AllowFrontend", policy =>
-//{
-//    policy.WithOrigins("http://localhost:3000", "http://localhost:3001", "http://socialrecipesadmin-container:3001", "http://localhost:8081/")
-///          .AllowAnyHeader()
- //         .AllowAnyMethod()
-//          .AllowCredentials();
-//});
-//});
+builder.Services.AddCors(options =>
+{
+options.AddPolicy("AllowFrontend", policy =>
+{
+    policy.WithOrigins("http://localhost:3000", "http://localhost:3001", "http://socialrecipesadmin-container:3001", "http://localhost:8081/")
+          .AllowAnyHeader()
+          .AllowAnyMethod()
+          .AllowCredentials();
+});
+});
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -113,7 +113,7 @@ using (var scope = app.Services.CreateScope())
 var logger = app.Services.GetRequiredService<ILogger<Program>>();
 logger.LogInformation("Application configuration started.");
 
-//app.UseCors("AllowFrontend");
+app.UseCors("AllowFrontend");
 app.UseSwagger();
 app.UseSwaggerUI();
 logger.LogInformation("Swagger UI enabled.");

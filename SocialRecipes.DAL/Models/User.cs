@@ -10,23 +10,23 @@ namespace SocialRecipes.DAL.Models
 
         [Required]
         [Column(TypeName = "varchar(255)")] 
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [Required]
         [Column(TypeName = "varchar(255)")] 
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         [Required]
         [Column(TypeName = "varchar(255)")] 
-        public string Password { get; set; }
+        public string? Password { get; set; }
 
         [Column(TypeName = "datetime")] 
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime? CreatedAt { get; set; } = DateTime.Now;
 
-        public ICollection<Recipe> Recipes { get; set; }
-        public ICollection<Follower> Followers { get; set; }
-        public ICollection<Message> SentMessages { get; set; }
-        public ICollection<Message> ReceivedMessages { get; set; }
-        public ICollection<Comment> Comments { get; set; }
+        public ICollection<Recipe>? Recipes { get; set; }
+        public ICollection<Follower>? Followers { get; set; }
+        public ICollection<Message>? SentMessages { get; set; }
+        public ICollection<Message>? ReceivedMessages { get; set; }
+        public ICollection<Comment>? Comments { get; set; }
     }
 }

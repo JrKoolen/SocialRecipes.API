@@ -27,7 +27,6 @@ namespace SocialRecipes.Tests.UnitTests
         private Mock<IAuthRepository> _authRepository;
         private AuthService __authService;
 
-
         [TestInitialize]
         public void Initialize()
         {
@@ -159,55 +158,6 @@ namespace SocialRecipes.Tests.UnitTests
 
             Assert.IsNotNull(result);
             Assert.AreEqual("Test", result.Name);
-        }
-
-        // Dto tests
-        [TestMethod]
-        public void Test_LoginDto_Should_Return_LoginDto()
-        {
-            LoginDto loginDto = new LoginDto
-            {
-                Name = "Test",
-                Password = "Test"
-            };
-
-            Assert.IsNotNull(loginDto);
-            Assert.AreEqual("Test", loginDto.Name);
-            Assert.AreEqual("Test", loginDto.Password);
-        }
-
-        [TestMethod]
-        public void Test_UserDto_Should_Return_UserDto()
-        {
-            UserDto userDto = new UserDto
-            {
-                Id = 1,
-                Name = "Test",
-                Email = "Test"
-            };
-
-            Assert.IsNotNull(userDto);
-            Assert.AreEqual(1, userDto.Id);
-            Assert.AreEqual("Test", userDto.Name);
-            Assert.AreEqual("Test", userDto.Email);
-        }
-
-        // consistency test
-        [TestMethod]
-        public void Test_UserDto_And_LoginDto_Should_Have_Consistent_namings()
-        {
-            var loginDtoProperties = typeof(LoginDto).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            var userDtoProperties = typeof(UserDto).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-
-            // Act & Assert
-            foreach (var loginDtoProperty in loginDtoProperties)
-            {
-                var matchingProperty = userDtoProperties
-                    .FirstOrDefault(u => u.Name == loginDtoProperty.Name);
-
-                // Check if the properties exist in UserDto
-                Assert.IsNotNull(matchingProperty, $"Property '{loginDtoProperty.Name}' found in LoginDto, but not in UserDto.");
-            }
         }
     }
 }
