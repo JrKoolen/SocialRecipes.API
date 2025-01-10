@@ -7,7 +7,7 @@ namespace SocialRecipes.DAL.Models
 {
     public class Recipe
     {
-        public int Id { get; set; }
+        public int Id { get; set; } = 0;
 
         [Required]
         [Column(TypeName = "varchar(255)")]

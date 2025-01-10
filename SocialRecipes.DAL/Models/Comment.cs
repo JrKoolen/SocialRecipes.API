@@ -6,7 +6,7 @@ namespace SocialRecipes.DAL.Models
 {
     public class Comment
     {
-        public int? Id { get; set; }
+        public int? Id { get; set; } = 0;
 
         public int? RecipeId { get; set; }
 

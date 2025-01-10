@@ -5,9 +5,9 @@ namespace SocialRecipes.DAL.Models
 {
     public class Follower
     {
-        public int? FollowedUserId { get; set; }
+        public int? FollowedUserId { get; set; } = 0;
 
-        public int? FollowingUserId { get; set; }
+        public int? FollowingUserId { get; set; } = 0;
 
         [Column(TypeName = "datetime")] 
         public DateTime? FollowingDate { get; set; } = DateTime.Now;
