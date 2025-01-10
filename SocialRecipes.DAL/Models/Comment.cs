@@ -11,6 +11,7 @@ namespace SocialRecipes.DAL.Models
 
         [ForeignKey("RecipeId")]
         public int RecipeId { get; set; } = 0;
+
         [ForeignKey("UserId")]
         public int UserId { get; set; } = 0;
 
