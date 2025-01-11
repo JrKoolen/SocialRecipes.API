@@ -202,9 +202,9 @@ jobs:
       - name: Build and Push API Image
         run: |
             docker build -f Dockerfile -t SocialRecipes.azurecr.io/socialrecipes-api:${{ github.sha }} .
-            docker tag SocialRecipes.azurecr.io/socialrecipes-api:${{ github.sha }} jeroenkoolen/socialrecipes-api:${{ github.sha }}
+            docker tag SocialRecipes.azurecr.io/socialrecipes-api:${{ github.sha }} jeroenkoolen/socialrecipes:${{ github.sha }}
             docker push SocialRecipes.azurecr.io/socialrecipes-api:${{ github.sha }}
-            docker push jeroenkoolen/socialrecipes-api:${{ github.sha }}
+            docker push jeroenkoolen/socialrecipes:${{ github.sha }}
 
       - name: Build and Push Frontend Image
         run: |
