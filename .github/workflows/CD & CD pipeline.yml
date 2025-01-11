@@ -221,7 +221,7 @@ jobs:
           --name socialrecipes-api \
           --image socialrecipes.azurecr.io/socialrecipes-api:${{ github.sha }} \
           --cpu 1 \
-          --memory 1.5 \
+          --memory 3 \
           --os-type Linux \
           --registry-login-server socialrecipes.azurecr.io \
           --registry-username ${{ secrets.AZURE_ACR_USERNAME }} \
@@ -230,7 +230,6 @@ jobs:
           --ports 8080 \
           --protocol TCP \
           --ip-address Public \
-          --environment-variables DB_CONNECTION_STRING=${{ secrets.DB_CONNECTION_STRING }} \
   
       - name: Deploy Frontend to ACI
         run: |
