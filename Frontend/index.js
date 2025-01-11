@@ -20,11 +20,11 @@ const envFile = process.env.NODE_ENV === 'production' ? '.env.production' : '.en
 dotenv.config({ path: envFile });
 const PORT = process.env.PORT || 3001; 
 
-const corsOptions = {
-origin: [process.env.CORS_ORIGIN || 'http://localhost:3000', 'http://localhost:3001', 'http://localhost:8081'],
-methods: ['GET', 'POST', 'PUT', 'DELETE'],
-credentials: true,
-};
+// const corsOptions = {
+// origin: [process.env.CORS_ORIGIN || 'http://localhost:3000', 'http://localhost:3001', 'http://localhost:8081'],
+// methods: ['GET', 'POST', 'PUT', 'DELETE'],
+// credentials: true,
+// };
 
 
 
@@ -34,7 +34,7 @@ module.exports = {
 
 const app = express();
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
