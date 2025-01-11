@@ -199,8 +199,8 @@ jobs:
         run: |
           echo ${{ secrets.AZURE_ACR_PASSWORD }} | docker login SocialRecipes.azurecr.io --username ${{ secrets.AZURE_ACR_USERNAME }} --password-stdin
 
-          - name: Build and Push API Image
-          run: |
+      - name: Build and Push API Image
+        run: |
             docker build -f Dockerfile -t SocialRecipes.azurecr.io/socialrecipes-api:${{ github.sha }} .
             docker tag SocialRecipes.azurecr.io/socialrecipes-api:${{ github.sha }} jeroenkoolen/socialrecipes-api:${{ github.sha }}
             docker push SocialRecipes.azurecr.io/socialrecipes-api:${{ github.sha }}
