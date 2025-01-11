@@ -12,7 +12,7 @@ namespace SocialRecipes.Infrastructure.Settings
 {
     public class Settings
     {
-        private readonly string _connectionString = "Server=socialrecipedb.mysql.database.azure.com; Port=3306; Database=socialrecipesdb; Uid=JKadmin; Pwd=@R3x!9Tq#Lz@1pV!;";
+        private readonly string _connectionString = "Server=mysql-db;Database=socialrecipesdb;User Id=root;Password=rootpassword;";
 
         private JwtSettings jwtSettings;
 
@@ -32,4 +32,7 @@ namespace SocialRecipes.Infrastructure.Settings
             return jwtSettings;
         }
     }
+    // "Server=mysql-db;Database=socialrecipesdb;User Id=root;Password=rootpassword;"
+    // "Server=socialrecipedb.mysql.database.azure.com; Port=3306; Database=socialrecipesdb; Uid=JKadmin; Pwd=@R3x!9Tq#Lz@1pV!;";
+
 }
