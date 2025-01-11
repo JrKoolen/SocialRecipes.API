@@ -229,7 +229,7 @@ jobs:
           --image socialrecipes.azurecr.io/socialrecipes-api:${{ github.sha }} \
           --cpu 2 \
           --memory 5 \
-          --os-type Linux \
+          --os-type Windows \
           --registry-login-server socialrecipes.azurecr.io \
           --registry-username ${{ secrets.AZURE_ACR_USERNAME }} \
           --registry-password ${{ secrets.AZURE_ACR_PASSWORD }} \
