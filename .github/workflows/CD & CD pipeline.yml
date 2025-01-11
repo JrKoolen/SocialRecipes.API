@@ -230,6 +230,7 @@ jobs:
           --ports 8080 \
           --protocol TCP \
           --ip-address Public \
+          --environment-variables DB_CONNECTION_STRING=${{ secrets.DB_CONNECTION_STRING }} \
   
       - name: Deploy Frontend to ACI
         run: |
@@ -247,7 +248,6 @@ jobs:
           --ports 3000 \
           --protocol TCP \
           --ip-address Public \
-          --environment-variables DB_CONNECTION_STRING=${{ secrets.DB_CONNECTION_STRING }} \
 
       - name: Deploy Database to ACI
         run: |
@@ -263,6 +263,5 @@ jobs:
           --registry-password ${{ secrets.AZURE_ACR_PASSWORD }} \
           --dns-name-label socialrecipes-database-${{ github.sha }} \
           --ports 3006 \
-          --environment-variables MYSQL_ROOT_PASSWORD=rootpassword MYSQL_DATABASE=socialrecipesdb MYSQL_USER=myuser MYSQL_PASSWORD=mypassword \
           --ip-address Public \
           --debug

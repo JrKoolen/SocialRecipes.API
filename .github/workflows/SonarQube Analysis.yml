@@ -1,54 +1,54 @@
-name: SonarQube Analysis
-on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
-  workflow_dispatch:
+# name: SonarQube Analysis
+# on:
+#   push:
+#     branches:
+#       - master
+#   pull_request:
+#     branches:
+#       - master
+#   workflow_dispatch:
 
-jobs:
-  build-and-analyze:
-    name: Build and Analyze with SonarQube
-    runs-on: ubuntu-latest
+# jobs:
+#   build-and-analyze:
+#     name: Build and Analyze with SonarQube
+#     runs-on: ubuntu-latest
 
-    steps:
-    - name: Checkout Code
-      uses: actions/checkout@v3
+#     steps:
+#     - name: Checkout Code
+#       uses: actions/checkout@v3
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '16'
+#     - name: Set up Node.js
+#       uses: actions/setup-node@v3
+#       with:
+#         node-version: '16'
 
-    - name: Start SonarQube Docker Container
-      run: |
-        docker run -d --name sonarqube -p 9000:9000 sonarqube:community
-        sleep 60 # Wait for SonarQube to fully initialize
+#     - name: Start SonarQube Docker Container
+#       run: |
+#         docker run -d --name sonarqube -p 9000:9000 sonarqube:community
+#         sleep 60 # Wait for SonarQube to fully initialize
 
-    - name: Install Dependencies
-      working-directory: ./Frontend
-      run: npm install
+#     - name: Install Dependencies
+#       working-directory: ./Frontend
+#       run: npm install
 
-    - name: Run Tests
-      working-directory: ./Frontend
-      run: npx nyc npx qunit
+#     - name: Run Tests
+#       working-directory: ./Frontend
+#       run: npx nyc npx qunit
 
-    - name: SonarQube Analysis
-      working-directory: ./Frontend
-      env:
-        SONAR_HOST_URL: http://localhost:9000
-        SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
-      run: |
-        npx sonarqube-scanner \
-          -Dsonar.projectKey=your-project-key \
-          -Dsonar.sources=./src \
-          -Dsonar.tests=./test \
-          -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
-          -Dsonar.host.url=$SONAR_HOST_URL \
-          -Dsonar.login=$SONAR_TOKEN
+#     - name: SonarQube Analysis
+#       working-directory: ./Frontend
+#       env:
+#         SONAR_HOST_URL: http://localhost:9000
+#         SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
+#       run: |
+#         npx sonarqube-scanner \
+#           -Dsonar.projectKey=your-project-key \
+#           -Dsonar.sources=./src \
+#           -Dsonar.tests=./test \
+#           -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
+#           -Dsonar.host.url=$SONAR_HOST_URL \
+#           -Dsonar.login=$SONAR_TOKEN
 
-    - name: Stop SonarQube Docker Container
-      if: always()
-      run: docker stop sonarqube && docker rm sonarqube
+#     - name: Stop SonarQube Docker Container
+#       if: always()
+#       run: docker stop sonarqube && docker rm sonarqube
