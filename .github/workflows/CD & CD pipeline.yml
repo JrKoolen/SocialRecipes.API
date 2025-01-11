@@ -214,6 +214,13 @@ jobs:
           docker build -f ./db/Dockerfile -t SocialRecipes.azurecr.io/socialrecipes-database:${{ github.sha }} ./db
           docker push SocialRecipes.azurecr.io/socialrecipes-database:${{ github.sha }}
 
+      - name: Delete Existing API Container
+        run: |
+          az container delete \
+          --resource-group SocialRecipes \
+          --name socialrecipes-api \
+          --yes || echo "Container does not exist, continuing..."
+
       - name: Deploy API to ACI
         run: |
           az container create \
