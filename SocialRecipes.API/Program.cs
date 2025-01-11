@@ -89,6 +89,7 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddControllers();
+builder.WebHost.UseUrls("http://*:8080");
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -112,7 +113,7 @@ using (var scope = app.Services.CreateScope())
 var logger = app.Services.GetRequiredService<ILogger<Program>>();
 logger.LogInformation("Application configuration started.");
 
-app.UseCors("AllowAll");
+app.UseCors("AllowFrontend");
 app.UseSwagger();
 app.UseSwaggerUI();
 logger.LogInformation("Swagger UI enabled.");
