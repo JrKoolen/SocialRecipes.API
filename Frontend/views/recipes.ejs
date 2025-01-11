@@ -13,9 +13,11 @@
 <body>
   <div class="main-content">
     <h1>Search recipes</h1>
+    
     <div class="search-bar">
       <input type="text" id="searchInput" placeholder="Search for recipes...">
     </div>
+
     <div class="recipe-grid" id="recipeGrid">
       <% recipes.forEach(function(recipe) { %>
         <div class="recipe-card" data-id="<%= recipe.id %>">
@@ -27,12 +29,11 @@
             </p>
           </div>
         </div>
-      <% }) %>
     </div>
+
     <script>
       const searchInput = document.getElementById('searchInput');
       const recipeCards = document.querySelectorAll('.recipe-card');
-
       searchInput.addEventListener('keyup', function() {
         const searchValue = searchInput.value.toLowerCase();
         
@@ -56,7 +57,6 @@
           likeCountSpan.textContent = `${likeCount} Likes`;
         });
       });
-
       recipeCards.forEach(card => {
         card.addEventListener('click', function() {
           const recipeId = this.getAttribute('data-id');
@@ -64,8 +64,10 @@
         });
       });
     </script>
+
     <footer>
       <%- include('partials/footer') %>
     </footer>
+
 </body>
 </html>

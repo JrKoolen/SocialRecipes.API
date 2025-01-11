@@ -247,7 +247,7 @@ jobs:
           --ports 3000 \
           --protocol TCP \
           --ip-address Public \
-          --debug
+          --environment-variables DB_CONNECTION_STRING=${{ secrets.DB_CONNECTION_STRING }} \
 
       - name: Deploy Database to ACI
         run: |
