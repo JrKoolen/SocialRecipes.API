@@ -80,13 +80,12 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddCors(options =>
 {
-options.AddPolicy("AllowFrontend", policy =>
-{
-    policy.WithOrigins("http://localhost:3000", "http://localhost:3001", "http://socialrecipesadmin-container:3001", "http://localhost:8081/")
-          .AllowAnyHeader()
-          .AllowAnyMethod()
-          .AllowCredentials();
-});
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
 });
 
 builder.Services.AddControllers();
@@ -113,7 +112,7 @@ using (var scope = app.Services.CreateScope())
 var logger = app.Services.GetRequiredService<ILogger<Program>>();
 logger.LogInformation("Application configuration started.");
 
-app.UseCors("AllowFrontend");
+app.UseCors("AllowAll");
 app.UseSwagger();
 app.UseSwaggerUI();
 logger.LogInformation("Swagger UI enabled.");
