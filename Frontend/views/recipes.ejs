@@ -23,7 +23,7 @@
           <div class="card-content">
             <h3 class="recipe-title"><%= recipe.title %></h3>
             <p class="recipe-description">
-              <%= recipe.description ? recipe.description : 'No description available' %>
+              <%= recipe.description %>
             </p>
           </div>
         </div>
@@ -64,8 +64,11 @@
         });
       });
     </script>
+
+    
     <footer>
       <%- include('partials/footer') %>
     </footer>
+    
 </body>
 </html>

@@ -8,6 +8,9 @@
         <li>
           <router-link to="/analytics" class="styled-link">Analytics</router-link>
         </li>
+        <li>
+          <router-link to="/adminpanel" class="styled-link">adminpanel</router-link>
+        </li>
       </ul>
     </aside>
     <main id="main-content">

@@ -244,5 +244,42 @@ namespace SocialRecipes.API.Controllers
                 return StatusCode(500, new { message = "Internal server error. Please try again later." });
             }
         }
+
+        /// <summary>
+        /// Retrieves all recipes created by a specific user.
+        /// </summary>
+        /// <param name="userId">The ID of the user whose recipes to retrieve.</param>
+        /// <returns>A list of recipes created by the user.</returns>
+        [HttpGet(" DeleteAllRecipesFromUser/{userId}")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> DeleteAllRecipesFromUserAsync(int userId)
+        {
+            try
+            {
+                _logger.LogInformation($"Deleteing all recipes from {userId}.");
+                var recipes = await _recipeService.GetAllRecipesFromUserAsync(userId);
+
+                if (recipes == null || !recipes.Any())
+                {
+                    _logger.LogWarning($"No recipes found for user with ID {userId}.");
+                    return NotFound(new { message = $"No recipes found for user with ID {userId}." });
+                }
+
+                foreach (var recipe in recipes)
+                {
+                    await _recipeService.DeleteRecipeByIdAsync(recipe.Id);
+                }
+                _logger.LogInformation($"Successfully retrieved recipes for user with ID {userId}.");
+                return Ok(new { message = $"All recipes from user with ID {userId} retrieved successfully."});
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while trying to delete recipes for user with ID {userId}.");
+                return StatusCode(500, new { message = "Internal server error. Please try again later." });
+            }
+        }
     }
 }

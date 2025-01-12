@@ -26,6 +26,12 @@ public class AuthController : ControllerBase
         _jwtSettings = jwtSettings.Value;
         _authService = authService; 
     }
+
+    /// <summary>
+    /// Allows a user to login.
+    /// </summary>
+    /// <param name="login">the login requires a name and password.</param>
+    /// <returns> returns a JWT token.</returns>
     [HttpPost("login")]
     [SwaggerResponseExample(StatusCodes.Status200OK, typeof(LoginResponseExample))]
     public async Task<IActionResult> LoginAsync([FromForm] LoginDto login)

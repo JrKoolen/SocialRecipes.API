@@ -34,7 +34,3 @@ module.exports = {
     DELETE_COMMENT: (commentId) => `${BASE_URL}/Comment/Delete/${commentId}`
   }
 };
-// @R3x!9Tq#Lz@1pV! 
-//http://socialrecipes-frontend-fcffbc96197724946bd2384afc88861792e721fd.westeurope.azurecontainer.io:3000/recipes
-// "https://socialrecipesapi-e4hjhse0f6cxfgen.westeurope-01.azurewebsites.net/api"
-//http://socialrecipes-api-container:8080/api

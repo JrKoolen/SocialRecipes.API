@@ -214,6 +214,28 @@ jobs:
           docker build -f ./db/Dockerfile -t SocialRecipes.azurecr.io/socialrecipes-database:${{ github.sha }} ./db
           docker push SocialRecipes.azurecr.io/socialrecipes-database:${{ github.sha }}
 
+      - name : build and push admin image
+        run: |
+          docker build -f ./admin/Dockerfile -t SocialRecipes.azurecr.io/socialrecipes-admin:${{ github.sha }} ./admin
+          docker push SocialRecipes.azurecr.io/socialrecipes-admin:${{ github.sha }}
+
+      - name : Deploy admin to ACI
+        run: |
+          az container create \
+          --resource-group SocialRecipes \
+          --name socialrecipes-admin \
+          --image socialrecipes.azurecr.io/socialrecipes-admin:${{ github.sha }} \
+          --cpu 1 \
+          --memory 1.5 \
+          --os-type Linux \
+          --registry-login-server socialrecipes.azurecr.io \
+          --registry-username ${{ secrets.AZURE_ACR_USERNAME }} \
+          --registry-password ${{ secrets.AZURE_ACR_PASSWORD }} \
+          --dns-name-label socialrecipes-admin-${{ github.sha }} \
+          --ports 3001 \
+          --protocol TCP \
+          --ip-address Public \
+
       - name: Delete Existing API Container
         run: |
           az container delete \
