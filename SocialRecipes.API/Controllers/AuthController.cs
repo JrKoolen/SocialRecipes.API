@@ -26,7 +26,7 @@ public class AuthController : ControllerBase
         _jwtSettings = jwtSettings.Value;
         _authService = authService; 
     }
-    [HttpPost("login")]
+    [HttpPost("loginn")]
     [SwaggerResponseExample(StatusCodes.Status200OK, typeof(LoginResponseExample))]
     public async Task<IActionResult> LoginAsync([FromForm] LoginDto login)
     {
