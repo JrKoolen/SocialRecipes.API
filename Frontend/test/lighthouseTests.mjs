@@ -42,7 +42,7 @@ async function runLighthouse(url, options = {}, config = null) {
     }
 }
 
-const urlToTest = 'http://socialrecipes-frontend-fcffbc96197724946bd2384afc88861792e721fd.westeurope.azurecontainer.io:3000/recipes';
+const urlToTest = 'http://localhost:3000/recipes';
 runLighthouse(urlToTest)
     .then(() => console.log('Lighthouse testing completed.'))
     .catch(err => console.error('Unhandled error:', err));

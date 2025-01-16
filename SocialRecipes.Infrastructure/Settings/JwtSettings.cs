@@ -8,25 +8,27 @@ namespace SocialRecipes.Infrastructure.Settings
 {
     public class JwtSettings
     {
-        private string Secret = "T8x!g5#Lk92z@Q7P$G1%XcMZ5L!7DfNlR";
-        private string Issuer = "http://localhost";
-        private string Audience = "http://localhost";
+        private readonly string secret;
+        private readonly string issuer;
+        private readonly string audience;
 
-        public JwtSettings()
+        public JwtSettings(string Secret, string Issuer, string Audience)
         {
-            
+            this.secret = Secret;   
+            this.issuer = Issuer;
+            this.audience = Audience;
         }
         public string GetSecret()
         {
-            return Secret;
+            return secret;
         }
         public string GetIssuer()
         {
-            return Issuer;
+            return issuer;
         }
         public string GetAudience()
         {
-            return Audience;
+            return audience;
         }
     }
 }

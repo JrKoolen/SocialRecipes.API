@@ -17,7 +17,6 @@ namespace SocialRecipes.Services.Services
 
         public virtual async Task DeleteUserByIdAsync(int id)
         {
-
             await _userRepository.DeleteUserByIdAsync(id);
         }
 

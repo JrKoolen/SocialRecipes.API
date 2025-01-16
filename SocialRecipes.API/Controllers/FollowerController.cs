@@ -6,7 +6,7 @@ namespace SocialRecipes.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class FollowController : Controller
+    public class FollowController : ControllerBase
     {
         private readonly ILogger<FollowController> _logger;
         private readonly FollowService _followerService;

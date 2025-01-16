@@ -55,9 +55,7 @@ app.use(
     saveUninitialized: false,
     cookie: {
       secure: false,
-     // httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24, 
-      //sameSite: process.env.NODE_ENV === 'production' ? 'Strict' : 'Lax',
     },
   })
 );
@@ -161,11 +159,10 @@ app.get('/logout', (req, res) => {
 });
 
 app.get('/mockAuth', (req, res) => {
-  //res.json({ isLoggedIn: true, username: 'testUser', userId: 1, token: 'mockToken' });
   req.session.user = {
     username: 'testUser',
     token: 'mockToken',
-    id: 1,
+    id: 999,
     isLoggedIn: true,
   };
   res.redirect('/user-page');
@@ -280,8 +277,9 @@ app.post('/create-recipe', upload.single('image'), async (req, res) => {
       payload,
       {
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
+          'Content-Type': 'application/x-www-form-urlencoded',
+          Authorization: `Bearer ${req.session.user.token}`
+      },
         httpsAgent
       }
     );

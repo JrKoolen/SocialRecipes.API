@@ -21,22 +21,10 @@ builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
 
-builder.Services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
-var jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>();
-
-if (jwtSettings == null)
-{
-    jwtSettings = settings.GetJwtSettings();
-    Console.WriteLine("JwtSettings were missing in the configuration. Using fallback values.");
-}
+var jwtSettings = settings.GetJwtSettings();
+var connstring = settings.GetConnectionString();
 
 builder.Services.AddSingleton(jwtSettings);
-
-var connstring = configuration.GetConnectionString("DefaultConnection");
-if (connstring == null)
-{
-    connstring = settings.GetConnectionString();
-}
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(connstring,
@@ -113,14 +101,11 @@ using (var scope = app.Services.CreateScope())
 var logger = app.Services.GetRequiredService<ILogger<Program>>();
 logger.LogInformation("Application configuration started.");
 
-app.UseCors("AllowFrontend");
-app.UseSwagger();
+app.UseCors("AllowFrontend");   
+app.UseSwagger();              
 app.UseSwaggerUI();
-logger.LogInformation("Swagger UI enabled.");
-
-app.UseAuthentication();
-app.UseAuthorization();
-
+app.UseAuthentication();       
+app.UseAuthorization();        
 app.MapControllers();
 
 app.Run();

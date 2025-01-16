@@ -2,12 +2,14 @@
 using SocialRecipes.Services.Services;
 using SocialRecipes.Domain.Dto.General;
 using SocialRecipes.Domain.Dto.IN;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace SocialRecipes.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class RecipeController : Controller
+    public class RecipeController : ControllerBase
     {
         private readonly ILogger<RecipeController> _logger;
         private readonly RecipeService _recipeService;
@@ -25,6 +27,7 @@ namespace SocialRecipes.API.Controllers
         /// <returns>A success message if the recipe is created, or an error message if it fails.</returns>
         [HttpPost("CreateRecipe")]
         [Produces("application/json")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -149,6 +152,7 @@ namespace SocialRecipes.API.Controllers
         {
             try
             {
+                _logger.LogInformation("Authorization Header: {Authorization}", Request.Headers["Authorization"]);
                 _logger.LogInformation($"Retrieving all recipes from user with ID {userId}.");
                 var recipes = await _recipeService.GetAllRecipesFromUserAsync(userId);
                 if (recipes == null || !recipes.Any())
@@ -250,7 +254,7 @@ namespace SocialRecipes.API.Controllers
         /// </summary>
         /// <param name="userId">The ID of the user whose recipes to retrieve.</param>
         /// <returns>A list of recipes created by the user.</returns>
-        [HttpGet(" DeleteAllRecipesFromUser/{userId}")]
+        [HttpDelete(" DeleteAllRecipesFromUser/{userId}")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
