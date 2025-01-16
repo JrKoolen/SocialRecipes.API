@@ -33,7 +33,7 @@ namespace SocialRecipes.Tests.UnitTests
             //controller moq
             _logger = new Mock<ILogger<AuthController>>();
             _mockJwtSettings = new Mock<IOptions<JwtSettings>>();
-            _mockJwtSettings.Setup(m => m.Value).Returns(new JwtSettings { });
+            _mockJwtSettings.Setup(m => m.Value).Returns(new JwtSettings() { });
             _authService = new Mock<AuthService>(_authRepository);
             _authController = new AuthController(_logger.Object, _mockJwtSettings.Object, _authService.Object);
 

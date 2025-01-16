@@ -8,20 +8,30 @@ namespace SocialRecipes.Infrastructure.Settings
     {
         private readonly string _connectionString;
         private readonly JwtSettings jwtSettings;
-
         public Settings(string env = "development")
         {
-            string envFileName = $".env.{env}";
-            DotNetEnv.Env.Load(envFileName);
+            string workingDirectory = Directory.GetCurrentDirectory();
+            Console.WriteLine($"{workingDirectory}");
+
+            string envFileName = Path.Combine(workingDirectory, $".env.{env}");
+            Console.WriteLine($"{envFileName}");
+
+            if (File.Exists(envFileName))
+            {
+                DotNetEnv.Env.Load(envFileName);
+                Console.WriteLine($"{envFileName}");
+            }
 
             _connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
+            string jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET");
+            string jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
+            string jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
 
             jwtSettings = new JwtSettings(
-                 Environment.GetEnvironmentVariable("JWT_SECRET"),
-                 Environment.GetEnvironmentVariable("JWT_ISSUER"),
-                 Environment.GetEnvironmentVariable("JWT_AUDIENCE") 
-             );
-
+                jwtSecret,
+                jwtIssuer,
+                jwtAudience
+            );
         }
 
         public string GetConnectionString()

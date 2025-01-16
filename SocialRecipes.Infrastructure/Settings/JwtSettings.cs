@@ -12,6 +12,8 @@ namespace SocialRecipes.Infrastructure.Settings
         private readonly string issuer;
         private readonly string audience;
 
+        public JwtSettings() { }
+
         public JwtSettings(string Secret, string Issuer, string Audience)
         {
             this.secret = Secret;   
