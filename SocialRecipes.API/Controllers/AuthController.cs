@@ -42,7 +42,7 @@ namespace SocialRecipes.API.Controllers
             try
             {
                 _logger.LogInformation("Starting LoginAsync.");
-
+                _logger.LogInformation("User details: {Name},", login.Name);
                 if (login == null || string.IsNullOrWhiteSpace(login.Name) || string.IsNullOrWhiteSpace(login.Password))
                 {
                     _logger.LogWarning("Invalid login credentials provided.");
@@ -88,7 +88,6 @@ namespace SocialRecipes.API.Controllers
             try
             {
                 _logger.LogInformation("Starting user registration process.");
-
                 if (addUser == null || string.IsNullOrWhiteSpace(addUser.Name) || string.IsNullOrWhiteSpace(addUser.Password) || string.IsNullOrWhiteSpace(addUser.Email))
                 {
                     _logger.LogWarning("Invalid registration details provided.");

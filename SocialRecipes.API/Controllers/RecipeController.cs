@@ -27,7 +27,6 @@ namespace SocialRecipes.API.Controllers
         /// <returns>A success message if the recipe is created, or an error message if it fails.</returns>
         [HttpPost("CreateRecipe")]
         [Produces("application/json")]
-        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

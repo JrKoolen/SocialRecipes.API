@@ -24,7 +24,11 @@ export const getTotalUsers = () => api.get('/User/GetTotalUsers');
 export const delUserFromId = (userId) => 
   api.delete(`/User/DeleteUser/${userId}`); 
 export const delRecipeFromId = (recipeId) => 
-  api.delete(`/Recipe/DeleteRecipeFromId/${recipeId}`); 
+  api.delete(`/Recipe/DeleteRecipeFromId/${recipeId}`);
+export const getRecipeById = (recipeId) =>
+  api.get(`/Recipe/GetRecipeById/${recipeId}`);
+export const getUserById = (userId) =>
+  api.get(`/User/GetUserById/${userId}`);
 export const GetLatestCommitStatus = () => githubApi.get('/repos/JrKoolen/SocialRecipes.API/actions/workflows/CD%20%26%20CD%20pipeline.yml/runs');
 
 

@@ -162,7 +162,7 @@ app.get('/mockAuth', (req, res) => {
   req.session.user = {
     username: 'testUser',
     token: 'mockToken',
-    id: 999,
+    id: 1,
     isLoggedIn: true,
   };
   res.redirect('/user-page');

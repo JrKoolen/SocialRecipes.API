@@ -1,5 +1,5 @@
 const BASE_URL = process.env.API_BASE_URL || (process.env.NODE_ENV === 'production'
-  ? 'https://socialrecipesapi-e4hjhse0f6cxfgen.westeurope-01.azurewebsites.net/api'
+  ? 'http://socialrecipes-api-container:8080/api'
   : 'http://socialrecipes-api-container:8080/api');
 module.exports = {
   AUTH: {
