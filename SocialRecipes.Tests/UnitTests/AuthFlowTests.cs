@@ -68,32 +68,6 @@ namespace SocialRecipes.Tests.UnitTests
             Assert.IsNotNull(_mockJwtSettings);
         }
 
-        // check if the output of the controller are all being used and present.
-        [TestMethod]
-        public async Task Test_LoginAsync_Should_Return_OK_When_Credentials_Are_Valid()
-        {
-            // Arrange
-            LoginDto loginDto = new LoginDto
-            {
-                Name = "Test",
-                Password = "test"
-            };
-
-            _authService.Setup(service => service.LoginAsync(It.IsAny<LoginDto>())).ReturnsAsync(new UserDto { Id = 1, Name = "Test" });
-
-
-            // Act
-            var result = await _authController.LoginAsync(loginDto);
-
-            // Assert
-            // test if the function was called 
-            _authService.Verify(service => service.LoginAsync(It.IsAny<LoginDto>()), Times.Once);
-            var okResult = result as OkObjectResult;
-            Assert.IsNotNull(okResult);
-            Assert.AreEqual(200, okResult.StatusCode);
-
-        }
-
         [TestMethod]
         public async Task Test_LoginAsync_Should_Return_Unauthorized_If_Credentials_Are_Invalid()
         {

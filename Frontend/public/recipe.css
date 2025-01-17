@@ -42,4 +42,19 @@
     border-radius: 5px;
     overflow-wrap: break-word; 
   }
+
+  button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-top: 10px;
+    background-color: #007BFF; /* Bootstrap primary blue */
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
   

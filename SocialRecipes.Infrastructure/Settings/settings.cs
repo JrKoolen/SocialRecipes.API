@@ -21,11 +21,15 @@ namespace SocialRecipes.Infrastructure.Settings
                 DotNetEnv.Env.Load(envFileName);
                 Console.WriteLine($"{envFileName}");
             }
+            else
+            {
+                Console.WriteLine("No .env file found.");
+            }
 
-            _connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
-            string jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET");
-            string jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
-            string jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
+            _connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING") ?? "Server=mysql-db;Database=socialrecipesdb;User Id=root;Password=rootpassword;";
+            string jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET") ?? "T8x!g5#Lk92z@Q7P$G1%XcMZ5L!7DfNlR";
+            string jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER") ?? "http://localhost";
+            string jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE") ?? "http://localhost";
 
             jwtSettings = new JwtSettings(
                 jwtSecret,

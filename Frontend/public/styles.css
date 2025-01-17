@@ -350,3 +350,18 @@ transition: background-color 0.3s ease;
 .recipe-form-container button[type="submit"]:hover {
 background-color: #45a049;
 }
+
+button2 {
+  display: inline-block;
+  padding: 10px 20px;
+  margin-top: 0px;
+  background-color: #007BFF; 
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
